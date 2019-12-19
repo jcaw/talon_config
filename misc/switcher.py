@@ -7,7 +7,7 @@ overrides = {"from": "Google Chrome"}
 
 
 def switch_app(m):
-    name = str(m._words[1])
+    name = str(m[1])
 
     full = apps.get(name)
     if not full:

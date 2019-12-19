@@ -35,7 +35,7 @@ def join_words(words, sep=" "):
 
 
 def parse_words(m):
-    return list(map(parse_word, m.dgndictation[0]._words))
+    return list(map(parse_word, m.dgndictation.words))
 
 
 def insert(s):
@@ -57,7 +57,7 @@ def word(m):
 
 
 def extract_word(m):
-    return join_words(list(map(parse_word, m.dgnwords[0]._words)))
+    return join_words(list(map(parse_word, m.dgnwords.words)))
 
 
 # FIX ME
@@ -90,7 +90,7 @@ def optional_numerals():
 
 
 def text_to_number(m):
-    tmp = [str(s).lower() for s in m._words]
+    tmp = [str(s).lower() for s in m]
     words = [parse_word(word) for word in tmp]
 
     result = 0

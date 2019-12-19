@@ -25,11 +25,11 @@ formatters = {
 
 def FormatText(m):
     fmt = []
-    if m._words[-1] == "over":
-        m._words = m._words[:-1]
     for w in m._words:
-        if isinstance(w, Word):
-            fmt.append(w.word)
+        if w in formatters:
+            fmt.append(w)
+        else:
+            break
     try:
         words = parse_words(m)
     except AttributeError:
