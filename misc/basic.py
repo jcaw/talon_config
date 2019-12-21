@@ -59,13 +59,13 @@ def insert(s):
 
 def get_modifiers(m):
     try:
-        return [modifiers[mod] for mod in m["basic.modifiers"]]
+        return [modifiers[mod] for mod in m["modifiers_list"]]
     except KeyError:
         return []
 
 
 def get_keys(m):
-    groups = ["basic.keys", "basic.arrows", "basic.digits", "basic.alphabet"]
+    groups = ["keys_list", "arrows_list", "digits_list", "alphabet_list"]
     for group in groups:
         try:
             return [keymap[k] for k in m[group]]

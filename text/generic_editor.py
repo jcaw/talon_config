@@ -54,7 +54,7 @@ def snipline():
 
 
 def get_first_word(m):
-    return str(m.dgndictation[0]._words[0])
+    return m.dgndictation.words[0]
 
 def jump_to(m):
     target = get_first_word(m)

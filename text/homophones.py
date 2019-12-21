@@ -149,10 +149,10 @@ def raise_homophones(m, force_raise=False, is_selection=False):
     #     # this mode is currently disabled...
     #     # experimenting with using a canonical representation and not using
     #     # dgndictation
-    #     word = str(m.dgndictation[0]._words[0])
+    #     word = m.dgndictation.words[0]
     #     word = parse_word(word)
     elif len(m._words) >= 2:
-        word = str(m._words[len(m._words) - 1])
+        word = str(m._words[-1])
         word = parse_word(word)
 
     is_capitalized = word == word.capitalize()

@@ -316,7 +316,7 @@ def format_actions(actions):
 
 
 def render_commands_help(m):
-    context = get_context(m["help.contexts"])
+    context = get_context(m.contexts_list)
     if not context:
         return
 
