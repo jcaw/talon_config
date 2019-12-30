@@ -1,3 +1,4 @@
+from talon import app
 from talon.voice import Context, Str, press
 import string
 
@@ -29,13 +30,17 @@ symbols = {
     "equals": "=",
 }
 modifiers = {
-    "command": "cmd",
     "control": "ctrl",
     "shift": "shift",
     "alt": "alt",
-    "option": "alt",
-    "super": "super",
 }
+if app.platform == "mac":
+    modifiers["command"] = "cmd"
+    modifiers["option"] = "alt"
+elif app.platform == "windows":
+    modifiers["windows"] = "win"
+elif app.platform == "linux":
+    modifiers["super"] = "super"
 
 alphabet = dict(zip(alpha_alt, string.ascii_lowercase))
 digits = {str(i): str(i) for i in range(10)}
