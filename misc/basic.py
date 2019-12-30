@@ -43,7 +43,18 @@ elif app.platform == "linux":
     modifiers["super"] = "super"
 
 alphabet = dict(zip(alpha_alt, string.ascii_lowercase))
-digits = {str(i): str(i) for i in range(10)}
+digits = {
+    "zero":  "0",
+    "one":   "1",
+    "two":   "2",
+    "three": "3",
+    "four":  "4",
+    "five":  "5",
+    "six":   "6",
+    "seven": "7",
+    "eight": "8",
+    "nine":  "9",
+}
 simple_keys = {k: k for k in simple_keys}
 arrows = {k: k for k in arrows}
 keys = {}
