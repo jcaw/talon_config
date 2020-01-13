@@ -1,0 +1,79 @@
+"""Module for playing wav files in Talon.
+
+Only works with 16-bit signed wavs. Not designed to work with spamming.
+
+Author: Ryan Hileman (lunixbochs).
+Modified by GitHub user Jcaw.
+
+"""
+
+import struct
+import threading
+import wave
+import functools
+
+from talon import cubeb
+
+
+class _WavSource:
+    def __init__(self, path):
+        self.path = path
+        try:
+            wav_file = wave.open(path)
+            self.params = wav_file.getparams()
+            if self.params.sampwidth != 2:
+                raise Exception("only 16-bit signed PCM supported")
+            nframes = self.params.nframes
+            frames = wav_file.readframes(nframes)
+            self.samples = struct.unpack(
+                "<{}h".format(nframes * self.params.nchannels), frames
+            )
+            self.samplerate = self.params.framerate
+            self.channels = self.params.nchannels
+            if self.channels == 2:
+                self.samples = self.samples[::2]
+                self.channels = 1
+        finally:
+            wav_file.close()
+
+
+class _Player:
+    def __init__(self, rate, fmt, channels):
+        self.lock = threading.Lock()
+        self.ctx = cubeb.Context()
+        params = cubeb.StreamParams(rate=rate, format=fmt, channels=channels)
+        self.buffer = []
+        self.stream = self.ctx.new_output_stream(
+            "player", None, params, latency=-1, data_cb=self._source
+        )
+        self.stream.start()
+
+    def _source(self, stream, samples_in, samples_out):
+        needed = len(samples_out)
+        with self.lock:
+            if len(self.buffer) > 0:
+                frame = self.buffer[:needed]
+                if len(frame) < needed:
+                    frame += [0] * (needed - len(frame))
+                samples_out[:] = frame
+                self.buffer = self.buffer[needed:]
+                return needed
+        return needed
+
+    def append(self, samples):
+        with self.lock:
+            self.buffer += samples
+
+
+# Cache to avoid repeated, slow disk I/O
+@functools.lru_cache(maxsize=32)
+def load_wav(path):
+    return _WavSource(path)
+
+
+def play_wav(path):
+    wav = load_wav(path)
+    # TODO: Leak? Understand how this is destroyed.
+    player = _Player(wav.samplerate, cubeb.SampleFormat.S16LE, wav.channels)
+    player.append(wav.samples)
+    return player
