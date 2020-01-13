@@ -2,6 +2,8 @@ from talon import app
 from talon.voice import Context, Str, press
 import string
 
+from . import numbers
+
 alpha_alt = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
 
 f_keys = {f"F {i}": f"f{i}" for i in range(1, 13)}
@@ -43,18 +45,6 @@ elif app.platform == "linux":
     modifiers["super"] = "super"
 
 alphabet = dict(zip(alpha_alt, string.ascii_lowercase))
-digits = {
-    "zero":  "0",
-    "one":   "1",
-    "two":   "2",
-    "three": "3",
-    "four":  "4",
-    "five":  "5",
-    "six":   "6",
-    "seven": "7",
-    "eight": "8",
-    "nine":  "9",
-}
 simple_keys = {k: k for k in simple_keys}
 arrows = {k: k for k in arrows}
 keys = {}
@@ -67,7 +57,7 @@ keys.update(symbols)
 keymap = keys.copy()
 keymap.update(arrows)
 keymap.update(alphabet)
-keymap.update(digits)
+keymap.update(numbers.DIGITS)
 
 
 def insert(s):
@@ -112,16 +102,15 @@ ctx.keymap(
         "{basic.modifiers}* {basic.alphabet}+": press_keys,
         # Force straight numbers to be spoken with a prefix to avoid ambiguity
         # with repeats.
-        "numb {basic.digits}++": press_keys,
+        "numb {numbers.digits}++": press_keys,
         # Allow the "numb" pattern to be used wherever we input number keys,
         # but don't make it mandatory.
-        "{basic.modifiers}+ [numb] {basic.digits}++": press_keys,
+        "{basic.modifiers}+ [numb] {numbers.digits}++": press_keys,
         "{basic.modifiers}* {basic.keys}+": press_keys,
         "(go | {basic.modifiers}+) {basic.arrows}+": press_keys,
     }
 )
 ctx.set_list("alphabet", alphabet.keys())
 ctx.set_list("arrows", arrows.keys())
-ctx.set_list("digits", digits.keys())
 ctx.set_list("keys", keys.keys())
 ctx.set_list("modifiers", modifiers.keys())
