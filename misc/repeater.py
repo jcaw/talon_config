@@ -12,6 +12,8 @@ A few reasons to use ordinals:
 """
 from talon.voice import Context, Rep, talon
 
+from .numbers import number_from_digits
+
 ctx = Context("repeater")
 
 ordinals = {}
@@ -38,11 +40,21 @@ for n in range(2, 100):
 ctx.set_list("ordinals", ordinals.keys())
 
 
-def repeat(m):
-    o = m.ordinals[0]
-    repeater = Rep(int(ordinals[o]))
+def make_repeater(repeats):
+    repeater = Rep(int(repeats))
     repeater.ctx = talon
     return repeater(None)
 
 
-ctx.keymap({"{repeater.ordinals}": repeat})
+def ordinal_repeat(m):
+    o = m.ordinals[0]
+    return make_repeater(ordinals[o])
+
+
+def digit_repeat(m):
+    n = number_from_digits(m)
+    return make_repeater(n)
+
+
+ctx.keymap({"{repeater.ordinals}": ordinal_repeat})
+ctx.keymap({"{numbers.digits}++": digit_repeat})

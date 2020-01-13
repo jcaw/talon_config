@@ -37,4 +37,6 @@ def number_from_digits(m):
 
 
 numbers_context = Context("numbers")
+# NOTE: Always use this greedily if it's at the end of a command, or it will
+# conflict with repeats.
 numbers_context.set_list("digits", DIGITS.keys())
