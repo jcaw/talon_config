@@ -110,7 +110,12 @@ ctx.keymap(
     {
         "(uppercase | ship) {basic.alphabet}+ [(lowercase | sunk)]": uppercase_letters,
         "{basic.modifiers}* {basic.alphabet}+": press_keys,
-        "{basic.modifiers}* {basic.digits}+": press_keys,
+        # Force straight numbers to be spoken with a prefix to avoid ambiguity
+        # with repeats.
+        "numb {basic.digits}++": press_keys,
+        # Allow the "numb" pattern to be used wherever we input number keys,
+        # but don't make it mandatory.
+        "{basic.modifiers}+ [numb] {basic.digits}++": press_keys,
         "{basic.modifiers}* {basic.keys}+": press_keys,
         "(go | {basic.modifiers}+) {basic.arrows}+": press_keys,
     }
