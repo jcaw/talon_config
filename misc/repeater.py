@@ -39,7 +39,7 @@ ctx.set_list("ordinals", ordinals.keys())
 
 
 def repeat(m):
-    o = m.ordinals
+    o = m.ordinals[0]
     repeater = Rep(int(ordinals[o]))
     repeater.ctx = talon
     return repeater(None)
