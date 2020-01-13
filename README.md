@@ -22,6 +22,6 @@ Check out this blog post [Getting Started with Voice Driven Development](https:/
 You will need to supplement this starter pack with additional modules depending on your needs. For example, you may need modules for some applications you use, languages you write, or your preferred text editor. Check out the following repositories for additional modules:
 
 * Largest collection maintained by @dwiel: [Talon Community](https://github.com/dwiel/talon_community) 
-* Mine: [Talon Configs](https://github.com/2shea/talon_configs)
+* @2shae's config (Mac): [Talon Configs](https://github.com/2shea/talon_configs)
 * Examples written by @aegis: [Talon Examples](https://github.com/talonvoice/examples)
 * @anonfunc's set: [Talon User](https://github.com/anonfunc/talon-user)
