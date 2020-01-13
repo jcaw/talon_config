@@ -1,7 +1,7 @@
 from talon.voice import Str, press
 import talon.clip as clip
 from talon import resource
-from .bundle_groups import FILETYPE_SENSITIVE_BUNDLES
+from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
 import json
 import platform
 
@@ -16,7 +16,7 @@ ON_MAC = platform.system() == "Darwin"
 # - force homophone preference (alternate homophones can be accessed with homophones command)
 
 # To add an override, add the word to override as the key and desired replacement as value in overrides.json
-mapping = json.load(resource.open("overrides.json"))
+mapping = json.load(resource.open("../overrides.json"))
 
 # used for auto-spacing
 punctuation = set(".,-!?")
