@@ -115,7 +115,7 @@ class DragAndDrop(object):
     def __enter__(self):
         drag()
 
-    def __exit__(self):
+    def __exit__(self, *_):
         drop()
 
 
