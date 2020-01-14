@@ -319,3 +319,14 @@ mouse_context.keymap(
         "center [mouse]": center_mouse,
     }
 )
+
+
+def delayed_drop(m=None):
+    """Wait, then drop.
+
+    Some drag actions require that the mouse wait in the drop position for a
+    little while before dropping.
+
+    """
+    time.sleep(0.3)
+    drop()
