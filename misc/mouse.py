@@ -290,9 +290,9 @@ mouse_context.keymap(
         "(track | eye) mouse": toggle_eye_mouse_exclusive,
         "zoom mouse": toggle_zoom_mouse_exclusive,
         "camera overlay": lambda m: eye_mouse.camera_overlay.toggle(),
-        "click": click,
         "run calibration": lambda m: eye_mouse.calib_start(),
         # Clicks
+        "click": click,
         "(rick | rickle | right click)": dynamic_action(right_click),
         "(mickle | middle click)": dynamic_action(middle_click),
         # "(click | chiff)": dynamic_action(click),
