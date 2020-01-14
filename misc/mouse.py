@@ -3,7 +3,7 @@
 import time
 import logging
 
-from talon import ctrl, ui
+from talon import ctrl, ui, cron
 from talon.voice import Context, ContextGroup
 from talon.track.geom import Point2d
 
@@ -297,8 +297,8 @@ mouse_context.keymap(
         "(mickle | middle click)": dynamic_action(middle_click),
         "double": dynamic_action(double_click),
         "triple": dynamic_action(triple_click),
-        "drag": dynamic_action(drag),
-        "(drop | put)": dynamic_action(drop),
+        "drag": backdated(drag),
+        "(drop | put)": backdated(drop),
         # Hiss misrecognitions:
         # "is": do_nothing,
         # "this is": do_nothing,
@@ -330,3 +330,18 @@ def delayed_drop(m=None):
     """
     time.sleep(0.3)
     drop()
+
+
+def queue_drag_drop(m):
+    queue_zoom_action(drag)(m)
+    # Add drop on a delay so the ding rings twice.
+    cron.after("100ms", lambda: queue_zoom_action(delayed_drop)(m))
+
+
+zoom_mouse_context.keymap(
+    {
+        # A drag implies a drop - so just queue both.
+        "drag": queue_drag_drop,
+        "(drop | put)": lambda m: queue_zoom_action(delayed_drop)(m),
+    }
+)
