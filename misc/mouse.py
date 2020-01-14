@@ -21,6 +21,7 @@ from ..utils.eye_mouse import (
     FrozenEyeMouse,
     toggle_eye_mouse_exclusive,
     toggle_zoom_mouse_exclusive,
+    clear_zoom_queue,
     TempEyeMouse,
 )
 from ..utils.auto_context import AutoContext
@@ -235,6 +236,8 @@ class ZoomMove(object):
 
     def __enter__(self):
         """Close the zoom, moving the mouse but not clicking it."""
+        # TODO: Audit. Should we move and cancel? Cancel separately?
+        clear_zoom_queue()
         final_position = cancel_zoom()
         if final_position:
             ctrl.mouse_move(final_position.x, final_position.y)
