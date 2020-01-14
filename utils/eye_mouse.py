@@ -62,8 +62,9 @@ def enable_eye_mouse():
 
 
 def clear_zoom_queue():
-    if eye_zoom_mouse.zoom_mouse.queued_action:
-        eye_zoom_mouse.zoom_mouse.cancel_action()
+    # Possible race here. Not important or likely to happen; tolerate it.
+    if not eye_zoom_mouse.zoom_mouse.queued_actions.empty():
+        eye_zoom_mouse.zoom_mouse.cancel_actions()
         if config.BUFFERED_CLICK_SOUNDS:
             sound.play_cancel()
 
