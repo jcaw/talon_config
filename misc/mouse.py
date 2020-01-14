@@ -250,7 +250,7 @@ mouse_group = ContextGroup("mouse_group")
 
 
 zoom_mouse_context = AutoContext("zoom_mouse", func=zoom_mouse_enabled)
-hiss_mapper.register(zoom_mouse_context, TempEyeMouse(), gap_tolerance=200)
+hiss_mapper.register(zoom_mouse_context, ZoomMove())
 
 
 not_zoom_mouse_context = AutoContext(
