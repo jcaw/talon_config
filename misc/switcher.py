@@ -1,6 +1,8 @@
 from talon.voice import Word, Context, Key, Rep, Str, press
 from talon import ui
 
+# TODO: Make multiplatform so it works on windows
+
 apps = {}
 
 overrides = {"from": "Google Chrome"}
