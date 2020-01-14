@@ -295,7 +295,6 @@ mouse_context.keymap(
         "click": click,
         "(rick | rickle | right click)": dynamic_action(right_click),
         "(mickle | middle click)": dynamic_action(middle_click),
-        # "(click | chiff)": dynamic_action(click),
         "double": dynamic_action(double_click),
         "triple": dynamic_action(triple_click),
         "drag": dynamic_action(drag),
