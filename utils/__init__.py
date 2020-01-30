@@ -251,3 +251,10 @@ def multi_map(mapping):
         else:
             result[key] = value
     return result
+
+
+def apply_function(function, dict_):
+    """Apply a function to each value in a dict."""
+    for command, args in dict_.items():
+        dict_[command] = function(*args)
+    return dict_
