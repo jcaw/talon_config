@@ -4,6 +4,7 @@ from talon import resource
 from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
 import json
 import platform
+import time
 
 
 ON_WINDOWS = platform.system() == "Windows"
@@ -173,7 +174,7 @@ def preserve_clipboard(fn):
     def wrapped_function(*args, **kwargs):
         old = clip.get()
         ret = fn(*args, **kwargs)
-        sleep(0.1)
+        time.sleep(0.1)
         clip.set(old)
         return ret
 
