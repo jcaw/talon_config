@@ -198,3 +198,24 @@ def jump_to_target(target):
     for i in range(0, len(target)):
         press("shift-right")
     press("right", wait=0)
+
+
+def chain(*commands, pause=0.05):
+    """Chain multiple commands together.
+
+    Creates a "chain" that (when executed) calls each ``command``, one by one,
+    pausing between each. Arguments are passed through directly. Designed to
+    create a chain of speech commands, but it will work with any list of
+    callables.
+
+    """
+    for command in commands:
+        assert callable(command), "Positional arguments must all be callable"
+
+    def do_commands(*args, **kwargs):
+        nonlocal commands, pause
+        for command in commands:
+            command(*args, **kwargs)
+            time.sleep(pause)
+
+    return do_commands
