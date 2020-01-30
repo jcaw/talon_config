@@ -339,6 +339,6 @@ zoom_mouse_context.keymap(
     {
         # A drag implies a drop - so just queue both.
         "drag": queue_drag_drop,
-        "(drop | put)": lambda m: queue_zoom_action(delayed_drop)(m),
+        "(drop | put)": queue_zoom_action(delayed_drop),
     }
 )
