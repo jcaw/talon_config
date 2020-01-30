@@ -219,3 +219,13 @@ def chain(*commands, pause=0.05):
             time.sleep(pause)
 
     return do_commands
+
+
+def dictify(list_):
+    """Pull `list_` into a dict where each item maps to itself.
+
+    >>> dictify(["a", "b", "c"])
+    {"a": "a", "b": "b", "c": "c"}
+
+    """
+    return {element: element for element in list_}
