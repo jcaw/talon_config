@@ -1,3 +1,5 @@
+import time
+
 from talon import ctrl
 from talon.voice import Context, Key
 
@@ -18,10 +20,20 @@ def minimize(m=None):
         _not_implemented()
 
 
+def _with_win_press(keys):
+    """Press ``keys`` with the windows key held down."""
+    ctrl.key_press("win", down=True)
+    try:
+        for key in keys:
+            Key(f"{key}")(None)
+            time.sleep(0.05)
+    finally:
+        ctrl.key_press("win", up=True)
+
+
 def maximize(m=None):
     if ON_WINDOWS:
-        for i in range(3):
-            Key("win-up")(None)
+        _with_win_press(["up"] * 3)
     else:
         _not_implemented()
 
@@ -44,12 +56,7 @@ def make_windows_align(directions):
         nonlocal directions
         # Maximize first to reset
         maximize()
-        ctrl.key_press("win", down=True)
-        try:
-            for direction in directions:
-                Key(f"{direction}")(None)
-        finally:
-            ctrl.key_press("win", up=True)
+        _with_win_press(directions)
 
     return do_align
 
