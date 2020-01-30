@@ -260,12 +260,9 @@ pop_mapper.register(not_zoom_mouse_context, click)
 
 
 zooming_context = AutoContext("zoom_mouse_zooming", func=zooming, group=mouse_group)
-hiss_mapper.register(
-    zooming_context,
-    ZoomMove(),
-    # Want this to override default zoom_mouse action.
-    priority=1,
-)
+# We might want to use different hiss actions in specific contexts, but retain
+# hiss to move when zooming.
+hiss_mapper.register(zooming_context, ZoomMove(), priority=10)
 
 
 eye_mouse_context = AutoContext("eye_mouse", func=eye_mouse_enabled, group=mouse_group)
