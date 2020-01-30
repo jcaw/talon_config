@@ -38,7 +38,7 @@ def maximize(m=None):
         _not_implemented()
 
 
-# Direction to match
+# Alignment commands for windows. Structure: `{command_root: key_sequence}`
 windows_alignments = {
     "right": ("right", "right"),
     "left": ("left", "left"),
