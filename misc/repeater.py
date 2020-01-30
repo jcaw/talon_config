@@ -35,25 +35,28 @@ def ordinal(n):
 
 
 for n in range(2, 100):
-    ordinals[ordinal(n)] = n - 1
+    ordinals[ordinal(n)] = n
 
 ctx.set_list("ordinals", ordinals.keys())
 
 
 def make_repeater(repeats):
-    repeater = Rep(int(repeats))
-    repeater.ctx = talon
-    return repeater(None)
+    if repeats >= 1:
+        repeater = Rep(int(repeats))
+        repeater.ctx = talon
+        return repeater(None)
+    else:
+        return None
 
 
 def ordinal_repeat(m):
-    o = m.ordinals[0]
-    return make_repeater(ordinals[o])
+    nth = m.ordinals[0]
+    return make_repeater(ordinals[nth] - 1)
 
 
 def digit_repeat(m):
     n = number_from_digits(m)
-    return make_repeater(n)
+    return make_repeater(n - 1)
 
 
 ctx.keymap({"{repeater.ordinals}": ordinal_repeat})
