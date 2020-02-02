@@ -314,6 +314,7 @@ mouse_context.keymap(
         # "wheel down here": [mouse_center, mouse_smooth_scroll(250)],
         # "wheel up here": [mouse_center, mouse_smooth_scroll(-250)],
         "center [mouse]": center_mouse,
+        "(unqueue | clear [zoom] [mouse] queue)": clear_zoom_queue,
     }
 )
 

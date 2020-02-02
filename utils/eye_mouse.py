@@ -61,7 +61,7 @@ def enable_eye_mouse():
     eye_mouse.control_mouse.enable()
 
 
-def clear_zoom_queue():
+def clear_zoom_queue(m=None):
     # Possible race here. Not important or likely to happen; tolerate it.
     if not eye_zoom_mouse.zoom_mouse.queued_actions.empty():
         eye_zoom_mouse.zoom_mouse.cancel_actions()
