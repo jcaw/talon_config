@@ -314,6 +314,8 @@ mouse_context.keymap(
         # "is": do_nothing,
         # "this is": do_nothing,
         # "this": do_nothing,
+        # Click immediately, in the current location.
+        "{basic.modifiers}* {mouse.clicks} (that | here | there)": click_from_phrase,
         # TODO: Remove, replace with something more generic.
         # "do paste": [dubclick, Key("ctrl-v")],
         # "do koosh": [dubclick, Key("ctrl-c")],
