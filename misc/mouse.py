@@ -309,10 +309,6 @@ mouse_context.keymap(
         # TODO: How to handle drag/drop? Just procedural or have both?
         "drag": backdated(drag),
         "(drop | put)": backdated(drop),
-        # Hiss misrecognitions:
-        # "is": do_nothing,
-        # "this is": do_nothing,
-        # "this": do_nothing,
         # Click immediately, in the current location.
         "{basic.modifiers}* {mouse.clicks} (that | here | there)": click_from_phrase,
         # TODO: Remove, replace with something more generic.
