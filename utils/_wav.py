@@ -71,9 +71,23 @@ def load_wav(path):
     return _WavSource(path)
 
 
+_players = {}
+
+
 def play_wav(path):
+    global _players
     wav = load_wav(path)
-    # TODO: Leak? Understand how this is destroyed.
-    player = _Player(wav.samplerate, cubeb.SampleFormat.S16LE, wav.channels)
+    # Player seems to leak. Creating many players eventually causes audio to
+    # corrupt. We can re-use old players to prevent it.
+    #
+    # NOTE this will play identically sampled wavs one by one, but differently
+    # sampled wavs in parallel.
+    #
+    # TODO: Allow multiple wavs to be played at once without corrupting.
+    player_key = (wav.samplerate, wav.channels)
+    player = _players.get(player_key)
+    if not player:
+        player = _Player(wav.samplerate, cubeb.SampleFormat.S16LE, wav.channels)
+        _players[player_key] = player
     player.append(wav.samples)
     return player
