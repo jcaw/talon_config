@@ -339,7 +339,7 @@ def queue_drag_drop(m):
 
 zoom_mouse_context.keymap(
     {
-        # A drag implies a drop - so just queue both.
+        # A drag implies a drop. Since we're queuing, we can just queue both.
         "drag": queue_drag_drop,
         "(drop | put)": queue_zoom_action(delayed_drop),
     }
