@@ -23,7 +23,6 @@ from ..utils.eye_mouse import (
     toggle_eye_mouse_exclusive,
     toggle_zoom_mouse_exclusive,
     clear_zoom_queue,
-    TempEyeMouse,
 )
 from ..utils.auto_context import AutoContext
 from ..utils.noise import hiss_mapper, pop_mapper
