@@ -331,6 +331,7 @@ def delayed_drop(m=None):
 
 
 def queue_drag_drop(m):
+    """Queue a drag, plus the subsequent drop, on the zoom mouse."""
     queue_zoom_action(drag)(m)
     # Add drop on a delay so the ding rings twice.
     cron.after("150ms", lambda: queue_zoom_action(delayed_drop)(m))
