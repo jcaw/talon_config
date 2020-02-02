@@ -9,9 +9,10 @@ from talon.track.geom import Point2d
 
 from talon_plugins import eye_mouse, eye_zoom_mouse
 
+from . import basic
 from .. import utils
 from ..utils import ON_WINDOWS
-from ..utils import sound
+from ..utils import sound, multi_map
 from ..utils.mouse_history import backdated_position
 from ..utils.eye_mouse import (
     zooming,
@@ -271,15 +272,31 @@ hiss_mapper.register(eye_mouse_context, DragAndDrop(), gap_tolerance=200)
 
 mouse_context = Context("mouse", group=mouse_group)
 
-click_phrases = {
-    "click": click,
-    "(rick | rickle)": right_click,
-    "middle": middle_click,
-    "double": double_click,
-    "triple": triple_click,
-    "drag": drag,
-    "drop": drop,
-}
+click_phrases = multi_map(
+    {
+        "click": click,
+        ("rick", "rickle"): right_click,
+        ("mickle", "middle"): middle_click,
+        "double": double_click,
+        "triple": triple_click,
+        "drag": drag,
+        "drop": drop,
+    }
+)
+
+mouse_context.set_list("clicks", click_phrases.keys())
+
+
+def click_from_phrase(m):
+    # TODO: Maybe allow multiple clicks here?
+    spoken_click = m.clicks[0]
+    click_function = click_phrases.get(spoken_click)
+    modifiers = basic.get_modifiers(m)
+
+    with basic.Modifiers(modifiers):
+        if click_function:
+            click_function()
+
 
 mouse_context.keymap(
     {
@@ -289,23 +306,14 @@ mouse_context.keymap(
         "camera overlay": lambda m: eye_mouse.camera_overlay.toggle(),
         "calibrate": lambda m: eye_mouse.calib_start(),
         # Clicks
-        "click": click,
-        "(rick | rickle | right click)": dynamic_action(right_click),
-        "(mickle | middle click)": dynamic_action(middle_click),
-        "double": dynamic_action(double_click),
-        "triple": dynamic_action(triple_click),
+        "{basic.modifiers}* {mouse.clicks}": dynamic_action(click_from_phrase),
+        # TODO: How to handle drag/drop? Just procedural or have both?
         "drag": backdated(drag),
         "(drop | put)": backdated(drop),
         # Hiss misrecognitions:
         # "is": do_nothing,
         # "this is": do_nothing,
         # "this": do_nothing,
-        # Modifier clicks:
-        # TODO: Should be rule-based, not hard-coded.
-        "control click": with_keys(["ctrl"], dynamic_action(click)),
-        "shift click": with_keys(["shift"], dynamic_action(click)),
-        "super click": with_keys(["super"], dynamic_action(click)),
-        "alt click": with_keys(["alt"], dynamic_action(click)),
         # TODO: Remove, replace with something more generic.
         # "do paste": [dubclick, Key("ctrl-v")],
         # "do koosh": [dubclick, Key("ctrl-c")],
