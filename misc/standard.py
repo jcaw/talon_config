@@ -2,7 +2,15 @@ from talon.voice import Word, Context, Key, Str, press
 from talon import app, clip, ui
 from talon_init import TALON_HOME, TALON_PLUGINS, TALON_USER
 import string
-from ..utils import surround, parse_words, parse_word, sentence_text, text, word
+from user.utils import (
+    surround,
+    parse_words,
+    parse_word,
+    sentence_text,
+    text,
+    word,
+    ctrl_cmd,
+)
 from talon.engine import engine
 
 
@@ -99,25 +107,25 @@ keymap.update(
         # "string utf8": "'utf8'",
         # "state past": "pass",
         "shebang bash": "#!/bin/bash -u\n",
-        "new window": Key("cmd-n"),
         "next window": Key("cmd-`"),
         "last window": Key("cmd-shift-`"),
         # 'next app': Key('cmd-tab'),
         # 'last app': Key('cmd-shift-tab'),
         "next tab": Key("ctrl-tab"),
-        "new tab": Key("cmd-t"),
         "last tab": Key("ctrl-shift-tab"),
         "next space": Key("cmd-alt-ctrl-right"),
         "last space": Key("cmd-alt-ctrl-left"),
         "zoom [in]": Key("cmd-+"),
         "zoom out": Key("cmd--"),
+        "new window": ctrl_cmd("n"),
+        "new tab": ctrl_cmd("t"),
         "(page | scroll) up": Key("pgup"),
         "(page | scroll) [down]": Key("pgdown"),
-        "copy": Key("cmd-c"),
-        "cut": Key("cmd-x"),
-        "paste": Key("cmd-v"),
-        "(undo | under | skunks)": Key("cmd-z"),
-        "redo": Key("cmd-shift-z"),
+        "copy": ctrl_cmd("c"),
+        "cut": ctrl_cmd("x"),
+        "paste": ctrl_cmd("v"),
+        "(undo | scrap)": ctrl_cmd("z"),
+        "redo": ctrl_cmd("shift-z"),
         # "menu help": Key("cmd-shift-?"),
         # "spotlight": Key("cmd-space"),
         # "(bass | clear | scratch )": Key("cmd-backspace"),

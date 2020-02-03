@@ -1,4 +1,4 @@
-from talon.voice import Str, press
+from talon.voice import Str, press, Key
 import talon.clip as clip
 from talon import resource
 from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
@@ -258,3 +258,18 @@ def apply_function(function, dict_):
     for command, args in dict_.items():
         dict_[command] = function(*args)
     return dict_
+
+
+def invalid_platform(*_, **__):
+    raise NotImplementedError("Not implemented on this platform.")
+
+
+def ctrl_cmd(key):
+    """Press a key with ctrl on Windows/Linux, cmd on Mac."""
+    if ON_WINDOWS or ON_LINUX:
+        return Key(f"ctrl-{key}")
+    elif ON_MAC:
+        return Key(f"cmd-{key}")
+    else:
+        # TODO: Add this to utils
+        invalid_platform()
