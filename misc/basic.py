@@ -1,4 +1,4 @@
-from talon import app
+from talon import app, ctrl
 from talon.voice import Context, Str, press
 import string
 
@@ -121,6 +121,22 @@ def press_keys(m):
         keys = keys[1:]
     for k in keys:
         press(k)
+
+
+class Modifiers(object):
+    """Context manager that holds down modifiers during the context."""
+
+    def __init__(self, modifiers):
+        self.modifiers = modifiers
+
+    # TODO: Replace these with key actions once they support up and down.
+    def __enter__(self):
+        for modifier in self.modifiers:
+            ctrl.key_press(modifier, down=True)
+
+    def __exit__(self, *_):
+        for modifier in self.modifiers:
+            ctrl.key_press(modifier, up=True)
 
 
 ctx = Context("basic")
