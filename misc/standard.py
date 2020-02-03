@@ -115,10 +115,11 @@ keymap.update(
         "last tab": Key("ctrl-shift-tab"),
         "next space": Key("cmd-alt-ctrl-right"),
         "last space": Key("cmd-alt-ctrl-left"),
-        "zoom [in]": Key("cmd-+"),
-        "zoom out": Key("cmd--"),
         "new window": ctrl_cmd("n"),
         "new tab": ctrl_cmd("t"),
+        # TODO: Alternate zoom commands
+        # "zoom in": Key("cmd-+"),
+        # "zoom out": Key("cmd--"),
         "(page | scroll) up": Key("pgup"),
         "(page | scroll) [down]": Key("pgdown"),
         "copy": ctrl_cmd("c"),
