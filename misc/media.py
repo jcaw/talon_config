@@ -6,7 +6,7 @@ from talon.voice import Context, Key
 
 from .vocab import NEXT, PREVIOUS
 from user.misc.numbers import numeric, pass_number
-from user.utils import ON_WINDOWS
+from user.utils import ON_WINDOWS, invalid_platform
 
 context = Context("media_keys")
 
@@ -27,16 +27,12 @@ def hacky_set_volume_windows(percent):
         Key("volup")(None)
 
 
-def not_implemented(percent):
-    raise NotImplementedError("Not implemented on this platform.")
-
-
 # HACK: Use heuristics until Talon has a formal API for setting the volume.
 # Platform-dependent implementation.
 if ON_WINDOWS:
     set_volume = hacky_set_volume_windows
 else:
-    set_volume = not_implemented
+    set_volume = invalid_platform
 
 
 context.keymap(

@@ -3,12 +3,8 @@ import time
 from talon import ctrl
 from talon.voice import Context, Key
 
-from user.utils import ON_WINDOWS, ON_LINUX, ON_MAC
+from user.utils import ON_WINDOWS, ON_LINUX, ON_MAC, invalid_platform
 from user.misc.numbers import numeric, pass_number
-
-
-def _not_implemented():
-    raise NotImplementedError("Not implemented on this platform.")
 
 
 def minimize(m=None):
@@ -17,7 +13,7 @@ def minimize(m=None):
         # The effect should be similar though.
         Key("alt-esc")(None)
     else:
-        _not_implemented()
+        invalid_platform()
 
 
 def _with_win_press(keys):
@@ -35,7 +31,7 @@ def maximize(m=None):
     if ON_WINDOWS:
         _with_win_press(["up"] * 3)
     else:
-        _not_implemented()
+        invalid_platform()
 
 
 # Alignment commands for windows. Structure: `{command_root: key_sequence}`
