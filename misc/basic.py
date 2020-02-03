@@ -4,7 +4,19 @@ import string
 
 from . import numbers
 
-alpha_alt = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
+defaults = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
+# With modifications for things that aren't recognizing well on this end.
+modified_defaults = (
+    " ".join(defaults)
+    .replace("air", "arch")
+    .replace("bat", "batch")
+    .replace("zip", "zen")
+    .split()
+)
+# my_old_alphabet = "arch brov char dell ed fomp goof hark ice jinks koop lug mowsh nerb ork pooch quash rosh souk tech unks verge womp trex yang zooch".split()
+phonetic_alphabet = modified_defaults
+
+alphabet = dict(zip(phonetic_alphabet, string.ascii_lowercase))
 
 f_keys = {f"F {i}": f"f{i}" for i in range(1, 13)}
 simple_keys = ["tab", "escape", "enter", "space", "pageup", "pagedown"]
@@ -45,7 +57,6 @@ elif app.platform == "windows":
 elif app.platform == "linux":
     modifiers["super"] = "super"
 
-alphabet = dict(zip(alpha_alt, string.ascii_lowercase))
 simple_keys = {k: k for k in simple_keys}
 keys = {}
 keys.update(f_keys)
