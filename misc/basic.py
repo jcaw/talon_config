@@ -153,7 +153,13 @@ def get_modifiers(m):
 
 
 def get_keys(m):
-    groups = ["keys_list", "arrows_list", "digits_list", "alphabet_list"]
+    groups = [
+        "keys_list",
+        "arrows_list",
+        "digits_list",
+        "alphabet_list",
+        "full_keymap_list",
+    ]
     for group in groups:
         try:
             return [keymap[k] for k in m[group]]
@@ -210,4 +216,5 @@ ctx.keymap(
 ctx.set_list("alphabet", alphabet.keys())
 ctx.set_list("arrows", arrows.keys())
 ctx.set_list("keys", keys.keys())
+ctx.set_list("full_keymap", keymap.keys())
 ctx.set_list("modifiers", modifiers.keys())
