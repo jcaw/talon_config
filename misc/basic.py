@@ -74,18 +74,22 @@ elif app.platform == "windows":
 elif app.platform == "linux":
     modifiers["super"] = "super"
 
-simple_keys = {k: k for k in simple_keys}
-keys = {}
-keys.update(f_keys)
-keys.update(simple_keys)
-keys.update(alternate_keys)
-keys.update(symbols)
+keys = {
+    #
+    **f_keys,
+    **simple_keys,
+    **alternate_keys,
+    **symbols,
+}
 
 # map alnum and keys separately so engine gives priority to letter/number repeats
-keymap = keys.copy()
-keymap.update(arrows)
-keymap.update(alphabet)
-keymap.update(numbers.DIGITS)
+keymap = {
+    #
+    **keys,
+    **arrows,
+    **alphabet,
+    **numbers.DIGITS,
+}
 
 
 def insert(s):
