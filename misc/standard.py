@@ -12,6 +12,7 @@ from user.utils import (
     ctrl_cmd,
 )
 from talon.engine import engine
+from .vocab import NEXT, PREVIOUS
 
 
 def engine_update(j):
@@ -107,16 +108,16 @@ keymap.update(
         # "string utf8": "'utf8'",
         # "state past": "pass",
         "shebang bash": "#!/bin/bash -u\n",
-        "next window": Key("cmd-`"),
-        "last window": Key("cmd-shift-`"),
-        # 'next app': Key('cmd-tab'),
-        # 'last app': Key('cmd-shift-tab'),
-        "next tab": Key("ctrl-tab"),
-        "last tab": Key("ctrl-shift-tab"),
-        "next space": Key("cmd-alt-ctrl-right"),
-        "last space": Key("cmd-alt-ctrl-left"),
         "new window": ctrl_cmd("n"),
+        # NEXT + " window": Key("cmd-`"),
+        # PREVIOUS + " window": Key("cmd-shift-`"),
+        # NEXT + ' app': Key('cmd-tab'),
+        # PREVIOUS + ' app': Key('cmd-shift-tab'),
         "new tab": ctrl_cmd("t"),
+        NEXT + " tab": Key("ctrl-tab"),
+        PREVIOUS + " tab": Key("ctrl-shift-tab"),
+        # NEXT + " space": Key("cmd-alt-ctrl-right"),
+        # PREVIOUS + " space": Key("cmd-alt-ctrl-left"),
         # TODO: Alternate zoom commands
         # "zoom in": Key("cmd-+"),
         # "zoom out": Key("cmd--"),
