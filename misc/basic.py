@@ -64,9 +64,11 @@ arrows = {"pup": "up", **dictify(["down", "right", "left"])}
 }
 if app.platform == "mac":
     modifiers["command"] = "cmd"
+    modifiers["super"] = "cmd"
     modifiers["option"] = "alt"
 elif app.platform == "windows":
     modifiers["windows"] = "win"
+    modifiers["super"] = "win"
 elif app.platform == "linux":
     modifiers["super"] = "super"
 
