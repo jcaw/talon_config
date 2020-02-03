@@ -101,10 +101,10 @@ keymap = {
     "(scrap | scratch | delete) word": Key("alt-backspace"),
     "(scrap | scratch | delete) (begin | start)": Key("cmd-backspace"),
     # navigation
-    "push": Key("cmd-right"),
-    "pop": Key("cmd-left"),
-    "step": Key("alt-right"),
-    "stone": Key("alt-left"),
+    # "push": Key("cmd-right"),
+    # "pop": Key("cmd-left"),
+    # "step": Key("alt-right"),
+    # "stone": Key("alt-left"),
     "jump to <dgndictation>": jump_to,
 }
 
