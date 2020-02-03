@@ -24,4 +24,4 @@ You will need to supplement this starter pack with additional modules depending 
 * Largest collection maintained by @dwiel: [Talon Community](https://github.com/dwiel/talon_community) 
 * @2shae's config (Mac): [Talon Configs](https://github.com/2shea/talon_configs)
 * Examples written by @aegis: [Talon Examples](https://github.com/talonvoice/examples)
-* @anonfunc's set: [Talon User](https://github.com/anonfunc/talon-user)
+* @anonfunc's config (Mac): [Talon User](https://github.com/anonfunc/talon-user)
