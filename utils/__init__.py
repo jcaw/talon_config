@@ -273,3 +273,19 @@ def ctrl_cmd(key):
     else:
         # TODO: Add this to utils
         invalid_platform()
+
+
+def prepend_arg(arg, dict_):
+    """Prepend ``arg`` to each value in ``dict_``.
+
+    For example:
+
+    >>> prepend_arg("tuna", {"a": [1, 2], "b": [3, 4, 5]})
+    {"a": ["tuna", 1, 2], "b": ["tuna", 3, 4, 5]}
+
+    Use to make maps with many instances of identical data more concise.
+
+    """
+    for key, arg_list in dict_.items():
+        dict_[key] = (arg, *arg_list)
+    return dict_
