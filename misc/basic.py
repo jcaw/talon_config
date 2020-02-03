@@ -3,6 +3,7 @@ from talon.voice import Context, Str, press
 import string
 
 from . import numbers
+from user.utils import dictify, multi_map
 
 defaults = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
 # With modifications for things that aren't recognizing well on this end.
@@ -18,32 +19,6 @@ phonetic_alphabet = modified_defaults
 
 alphabet = dict(zip(phonetic_alphabet, string.ascii_lowercase))
 
-simple_keys = ["tab", "escape", "enter", "space", "pageup", "pagedown"]
-alternate_keys = {"delete": "backspace", "forward delete": "delete"}
-symbols = {
-    "back tick": "`",
-    "comma": ",",
-    "dot": ".",
-    "period": ".",
-    "semi": ";",
-    "semicolon": ";",
-    "quote": "'",
-    "L square": "[",
-    "left square": "[",
-    "square": "[",
-    "R square": "]",
-    "right square": "]",
-    "forward slash": "/",
-    "slash": "/",
-    "backslash": "\\",
-    "minus": "-",
-    "dash": "-",
-    "equals": "=",
-}
-modifiers = {
-    "control": "ctrl",
-    "shift": "shift",
-    "alt": "alt",
 
 # FIXME: F keys don't work under Windows Dragon - guessing they might be
 #   reserved, I don't think they work under NatLink either.
@@ -63,7 +38,81 @@ f_keys = make_f_keys()
 # we keep simple arrows separate because "up" has a high false positive rate.
 # It's replaced with "pup".
 arrows = {"pup": "up", **dictify(["down", "right", "left"])}
+simple_keys = dictify(
+    [
+        "tab",
+        "escape",
+        "enter",
+        "space",
+        "pageup",
+        "pagedown",
+        "backspace",
+        "delete",
+        "home",
+        "end",
+    ]
+)
+alternate_keys = {
+    # b[ackward k]ill
+    "bill": "backspace",
+    # f[orward k]ill
+    "fill": "delete",
+    # "pat": "space",
+    "pack": "space",
+    "scape": "escape",
+    "knock": "end",
 }
+symbols = multi_map(
+    {
+        ("back tick", "grave"): "`",
+        ("comma", "cam"): ",",
+        ("dot", "period", "full stop"): ".",
+        ("semicolon", "semi"): ";",
+        ("apostrophe", "quote"): "'",
+        ("double quote", "speech mark", "speech"): '"',
+        # Parens
+        ("lub", "left paren"): "(",
+        ("rub", "right paren"): ")",
+        "parens": "( ) left",
+        # Curly Braces
+        ("lace", "left brace"): "{",
+        ("race", "right brace"): "}",
+        "braces": "{ } left",
+        # Square Braces
+        ("lack", "left square"): "[",
+        ("rack", "right square"): "]",
+        "squares": "[ ] left",
+        # Angles
+        ("langle", "less than"): "<",
+        ("rangle", "greater than"): ">",
+        "angles": "< > left",
+        # Currency
+        "dollar": "$",
+        "pound": "£",
+        "euro": "€",  # FIXME: types "4"
+        # Unsorted
+        ("forward slash", "slash"): "/",
+        "backslash": "\\",
+        "plus": "+",
+        ("minus", "dash"): "-",
+        ("equals", "eek"): "=",
+        "hash": "#",
+        ("question mark", "question", "quess"): "?",
+        ("exclamation", "exclamation mark", "bang"): "!",
+        "tilde": "~",
+        ("underscore", "score"): "_",
+        ("colon", "coal"): ":",
+        ("asterisk", "star"): "*",
+        ("percent", "mod"): "%",
+        "caret": "^",
+        "at sign": "@",
+        ("ampersand", "amper"): "&",
+        "pipe": "|",
+    }
+)
+modifiers = multi_map(
+    {("control", "troll"): "ctrl", ("shift", "schiff"): "shift", "alt": "alt"}
+)
 if app.platform == "mac":
     modifiers["command"] = "cmd"
     modifiers["super"] = "cmd"
