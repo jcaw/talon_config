@@ -1,5 +1,11 @@
 from talon.voice import Key, press, Str, Context
-from ..utils import parse_word, numerals, optional_numerals, text_to_number, jump_to_target
+from ..utils import (
+    parse_word,
+    numerals,
+    optional_numerals,
+    text_to_number,
+    jump_to_target,
+)
 
 ctx = Context("generic_editor")
 
@@ -55,6 +61,7 @@ def snipline():
 
 def get_first_word(m):
     return m.dgndictation.words[0]
+
 
 def jump_to(m):
     target = get_first_word(m)
