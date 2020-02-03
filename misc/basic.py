@@ -18,7 +18,6 @@ phonetic_alphabet = modified_defaults
 
 alphabet = dict(zip(phonetic_alphabet, string.ascii_lowercase))
 
-f_keys = {f"F {i}": f"f{i}" for i in range(1, 13)}
 simple_keys = ["tab", "escape", "enter", "space", "pageup", "pagedown"]
 alternate_keys = {"delete": "backspace", "forward delete": "delete"}
 symbols = {
@@ -45,6 +44,20 @@ modifiers = {
     "control": "ctrl",
     "shift": "shift",
     "alt": "alt",
+
+def make_f_keys():
+    f_numbers = {
+        **numbers.DIGITS,
+        "ten": "10",
+        "eleven": "11",
+        "twelve": "12",
+        "thirteen": "13",
+    }
+    del f_numbers["zero"]
+    return {f"F {i}": f"f{i}" for spoken, i in f_numbers.items()}
+
+
+f_keys = make_f_keys()
 # we keep simple arrows separate because "up" has a high false positive rate.
 # It's replaced with "pup".
 arrows = {"pup": "up", **dictify(["down", "right", "left"])}
