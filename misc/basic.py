@@ -7,8 +7,6 @@ from . import numbers
 alpha_alt = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split()
 
 f_keys = {f"F {i}": f"f{i}" for i in range(1, 13)}
-# arrows are separated because 'up' has a high false positive rate
-arrows = ["left", "right", "up", "down"]
 simple_keys = ["tab", "escape", "enter", "space", "pageup", "pagedown"]
 alternate_keys = {"delete": "backspace", "forward delete": "delete"}
 symbols = {
@@ -35,6 +33,9 @@ modifiers = {
     "control": "ctrl",
     "shift": "shift",
     "alt": "alt",
+# we keep simple arrows separate because "up" has a high false positive rate.
+# It's replaced with "pup".
+arrows = {"pup": "up", **dictify(["down", "right", "left"])}
 }
 if app.platform == "mac":
     modifiers["command"] = "cmd"
@@ -46,7 +47,6 @@ elif app.platform == "linux":
 
 alphabet = dict(zip(alpha_alt, string.ascii_lowercase))
 simple_keys = {k: k for k in simple_keys}
-arrows = {k: k for k in arrows}
 keys = {}
 keys.update(f_keys)
 keys.update(simple_keys)
@@ -107,7 +107,7 @@ ctx.keymap(
         # but don't make it mandatory.
         "{basic.modifiers}+ [numb] {numbers.digits}++": press_keys,
         "{basic.modifiers}* {basic.keys}+": press_keys,
-        "(go | {basic.modifiers}+) {basic.arrows}+": press_keys,
+        "{basic.modifiers}* {basic.arrows}+": press_keys,
     }
 )
 ctx.set_list("alphabet", alphabet.keys())
