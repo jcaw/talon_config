@@ -45,6 +45,8 @@ modifiers = {
     "shift": "shift",
     "alt": "alt",
 
+# FIXME: F keys don't work under Windows Dragon - guessing they might be
+#   reserved, I don't think they work under NatLink either.
 def make_f_keys():
     f_numbers = {
         **numbers.DIGITS,
