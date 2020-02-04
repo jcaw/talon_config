@@ -275,7 +275,7 @@ def ctrl_cmd(key):
         invalid_platform()
 
 
-def prepend_arg(arg, dict_):
+def prepend_to_map(arg, dict_):
     """Prepend ``arg`` to each value in ``dict_``.
 
     For example:
