@@ -1,3 +1,5 @@
+from talon.voice import Key
+
 from user.misc.vocab import NEXT, PREVIOUS
 from ._web_context import WebContext
 
@@ -15,7 +17,7 @@ context.keymap(
         "retweet": "t",
         "mute account": "u",
         "block account": "b",
-        "[tweet] details": "enter",
+        "[tweet] details": Key("enter"),
         "(open | expand) [photo]": "o",
         "search": "/",
         "go home": "gh",
