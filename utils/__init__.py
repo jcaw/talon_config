@@ -214,7 +214,7 @@ def jump_to_target(target):
 def chain(*commands, pause=0.05):
     """Chain multiple commands together.
 
-    Creates a "chain" that (when executed) calls each ``command``, one by one,
+    Creates a function that (when executed) calls each ``command``, one by one,
     pausing between each. Arguments are passed through directly. Designed to
     create a chain of speech commands, but it will work with any list of
     callables.
