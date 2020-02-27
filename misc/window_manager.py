@@ -22,7 +22,8 @@ def _with_win_press(keys):
     try:
         for key in keys:
             Key(f"{key}")(None)
-            time.sleep(0.05)
+            # Need a relatively long pause to eliminate errors.
+            time.sleep(0.1)
     finally:
         ctrl.key_press("win", up=True)
 
