@@ -332,8 +332,10 @@ class Hook(object):
 
         """
         with self._lock:
-            if function_ in self._functions:
+            try:
                 self._functions.remove(function_)
+            except AttributeError:
+                pass
 
     def run(self):
         """Run all functions attached to the hook.
