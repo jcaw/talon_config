@@ -5,6 +5,7 @@ from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
 import json
 import platform
 import time
+from functools import wraps
 
 
 ON_WINDOWS = platform.system() == "Windows"
@@ -171,6 +172,7 @@ def is_filetype(extensions=()):
 
 
 def preserve_clipboard(fn):
+    @wraps(fn)
     def wrapped_function(*args, **kwargs):
         old = clip.get()
         ret = fn(*args, **kwargs)
