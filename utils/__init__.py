@@ -5,6 +5,8 @@ from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
 import json
 import platform
 import time
+import logging
+import threading
 from functools import wraps
 
 
@@ -300,3 +302,49 @@ def prepend_to_map(arg, dict_):
     for key, arg_list in dict_.items():
         dict_[key] = (arg, *arg_list)
     return dict_
+
+
+class Hook(object):
+    """Emacs-style hook, allows arbitrary functions to be run at specific times.
+
+    When the hook is `run`, every function attached to the hook is executed.
+    Exceptions will not interrupt subsequent functions.
+
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._functions = []
+
+    def add(self, function_):
+        """Add a function to the hook.
+
+        The function will be called whenever the hook is run.
+
+        """
+        with self._lock:
+            self._functions.append(function_)
+
+    def remove(self, function_):
+        """Remove a function from the hook. See `add`.
+
+        Will not raise an error if the function is absent.
+
+        """
+        with self._lock:
+            if function_ in self._functions:
+                self._functions.remove(function_)
+
+    def run(self):
+        """Run all functions attached to the hook.
+
+        Errors will be logged, but otherwise ignored.
+
+        """
+        with self._lock:
+            functions_copy = self._functions
+        for func in functions_copy:
+            try:
+                func()
+            except Exception as e:
+                logging.exception(f"Error running hooked function")
