@@ -171,14 +171,23 @@ def is_filetype(extensions=()):
     return matcher
 
 
+class PreserveClipboard:
+    def __init__(self):
+        self.old_clipboard = None
+
+    def __enter__(self):
+        self.old_clipboard = clip.get()
+
+    def __exit__(self):
+        time.sleep(0.1)
+        clip.set(self.old_clipboard)
+
+
 def preserve_clipboard(fn):
     @wraps(fn)
     def wrapped_function(*args, **kwargs):
-        old = clip.get()
-        ret = fn(*args, **kwargs)
-        time.sleep(0.1)
-        clip.set(old)
-        return ret
+        with PreserveClipboard():
+            return fn(*args, **kwargs)
 
     return wrapped_function
 
