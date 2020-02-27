@@ -97,7 +97,7 @@ symbols = multi_map(
         ("minus", "dash"): "-",
         ("equals", "eek"): "=",
         "hash": "#",
-        ("question mark", "question", "quess"): "?",
+        ("question mark", "question", "quest"): "?",
         ("exclamation", "exclamation mark", "bang"): "!",
         "tilde": "~",
         ("underscore", "score"): "_",
