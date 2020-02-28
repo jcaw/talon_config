@@ -1,0 +1,1 @@
+<user.newapi.formatters.formatted_dictation> [over]: insert(format_text)
