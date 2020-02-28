@@ -12,9 +12,9 @@ class install(_install):
 
 def main():
     setup(
+        #
         name="talon_config",
         version="0.1",
-        install_requires=["pre-commit", "black", "flake8"],
         cmdclass={"install": install},
     )
 

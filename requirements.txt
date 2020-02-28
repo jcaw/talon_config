@@ -1,0 +1,9 @@
+pre-commit
+black
+flake8
+requests
+bs4
+pandas
+emacs_porthole>=0.3.1
+# For some games
+keyboard
