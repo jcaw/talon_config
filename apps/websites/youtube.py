@@ -9,7 +9,7 @@ from ._web_context import WebContext
 #
 # HACK: Talon can't seem to get the title when YouTube is fullscreen - it's
 #   just empty. Activate with all empty firefox titles.
-context = WebContext("youtube", r"( \- YouTube$)|(^$)")
+context = WebContext("youtube", r"(\- YouTube$)|(^$)")
 
 
 def reset_video_speed(m):
