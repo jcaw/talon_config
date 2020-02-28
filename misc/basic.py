@@ -111,12 +111,15 @@ symbols = multi_map(
     }
 )
 modifiers = multi_map(
-    {("control", "troll"): "ctrl", ("shift", "schiff"): "shift", "alt": "alt"}
+    {
+        ("control", "troll"): "ctrl",
+        ("shift", "schiff"): "shift",
+        ("alt", "option"): "alt",
+    }
 )
 if app.platform == "mac":
     modifiers["command"] = "cmd"
     modifiers["super"] = "cmd"
-    modifiers["option"] = "alt"
 elif app.platform == "windows":
     modifiers["windows"] = "win"
     modifiers["super"] = "win"
