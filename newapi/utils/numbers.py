@@ -6,7 +6,7 @@ https://github.com/lunixbochs/community/blob/master/text/numbers.py
 
 """
 
-from talon import Context, actions
+from talon import Context, Module, actions
 
 digits = [
     "zero",
@@ -152,6 +152,14 @@ assert(test_num([1, 'million', 1, 1]) == 10000011)
 assert(test_num([1, 'million', 10, 10]) == 100001010)
 """
 
+module = Module()
+
+
+@module.capture
+def natural_number(m) -> int:
+    """Naturally-spoken number. E.g. "five hundred", "twenty four"."""
+
+
 ctx = Context()
 
 
@@ -177,11 +185,16 @@ def number_small(m):
 
 # TODO: Also allow repeating digits
 @ctx.capture(
-    "number",
+    "self.natural_number",
     rule=f"<number_small> [{alt_scales} ([and] (<number_small> | {alt_scales} | <number_small> {alt_scales}))*]",
 )
-def number(m):
+def natural_number(m) -> int:
     return fuse_num(fuse_scale(fuse_num(fuse_scale(list(m), 3))))[0]
+
+
+@ctx.capture("number", rule=f"(<self.natural_number> | <digits>)")
+def number(m):
+    return m[0]
 
 
 @ctx.capture("number_signed", rule=f"[negative] <number>")
