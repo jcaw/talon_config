@@ -1,1 +1,1 @@
-<user.newapi.formatters.formatted_dictation> [over]: insert(format_text)
+<user.newapi.formatters.formatted_dictation> [over]: format_text()
