@@ -88,6 +88,11 @@ def formatted_dictation(m) -> None:
     """Insert formatted dictation."""
 
 
+@module.capture
+def reformat_left(m) -> None:
+    """Reformat a number of words left of the cursor."""
+
+
 context = Context()
 context.lists["self.formatters"] = formatter_map.keys()
 
@@ -116,13 +121,11 @@ def formatted_dictation(m) -> None:
     actions.self.insert_complex(format_text(text, m.formatters, surrounding_text))
 
 
-# TODO: Reimplement once I have newapi numbers
-# def reformat_left(m):
-#     formatters = extract_formatters(m)
-#     number = extract_number(m)
-#     text = actions.cut_words_left(number)
-#     surrounding_text = get_surrounding_text()
-#     insert_complex(reformat_text(text, formatters, surrounding_text))
+@context.capture(rule="<self.formatters> <number>")
+def reformat_left(m):
+    text = actions.self.cut_words_left(m.number)
+    surrounding_text = actions.self.surrounding_text()
+    actions.self.insert_complex(reformat_text(text, m.formatters, surrounding_text))
 
 
 @context.action_class
