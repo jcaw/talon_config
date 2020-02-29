@@ -163,7 +163,7 @@ def natural_number(m) -> int:
 ctx = Context()
 
 
-@ctx.capture("digits", rule=f"{alt_digits}+")
+@ctx.capture("digits", rule=f"{alt_digits}++")
 def digits(m):
     return int("".join([str(digits_map[n]) for n in m]))
 
