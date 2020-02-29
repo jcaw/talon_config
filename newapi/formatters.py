@@ -73,7 +73,7 @@ class Actions:
     def cut_words_left(number: int) -> SurroundingText:
         """Cut `number` words left of the cursor."""
 
-    # TODO: Maybe extract to a more generic context
+    # TODO: Should be in a more generic module
     def insert_complex(complex_insert: ComplexInsert) -> None:
         """Input a ComplexInsert into the current program."""
 
@@ -137,6 +137,7 @@ class Actions:
 
     @preserve_clipboard
     def cut_words_left(number: int) -> SurroundingText:
+        # TODO: Use generic actions
         for i in range(number):
             actions.key("ctrl-shift-left")
         time.sleep(0.1)
