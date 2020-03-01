@@ -71,13 +71,8 @@ def formatters(m) -> List[str]:
 
 
 @module.capture
-def formatted_dictation(m) -> None:
-    """Insert formatted dictation."""
-
-
-@module.capture
-def reformat_left(m) -> None:
-    """Reformat a number of words left of the cursor."""
+def formatted_dictation(m) -> ComplexInsert:
+    """Get a complex insert for some dictation."""
 
 
 context = Context()
@@ -101,18 +96,13 @@ def formatters(m) -> List[str]:
     return [formatter_map[word] for word in formatter_words]
 
 
+
+
 @context.capture(rule="<self.formatters> <dgndictation>")
-def formatted_dictation(m) -> None:
+def formatted_dictation(m) -> str:
     text = extract_dictation(m)
     surrounding_text = actions.self.surrounding_text()
-    actions.self.insert_complex(format_text(text, m.formatters, surrounding_text))
-
-
-@context.capture(rule="<self.formatters> <number>")
-def reformat_left(m):
-    text = actions.self.cut_words_left(m.number)
-    surrounding_text = actions.self.surrounding_text()
-    actions.self.insert_complex(reformat_text(text, m.formatters, surrounding_text))
+    return format_text(text, m.formatters, surrounding_text)
 
 
 @module.action_class
@@ -133,6 +123,12 @@ class Actions:
         actions.key("ctrl-x")
         time.sleep(0.1)
         return clip.get()
+
+    def reformat_left(formatters: List[str], number: int) -> None:
+        """Reformat a number of words left of the cursor."""
+        text = actions.self.cut_words_left(number)
+        surrounding_text = actions.self.surrounding_text()
+        actions.self.insert_complex(reformat_text(text, formatters, surrounding_text))
 
     def insert_complex(complex_insert: ComplexInsert) -> None:
         """Input a ComplexInsert into the current program."""

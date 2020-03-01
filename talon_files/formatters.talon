@@ -1,2 +1,4 @@
-<user.newapi.formatters.formatted_dictation> [over]: format_text()
-<user.newapi.formatters.reformat_left>: reformat_left()
+<user.newapi.formatters.formatted_dictation> [over]:
+    user.newapi.formatters.insert_complex(formatted_dictation)
+<user.newapi.formatters.formatters> <number>:
+    user.newapi.formatters.reformat_left(formatters, number)
