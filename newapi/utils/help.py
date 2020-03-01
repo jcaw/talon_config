@@ -18,7 +18,7 @@ context = Context()
 
 def _action_declarations():
     """Generate all defined actions, as strings."""
-    for decl in registry.decls.actions.keys():
+    for decl in registry.decls.actions.values():
         yield str(decl)
 
 
