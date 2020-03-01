@@ -2,17 +2,6 @@ from talon import Module, Context, registry, clip
 
 
 module = Module()
-
-
-@module.action_class
-class Actions:
-    def print_copy_actions() -> None:
-        """Print & copy all declared actions."""
-
-    def print_copy_captures() -> None:
-        """Print & copy all declared captures."""
-
-
 context = Context()
 
 
@@ -35,10 +24,13 @@ def _print_and_copy(string):
     print("String copied to clipboard.")
 
 
+@module.action_class
 @context.action_class
 class Actions:
     def print_copy_actions() -> None:
+        """Print & copy all declared actions."""
         _print_and_copy("\n".join(_action_declarations()))
 
     def print_copy_captures() -> None:
+        """Print & copy all declared captures."""
         _print_and_copy("\n".join(_capture_declarations()))
