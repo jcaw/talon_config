@@ -116,11 +116,11 @@ class Actions:
     @preserve_clipboard
     def cut_words_left(number: int) -> str:
         """Cut `number` words left of the cursor."""
-        # TODO: Use generic actions
         for i in range(number):
+            # TODO: Use generic action
             actions.key("ctrl-shift-left")
         time.sleep(0.1)
-        actions.key("ctrl-x")
+        actions.edit.cut()
         time.sleep(0.1)
         return clip.get()
 
