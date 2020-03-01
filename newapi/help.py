@@ -25,7 +25,6 @@ def _print_and_copy(string):
 
 
 @module.action_class
-@context.action_class
 class Actions:
     def print_copy_actions() -> None:
         """Print & copy all declared actions."""

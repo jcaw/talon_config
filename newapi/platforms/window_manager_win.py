@@ -57,7 +57,6 @@ class DefaultUserActions:
 
 
 @module.action_class
-@context.action_class
 class WindowsUserActions:
     # On Windows, to alt-tab through multiple windows, you have to hold alt (or
     # alt-shift) - letting go resets. We need custom actions that eat the
