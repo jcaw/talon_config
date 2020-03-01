@@ -65,19 +65,6 @@ module = Module()
 module.list("formatters", desc="List of formatters")
 
 
-@module.action_class
-class Actions:
-    def surrounding_text() -> SurroundingText or None:
-        """Get the text on either side of the next insert."""
-
-    def cut_words_left(number: int) -> SurroundingText:
-        """Cut `number` words left of the cursor."""
-
-    # TODO: Should be in a more generic module
-    def insert_complex(complex_insert: ComplexInsert) -> None:
-        """Input a ComplexInsert into the current program."""
-
-
 @module.capture
 def formatters(m) -> List[str]:
     """List of text formatters."""
@@ -128,15 +115,18 @@ def reformat_left(m):
     actions.self.insert_complex(reformat_text(text, m.formatters, surrounding_text))
 
 
+@module.action_class
 @context.action_class
 class Actions:
     def surrounding_text():
+        """Get the text on either side of the next insert."""
         # TODO: Heuristic method for surrounding text in generic case. Try
         #   using clipboard until we have accessibility interfaces?
         return None
 
     @preserve_clipboard
     def cut_words_left(number: int) -> SurroundingText:
+        """Cut `number` words left of the cursor."""
         # TODO: Use generic actions
         for i in range(number):
             actions.key("ctrl-shift-left")
@@ -146,6 +136,7 @@ class Actions:
         return clip.get()
 
     def insert_complex(complex_insert: ComplexInsert) -> None:
+        """Input a ComplexInsert into the current program."""
         actions.insert(complex_insert.insert)
         actions.insert(complex_insert.text_after)
         for i in range(len(complex_insert.text_after)):
