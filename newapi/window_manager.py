@@ -23,3 +23,9 @@ class Actions:
 
     def maximize() -> None:
         """Maximize the current window."""
+
+    def all_programs() -> None:
+        """Show an outline of all programs"""
+
+    def toggle_fullscreen() -> None:
+        """Toggle fullscreen mode for the current window."""

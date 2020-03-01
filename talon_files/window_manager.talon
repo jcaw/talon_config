@@ -1,3 +1,10 @@
 minimize: app.window_hide()
 maximize: user.newapi.window_manager.maximize()
+quit program: app.window_close()
+(next | neck) (window | win): app.window_next()
+(last | larse) (window | win): app.window_previous()
+(new | open) (window | win): app.window_open()
+[show] programs: user.newapi.window_manager.all_programs()
+fullscreen: user.newapi.window_manager.toggle_fullscreen()
+
 align {user.newapi.window_manager.position}: user.newapi.window_manager.align_window(position)
