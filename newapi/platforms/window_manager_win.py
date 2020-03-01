@@ -42,6 +42,7 @@ class DefaultUserActions:
         if position not in _positions:
             raise ValueError("This direction is not implemented on Windows.")
         keys = _positions[position]
+        actions.user.newapi.window_manager.maximize()
         _with_win_press(keys)
 
     def maximize() -> None:
