@@ -107,14 +107,14 @@ def formatted_dictation(m) -> str:
 
 @module.action_class
 class Actions:
-    def surrounding_text():
+    def surrounding_text() -> SurroundingText:
         """Get the text on either side of the next insert."""
         # TODO: Heuristic method for surrounding text in generic case. Try
         #   using clipboard until we have accessibility interfaces?
         return None
 
     @preserve_clipboard
-    def cut_words_left(number: int) -> SurroundingText:
+    def cut_words_left(number: int) -> str:
         """Cut `number` words left of the cursor."""
         # TODO: Use generic actions
         for i in range(number):
