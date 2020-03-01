@@ -3,6 +3,9 @@ import math
 from talon import Context, actions
 
 context = Context()
+context.matches = r"""
+os: windows
+"""
 
 
 @context.action_class("user.newapi.media")

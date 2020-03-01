@@ -6,6 +6,9 @@ from talon import Context, Module, actions, ctrl
 
 module = Module()
 context = Context()
+context.matches = r"""
+os: windows
+"""
 
 
 # Spoken positions, mapped to alignment key sequences.
