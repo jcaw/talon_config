@@ -1,5 +1,7 @@
 from talon import Module, Context, registry, clip
 
+from user.utils import sound
+
 
 module = Module()
 context = Context()
@@ -33,3 +35,9 @@ class Actions:
     def print_copy_captures() -> None:
         """Print & copy all declared captures."""
         _print_and_copy("\n".join(_capture_declarations()))
+
+    def mic_test() -> None:
+        """Test recognition. Prints and plays a sound when successful."""
+        print("Recognition working!")
+        sound.play(sound.GLASS_TAP)
+        # TODO: Ping short notification
