@@ -99,18 +99,6 @@ class FrozenEyeMouse(object):
             enable_eye_mouse()
 
 
-def toggle_eye_mouse_exclusive(m):
-    """Toggle the eye mouse. Also disables the zoom mouse."""
-    disable_zoom_mouse()
-    eye_mouse.control_mouse.toggle()
-
-
-def toggle_zoom_mouse_exclusive(m):
-    """Toggle the zoom mouse. Also disables regular eye mouse."""
-    disable_eye_mouse()
-    eye_zoom_mouse.active.toggle()
-
-
 class TempEyeMouse(object):
     """Temporarily enable the eye mouse for the duration of the context.
 

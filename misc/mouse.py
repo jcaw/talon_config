@@ -20,8 +20,6 @@ from ..utils.eye_mouse import (
     zoom_mouse_enabled,
     eye_mouse_enabled,
     FrozenEyeMouse,
-    toggle_eye_mouse_exclusive,
-    toggle_zoom_mouse_exclusive,
     clear_zoom_queue,
 )
 from ..utils.auto_context import AutoContext
@@ -299,11 +297,6 @@ def click_from_phrase(m):
 
 mouse_context.keymap(
     {
-        "debug overlay": lambda m: eye_mouse.debug_overlay.toggle(),
-        "(track | eye) mouse": toggle_eye_mouse_exclusive,
-        "zoom mouse": toggle_zoom_mouse_exclusive,
-        "camera overlay": lambda m: eye_mouse.camera_overlay.toggle(),
-        "calibrate": lambda m: eye_mouse.calib_start(),
         # Clicks
         "{basic.modifiers}* {mouse.clicks}": dynamic_action(click_from_phrase),
         # TODO: How to handle drag/drop? Just procedural or have both?

@@ -1,0 +1,5 @@
+(track | eye) mouse: user.newapi.mouse.toggle_eye_mouse()
+[eye] zoom mouse: user.newapi.mouse.toggle_zoom_mouse()
+calibrate: user.newapi.mouse.calibrate_tracker()
+debug overlay: user.newapi.mouse.debug_overlay()
+camera overlay: user.newapi.mouse.camera_overlay()
