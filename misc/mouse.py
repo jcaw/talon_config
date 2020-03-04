@@ -248,23 +248,23 @@ mouse_group = ContextGroup("mouse_group")
 
 
 zoom_mouse_context = AutoContext("zoom_mouse", func=zoom_mouse_enabled)
-hiss_mapper.register(zoom_mouse_context, ZoomMove())
+# hiss_mapper.register(zoom_mouse_context, ZoomMove())
 
 
 not_zoom_mouse_context = AutoContext(
     "not_zoom_mouse", func=lambda: not zoom_mouse_enabled(), group=mouse_group
 )
-pop_mapper.register(not_zoom_mouse_context, click)
+# pop_mapper.register(not_zoom_mouse_context, click)
 
 
 zooming_context = AutoContext("zoom_mouse_zooming", func=zooming, group=mouse_group)
 # We might want to use different hiss actions in specific contexts, but retain
 # hiss to move when zooming.
-hiss_mapper.register(zooming_context, ZoomMove(), priority=10)
+# hiss_mapper.register(zooming_context, ZoomMove(), priority=10)
 
 
 eye_mouse_context = AutoContext("eye_mouse", func=eye_mouse_enabled, group=mouse_group)
-hiss_mapper.register(eye_mouse_context, DragAndDrop(), gap_tolerance=200)
+# hiss_mapper.register(eye_mouse_context, DragAndDrop(), gap_tolerance=200)
 
 
 mouse_context = Context("mouse", group=mouse_group)
@@ -295,26 +295,26 @@ def click_from_phrase(m):
             click_function()
 
 
-mouse_context.keymap(
-    {
-        # Clicks
-        "{basic.modifiers}* {mouse.clicks}": dynamic_action(click_from_phrase),
-        # TODO: How to handle drag/drop? Just procedural or have both?
-        "drag": backdated(drag),
-        "(drop | put)": backdated(drop),
-        # Click immediately, in the current location.
-        "{basic.modifiers}* {mouse.clicks} (that | here | there)": click_from_phrase,
-        # TODO: Remove, replace with something more generic.
-        # "do paste": [dubclick, Key("ctrl-v")],
-        # "do koosh": [dubclick, Key("ctrl-c")],
-        "wheel down": wheel_down,
-        "wheel up": wheel_up,
-        # "wheel down here": [mouse_center, mouse_smooth_scroll(250)],
-        # "wheel up here": [mouse_center, mouse_smooth_scroll(-250)],
-        "center [mouse]": center_mouse,
-        "(unqueue | clear [zoom] [mouse] queue)": clear_zoom_queue,
-    }
-)
+# mouse_context.keymap(
+#     {
+#         # Clicks
+#         "{basic.modifiers}* {mouse.clicks}": dynamic_action(click_from_phrase),
+#         # TODO: How to handle drag/drop? Just procedural or have both?
+#         "drag": backdated(drag),
+#         "(drop | put)": backdated(drop),
+#         # Click immediately, in the current location.
+#         "{basic.modifiers}* {mouse.clicks} (that | here | there)": click_from_phrase,
+#         # TODO: Remove, replace with something more generic.
+#         # "do paste": [dubclick, Key("ctrl-v")],
+#         # "do koosh": [dubclick, Key("ctrl-c")],
+#         "wheel down": wheel_down,
+#         "wheel up": wheel_up,
+#         # "wheel down here": [mouse_center, mouse_smooth_scroll(250)],
+#         # "wheel up here": [mouse_center, mouse_smooth_scroll(-250)],
+#         "center [mouse]": center_mouse,
+#         "(unqueue | clear [zoom] [mouse] queue)": clear_zoom_queue,
+#     }
+# )
 
 
 def delayed_drop(m=None):
@@ -335,10 +335,10 @@ def queue_drag_drop(m):
     cron.after("150ms", lambda: queue_zoom_action(delayed_drop)(m))
 
 
-zoom_mouse_context.keymap(
-    {
-        # A drag implies a drop. Since we're queuing, we can just queue both.
-        "drag": queue_drag_drop,
-        "(drop | put)": queue_zoom_action(delayed_drop),
-    }
-)
+# zoom_mouse_context.keymap(
+#     {
+#         # A drag implies a drop. Since we're queuing, we can just queue both.
+#         "drag": queue_drag_drop,
+#         "(drop | put)": queue_zoom_action(delayed_drop),
+#     }
+# )
