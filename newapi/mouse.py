@@ -17,7 +17,8 @@ CLICKS_MAP = {
     "double": actions.self.double_click,
     "triple": actions.self.triple_click,
     "drag": actions.self.drag,
-    "drop": actions.self.drop,
+    # "drop" has a high misrecognition rate, so use "undrag"
+    "undrag": actions.self.drop,
 }
 
 
