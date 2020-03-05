@@ -180,7 +180,7 @@ class PreserveClipboard:
     def __enter__(self):
         self.old_clipboard = clip.get()
 
-    def __exit__(self):
+    def __exit__(self, *_):
         time.sleep(0.1)
         clip.set(self.old_clipboard)
 
