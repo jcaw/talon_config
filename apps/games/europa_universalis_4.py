@@ -499,7 +499,8 @@ ctx.keymap(
 
 # Move the camera by hissing. We still want zoom hiss to move/cancel, so use a
 # lower priority than that.
-hiss_mapper.register(ctx, EyeMapScroller(), priority=9)
+# TODO: Only re-enable this once eu4 is active again
+# hiss_mapper.register(ctx, EyeMapScroller(), priority=9)
 
 # Talon's native input doesn't work yet.
 #
