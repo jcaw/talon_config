@@ -133,15 +133,16 @@ context = Context()
 context.lists["self.clicks"] = CLICKS_MAP.keys()
 
 
-@context.capture(rule="{self.clicks}")
+@context.capture(rule="<user.newapi.keys.modifiers> {self.clicks}")
 def click(m) -> Click:
     click_command = m["clicks"][0]
     click_function = CLICKS_MAP[click_command]
     # TODO: Cover no backdated position
-    position = backdated_position(m)
-    modifiers = []
-    # TODO: Add modifiers, once they're ported to newapi
-    # modifiers = m.modifiers
+    #
+    # NOTE: This has quirks. If you say "shift click", it will backdate to the
+    #   start of "click", not "shift".
+    position = backdated_position(m[-1])
+    modifiers = m["modifiers"]
     return Click(click_function, position, modifiers)
 
 

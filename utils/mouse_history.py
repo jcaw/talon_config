@@ -144,13 +144,13 @@ def actual_word_start(word):
     return estimate / 1000.0
 
 
-def backdated_position(m):
-    """Get the position of the mouse the user started to speak `m`.
+def backdated_position(word_meta):
+    """Get the position of the mouse the user started to speak ``word_meta``.
 
     Note that on Windows, Draconity's timestamps seem to be able to drift out
     of sync with our timestamps, giving us the *wrong position*. If this
     happens, restarting Dragon seems to help.
 
     """
-    _, position = position_at_time(actual_word_start(m._words[0]))
+    _, position = position_at_time(actual_word_start(word_meta))
     return position
