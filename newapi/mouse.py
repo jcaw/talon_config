@@ -32,6 +32,7 @@ class Click:
         :param function: Function to call to perform the click.
         :param Point2d: Position when the action was spoken. (Usually this is
           the mouse position.) This position can be used to backdate the click.
+        :param modifiers: Modifiers to hold while executing ``function``.
 
         """
         self.function = function
