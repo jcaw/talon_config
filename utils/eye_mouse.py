@@ -94,7 +94,7 @@ class FrozenEyeMouse(object):
 
     def __exit__(self, *args):
         if self.zoom_was_enabled:
-            enable_eye_mouse()
+            enable_zoom_mouse()
         if self.eye_mouse_was_enabled:
             enable_eye_mouse()
 
