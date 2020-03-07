@@ -1,4 +1,4 @@
-from talon import Module, Context, registry, clip
+from talon import Module, Context, registry, clip, ui
 
 from user.utils import sound
 
@@ -41,3 +41,15 @@ class Actions:
         print("Recognition working!")
         sound.play(sound.GLASS_TAP)
         # TODO: Ping short notification
+
+    def copy_current_app_info() -> None:
+        """Copy all info for the current app."""
+        active_app = ui.active_app()
+        info = "\n".join(
+            [
+                'Bundle: "{}"'.format(active_app.bundle),
+                'Exe:    "{}"'.format(active_app.exe),
+                'Title:  "{}"'.format(ui.active_window().title),
+            ]
+        )
+        _print_and_copy(info)
