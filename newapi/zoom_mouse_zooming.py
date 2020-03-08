@@ -33,16 +33,16 @@ class ZoomingActions:
 zooming_context = make_ticker_context(None, is_zooming)
 
 
-@zooming_context.action_class("user.newapi.mouse")
+@zooming_context.action_class("user")
 class MouseActions:
     def default_click(click_info: Click):
-        actions.user.newapi.zoom_mouse_zooming.end_zoom()
+        actions.user.end_zoom()
         click_info.function(click_info.modifiers)
 
 
-@zooming_context.action_class("user.newapi.noise")
+@zooming_context.action_class("user")
 class SoundActions:
     def on_hiss(start: bool):
         if start:
-            actions.user.newapi.zoom_mouse.clear_zoom_queue()
-            actions.user.newapi.zoom_mouse_zooming.end_zoom()
+            actions.clear_zoom_queue()
+            actions.end_zoom()

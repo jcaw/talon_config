@@ -22,7 +22,7 @@ _positions = {
 }
 
 
-context.lists["user.newapi.window_manager.position"] = _positions.keys()
+context.lists["user.window_align_position"] = _positions.keys()
 
 
 def _with_win_press(key_names):
@@ -38,14 +38,14 @@ def _with_win_press(key_names):
         ctrl.key_press("win", up=True)
 
 
-@context.action_class("user.newapi.window_manager")
+@context.action_class("user")
 class DefaultUserActions:
     def align_window(position: List[str]) -> None:
         position = position[0]
         if position not in _positions:
             raise ValueError("This direction is not implemented on Windows.")
         keys = _positions[position]
-        actions.user.newapi.window_manager.maximize()
+        actions.user.maximize()
         _with_win_press(keys)
 
     def maximize() -> None:

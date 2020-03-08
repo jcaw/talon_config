@@ -134,7 +134,7 @@ context = Context()
 context.lists["self.clicks"] = CLICKS_MAP.keys()
 
 
-@context.capture(rule="<user.newapi.keys.modifiers> {self.clicks}")
+@context.capture(rule="<user.modifiers> {self.clicks}")
 def click(m) -> Click:
     click_command = m["clicks"][0]
     click_function = CLICKS_MAP[click_command]
@@ -147,7 +147,7 @@ def click(m) -> Click:
     return Click(click_function, position, modifiers)
 
 
-@context.action_class("user.newapi.noise")
+@context.action_class("user")
 class NoiseActions:
     def on_pop():
         actions.mouse_click()

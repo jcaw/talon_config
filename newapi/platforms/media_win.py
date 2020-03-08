@@ -8,7 +8,7 @@ os: windows
 """
 
 
-@context.action_class("user.newapi.media")
+@context.action_class("user")
 class Actions:
     def set_volume(percent: int) -> None:
         """Set the volume to a specific percentage using media keys.

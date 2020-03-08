@@ -4,12 +4,12 @@ from talon import Module
 
 
 module = Module()
-module.list("position", desc="list of window alignment positions")
+module.list("window_align_position", desc="list of window alignment positions")
 
 
 @module.capture
-def position(m) -> str:
-    """Align the window to a specific direction."""
+def window_align_position(m) -> str:
+    """Get a specific direction to align the window to."""
 
 
 @module.action_class

@@ -1,7 +1,7 @@
-(print | copy | get) actions: user.newapi.help.print_copy_actions()
-(print | copy | get) captures: user.newapi.help.print_copy_captures()
+(print | copy | get) actions: user.print_copy_actions()
+(print | copy | get) captures: user.print_copy_captures()
 
 # Useful when dragon hangs. Say "mic check", it'll ping when it's ready.
-(mic | mike) (test | check): user.newapi.help.mic_test()
+(mic | mike) (test | check): user.mic_test()
 
-(copy app | app info): user.newapi.help.copy_current_app_info()
+(copy app | app info): user.copy_current_app_info()

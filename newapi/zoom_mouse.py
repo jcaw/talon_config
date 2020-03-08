@@ -71,7 +71,7 @@ class Actions:
 context = make_ticker_context(None, zoom_mouse_active)
 
 
-@context.action_class("user.newapi.mouse")
+@context.action_class("user")
 class MouseActions:
     def drop(modifiers: List[str] = []):
         # Some drag actions require that the mouse wait in the drop position
@@ -92,19 +92,17 @@ class MouseActions:
         # HACK: Intercepting the function here is pretty hacky.
         #
         # TODO: Remove `str` cast once action path comparison works
-        if str(click_info.function) == str(actions.user.newapi.mouse.drag):
+        if str(click_info.function) == str(actions.user.drag):
 
             def queue_drop():
                 nonlocal modifiers
-                actions.self.queue_zoom_action(
-                    lambda: actions.user.newapi.mouse.drop(modifiers)
-                )
+                actions.user.queue_zoom_action(lambda: actions.user.drop(modifiers))
 
             # Add drop on a delay so the ding rings twice.
             cron.after("150ms", queue_drop)
 
 
-@context.action_class("user.newapi.noise")
+@context.action_class("user")
 class NoiseActions:
     def on_pop():
         # Explicitly defer to the zoom mouse's implementation.

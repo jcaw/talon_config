@@ -1,4 +1,4 @@
-[set] volume <number>: user.newapi.media.set_volume(number)
+[set] volume <number>: user.set_volume(number)
 volume up: key(volup)
 volume down: key(voldown)
 volume (mute | unmute): key(mute)
