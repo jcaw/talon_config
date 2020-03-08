@@ -2,13 +2,12 @@ from typing import Callable, List
 import logging
 import time
 
-from talon import Module, actions, settings, ctrl, cron
+from talon import Module, Context, actions, settings, ctrl, cron, speech_system
 from talon_plugins import eye_zoom_mouse
 
 from user.misc import basic
 from user.utils import sound
 from user.newapi.mouse import Click
-from user.newapi.utils.ticker_context import make_ticker_context
 
 
 LOGGER = logging.getLogger(__name__)
@@ -35,6 +34,19 @@ module.setting(
     default=True,
     desc="play sounds when zoom clicks are buffered (or cancelled)",
 )
+
+
+# TODO: Pull this out once talon exposes mouse mode scopes by default
+@module.scope
+def scope(*_):
+    zoom_mouse = zoom_mouse_active()
+    return {
+        "zoom_mouse_active": zoom_mouse,
+        "zoom_mouse_zooming": zoom_mouse and is_zooming(),
+    }
+
+
+speech_system.register("pre:phrase", scope.update)
 
 
 @module.action_class
@@ -68,7 +80,10 @@ class Actions:
                 sound.play_cancel()
 
 
-context = make_ticker_context(None, zoom_mouse_active)
+context = Context()
+context.matches = r"""
+user.zoom_mouse_active: True
+"""
 
 
 @context.action_class("user")

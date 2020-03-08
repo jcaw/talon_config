@@ -1,12 +1,11 @@
 from typing import Callable, List
 
-from talon import Module, actions
+from talon import Module, Context, actions
 from talon.track.geom import Point2d
 from talon_plugins import eye_zoom_mouse
 
 from user.newapi.mouse import Click
 from user.newapi.zoom_mouse import is_zooming
-from user.newapi.utils.ticker_context import make_ticker_context
 
 
 # TODO: Combine this with zoom_mouse.py
@@ -33,7 +32,10 @@ class ZoomingActions:
         return origin
 
 
-zooming_context = make_ticker_context(None, is_zooming)
+zooming_context = Context()
+zooming_context.matches = r"""
+user.zoom_mouse_zooming: True
+"""
 
 
 @zooming_context.action_class("user")
