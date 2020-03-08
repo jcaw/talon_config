@@ -109,7 +109,12 @@ class NoiseActions:
         pass
 
     def on_hiss(start: bool):
-        # Explicitly do nothing.
-        #
-        # TODO: Hiss to scroll?
-        pass
+        try:
+            # This is currently a private module. Use if available.
+            from user.newapi.utils import scroll
+        except ImportError:
+            return
+        if start:
+            scroll.start()
+        else:
+            scroll.stop()
