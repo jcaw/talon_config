@@ -20,6 +20,8 @@ class ZoomingActions:
     def end_zoom() -> Point2d:
         """Terminate the zoom.
 
+        Mouse will be moved to the user's gaze position.
+
         :returns: the final position
 
         """
@@ -28,6 +30,7 @@ class ZoomingActions:
         _, origin = eye_zoom_mouse.zoom_mouse.get_pos()
         eye_zoom_mouse.zoom_mouse.cancel()
         actions.mouse_move(origin.x, origin.y)
+        return origin
 
 
 zooming_context = make_ticker_context(None, is_zooming)
