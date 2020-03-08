@@ -47,5 +47,5 @@ class MouseActions:
 class SoundActions:
     def on_hiss(start: bool):
         if start:
-            actions.clear_zoom_queue()
-            actions.end_zoom()
+            actions.user.clear_zoom_queue()
+            actions.self.end_zoom()
