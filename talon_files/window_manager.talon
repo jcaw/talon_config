@@ -1,5 +1,5 @@
-minimize: app.window_hide()
-maximize: user.maximize()
+(minimize | mini): app.window_hide()
+(maximize | maxi): user.maximize()
 quit program: app.window_close()
 (next | neck) (window | win): app.window_next()
 (last | larse) (window | win): app.window_previous()
