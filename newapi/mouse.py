@@ -106,7 +106,6 @@ class Actions:
     def drop(modifiers: List[str] = []):
         """Release a mouse button at current position (default left)."""
         # TODO: Switch to newapi action once I know the interface
-        print("Default drag")
         ctrl.mouse_click(button=0, up=True)
         basic.Modifiers(modifiers).__exit__(None, None, None)
 
