@@ -2,7 +2,7 @@ from typing import Callable, List
 import logging
 import time
 
-from talon import Module, Context, actions, settings, ctrl, cron, speech_system
+from talon import Module, Context, actions, settings, ctrl, cron, speech_system, noise
 from talon_plugins import eye_zoom_mouse
 
 from user.misc import basic
@@ -47,6 +47,9 @@ def scope(*_):
 
 
 speech_system.register("pre:phrase", scope.update)
+# Noises won't trigger pre:phrase - bind them so we definitely catch the zoom.
+noise.register("post:pop", scope.update)
+noise.register("pre:hiss", scope.update)
 
 
 @module.action_class
