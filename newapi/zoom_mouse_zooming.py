@@ -1,11 +1,8 @@
-from typing import Callable, List
+from typing import List
 
-from talon import Module, Context, actions
-from talon.track.geom import Point2d
-from talon_plugins import eye_zoom_mouse
+from talon import Context, actions
 
 from user.newapi.mouse import Click
-from user.newapi.zoom_mouse import is_zooming
 
 
 # TODO: Combine this with zoom_mouse.py
