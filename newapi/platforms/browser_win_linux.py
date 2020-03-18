@@ -14,6 +14,8 @@ import time
 from talon import Context, actions
 
 key = actions.key
+user = actions.user
+browser = actions.browser
 
 
 context = Context()
@@ -50,6 +52,26 @@ class AppActions:
 
     def tab_reopen():
         key("ctrl-shift-t")
+
+
+@context.action_class("edit")
+class EditActions:
+    def find(text: str = None):
+        key("ctrl-f")
+        if text:
+            actions.insert(text)
+
+
+@context.action_class("user")
+class UserActions:
+    def search() -> None:
+        browser.focus_search()
+
+    def search_text(text: str) -> None:
+        user.search()
+        time.sleep(0.2)
+        actions.insert(text)
+        key("enter")
 
 
 @context.action_class("browser")
