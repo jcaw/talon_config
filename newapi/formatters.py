@@ -72,6 +72,12 @@ def formatters(m) -> List[str]:
     """List of text formatters."""
 
 
+@module.capture(rule="<dgndictation>++ [over]")
+def dictation(m) -> str:
+    """Arbitrary dictation, optionally terminated with [over]."""
+    return extract_dictation(m)
+
+
 @module.capture
 def formatted_dictation(m) -> ComplexInsert:
     """Get a complex insert for some dictation."""
@@ -100,11 +106,11 @@ def formatters(m) -> List[str]:
 
 
 
-@context.capture(rule="<self.formatters> <dgndictation>")
-def formatted_dictation(m) -> str:
     text = extract_dictation(m)
     surrounding_text = actions.self.surrounding_text()
     return format_text(text, m.formatters, surrounding_text)
+@context.capture(rule="<self.formatters> <self.dictation>")
+def formatted_dictation(m) -> ComplexInsert:
 
 
 @module.action_class
