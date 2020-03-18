@@ -11,27 +11,6 @@ from user.newapi.zoom_mouse import is_zooming
 # TODO: Combine this with zoom_mouse.py
 
 
-zooming_module = Module()
-
-
-@zooming_module.action_class
-class ZoomingActions:
-    def end_zoom() -> Point2d:
-        """Terminate the zoom.
-
-        Mouse will be moved to the user's gaze position.
-
-        :returns: the final position
-
-        """
-        # TODO: Will this be reactive enough, or should we make this accessible
-        #   anywhere in the zoom mouse?
-        _, origin = eye_zoom_mouse.zoom_mouse.get_pos()
-        eye_zoom_mouse.zoom_mouse.cancel()
-        actions.mouse_move(origin.x, origin.y)
-        return origin
-
-
 zooming_context = Context()
 zooming_context.matches = r"""
 user.zoom_mouse_zooming: True

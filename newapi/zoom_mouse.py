@@ -3,6 +3,7 @@ import logging
 import time
 
 from talon import Module, Context, actions, settings, ctrl, cron, speech_system, noise
+from talon.track.geom import Point2d
 from talon_plugins import eye_zoom_mouse
 
 from user.misc import basic
@@ -54,6 +55,22 @@ noise.register("pre:hiss", scope.update)
 
 @module.action_class
 class Actions:
+    def end_zoom() -> Point2d:
+        """Terminate the zoom.
+
+        Mouse will be moved to the user's gaze position.
+
+        :returns: the final position
+
+        """
+        # TODO: Will this be reactive enough, or should we make this accessible
+        #   anywhere in the zoom mouse?
+        _, origin = eye_zoom_mouse.zoom_mouse.get_pos()
+        if origin:
+            eye_zoom_mouse.zoom_mouse.cancel()
+            actions.mouse_move(origin.x, origin.y)
+        return origin
+
     def queue_zoom_action(function: Callable):
         """Create a command that queues a specific click type on the next zoom.
 
