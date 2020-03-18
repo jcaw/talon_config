@@ -33,23 +33,25 @@ from user.misc.numbers import extract_number, numeric
 
 # TODO: Separate atomic modifiers that can't be chained, e.g. Natural Language?
 #   Own map, don't even allow chaining?
-formatter_map = {
-    "camel": apply_camel_case,
-    "studley": apply_studley_case,
-    "snake": apply_snake,
-    "spine": apply_spine,
-    # TODO: Maybe change this command. Dotty?
-    "dotword": apply_dotword,
-    "squash": apply_squash,
-    # TODO: Where is this delimiter used again?
-    "see path": make_apply_delimiter("::"),  # c path
-    "dunder": apply_dunder,
-    "upper": apply_uppercase,
-    "lower": apply_lowercase,
-    "say": apply_sentence,
-    "top": apply_capitalized_sentence,
-    "title": apply_title,
-}
+formatter_map = multi_map(
+    {
+        "camel": apply_camel_case,
+        "studley": apply_studley_case,
+        "snake": apply_snake,
+        "spine": apply_spine,
+        # TODO: Maybe change this command. Dotty?
+        "dotword": apply_dotword,
+        "squash": apply_squash,
+        # TODO: Where is this delimiter used again?
+        "see path": make_apply_delimiter("::"),  # c path
+        "dunder": apply_dunder,
+        "upper": apply_uppercase,
+        ("lower", "bot"): apply_lowercase,
+        "say": apply_sentence,
+        "top": apply_capitalized_sentence,
+        "title": apply_title,
+    }
+)
 
 
 # TODO: Wrapped, e.g. parens and string?
