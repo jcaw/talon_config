@@ -54,9 +54,10 @@ class AppActions:
 
 @context.action_class("browser")
 class BrowserActions:
-    # TODO: Talon seems to register a pre:phrase hook that triggers this,
-    # focussing the bar. Don't want that, so remove for now. Probably have to
-    # use APIs or extensions (or maybe accessibility interfaces)
+    # TODO: Talon seems to register a pre:phrase hook that triggers this
+    #   action. This causes the bar to focus before each phrase, so remove for
+    #   now. Probably have to use APIs or extensions (or maybe accessibility
+    #   interfaces)
     #
     # def address():
     #     actions.browser.focus_address()
