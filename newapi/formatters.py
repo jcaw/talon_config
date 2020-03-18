@@ -97,6 +97,11 @@ def extract_dictation(m) -> str:
     return join_punctuation(actions.dictate.parse_words(m.dgndictation))
 
 
+def format_contextually(text, formatters):
+    surrounding_text = actions.self.surrounding_text()
+    return format_text(text, formatters, surrounding_text)
+
+
 @context.capture(rule="{self.formatters}+")
 def formatters(m) -> List[str]:
     global formatter_map
@@ -104,13 +109,9 @@ def formatters(m) -> List[str]:
     return [formatter_map[word] for word in formatter_words]
 
 
-
-
-    text = extract_dictation(m)
-    surrounding_text = actions.self.surrounding_text()
-    return format_text(text, m.formatters, surrounding_text)
 @context.capture(rule="<self.formatters> <self.dictation>")
 def formatted_dictation(m) -> ComplexInsert:
+    return format_contextually(m.dictation, m.formatters)
 
 
 @module.action_class
