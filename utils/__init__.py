@@ -337,8 +337,10 @@ class Hook(object):
             except AttributeError:
                 pass
 
-    def run(self):
+    def run(self, *args, **kwargs):
         """Run all functions attached to the hook.
+
+        Provide ``args`` or ``kwargs`` to run the functions with arguments.
 
         Errors will be logged, but otherwise ignored.
 
@@ -347,6 +349,6 @@ class Hook(object):
             functions_copy = self._functions
         for func in functions_copy:
             try:
-                func()
+                func(*args, **kwargs)
             except Exception as e:
                 logging.exception(f"Error running hooked function")
