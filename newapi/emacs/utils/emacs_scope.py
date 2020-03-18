@@ -39,7 +39,6 @@ def _add_string_values(scope, state):
 def scope(*_):
     """Update the scope with relevant Emacs keys."""
     state = emacs_state.freeze()
-    print("Scope update:", state.keys())
     scope = {}
     # Allow the user to match on any string value.
     _add_string_values(scope, state)
@@ -48,7 +47,6 @@ def scope(*_):
     # TODO: Maybe do this automatically?
     _add_scope_list(scope, state, "minor-modes")
     _add_scope_list(scope, state, "active-yasnippet-tables")
-    print(f"New emacs scope: {scope}")
     return scope
 
 
