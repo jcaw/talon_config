@@ -100,7 +100,7 @@ def extract_dictation(m) -> str:
 @context.capture(rule="{self.formatters}+")
 def formatters(m) -> List[str]:
     global formatter_map
-    formatter_words = m.formatters
+    formatter_words = m.formatters_list
     return [formatter_map[word] for word in formatter_words]
 
 
