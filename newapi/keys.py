@@ -214,7 +214,7 @@ def modifiers(m) -> Set[str]:
 
 @ctx.capture(rule="{self.arrow}")
 def arrow(m) -> str:
-    return m.arrow[0]
+    return m.arrow
 
 
 @ctx.capture(rule="<self.arrow>+")
@@ -224,27 +224,27 @@ def arrows(m) -> str:
 
 @ctx.capture(rule="{self.standalone_arrow}")
 def standalone_arrow(m) -> str:
-    return m.standalone_arrow[0]
+    return m.standalone_arrow
 
 
 @ctx.capture(rule="{self.number}")
 def number(m):
-    return m.number[0]
+    return m.number
 
 
 @ctx.capture(rule="{self.letter}")
 def letter(m):
-    return m.letter[0]
+    return m.letter
 
 
 @ctx.capture(rule="{self.special}")
 def special(m):
-    return m.special[0]
+    return m.special
 
 
 @ctx.capture(rule="{self.symbol}")
 def symbol(m):
-    return m.symbol[0]
+    return m.symbol
 
 
 @ctx.capture(rule="(<self.arrow> | <self.number> | <self.letter> | <self.special>)")
