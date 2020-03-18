@@ -267,7 +267,7 @@ def letters(m):
 class Actions:
     def modifier_key(modifier: str, key: str):
         """(TEMPORARY) Presses the modifier plus supplied number"""
-        res = "-".join([modifier] + [str(key)])
+        res = "-".join([modifier, str(key)])
         actions.key(res)
 
     def uppercase_letters(chars: List[str]):
