@@ -135,7 +135,7 @@ context.lists["self.clicks"] = CLICKS_MAP.keys()
 
 @context.capture(rule="<user.modifiers> {self.clicks}")
 def click(m) -> Click:
-    click_command = m["clicks"][0]
+    click_command = m["clicks"]
     click_function = CLICKS_MAP[click_command]
     # TODO: Cover no backdated position
     #
