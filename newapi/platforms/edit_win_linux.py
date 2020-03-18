@@ -18,8 +18,41 @@ class BuiltInActions:
     def cut():
         key("ctrl-x")
 
+    def file_end():
+        key("ctrl-end")
+
+    def file_start():
+        key("ctrl-start")
+
+    def find():
+        key("ctrl-f")
+
+    def paragraph_end():
+        key("ctrl-down")
+
+    def paragraph_start():
+        key("ctrl-up")
+
     def paste():
         key("ctrl-v")
+
+    def print():
+        key("ctrl-p")
+
+    def save():
+        key("ctrl-s")
+
+    def save_all():
+        key("ctrl-shift-s")
+
+    def select_all():
+        key("ctrl-a")
+
+    def word_left():
+        key("ctrl-left")
+
+    def word_right():
+        key("ctrl-right")
 
     def undo():
         key("ctrl-z")
