@@ -1,5 +1,5 @@
 import time
-from typing import List
+from typing import List, Callable
 
 from talon import Module, Context, ui, actions
 import talon.clip as clip
@@ -145,3 +145,15 @@ class Actions:
         actions.insert(complex_insert.text_after)
         for i in range(len(complex_insert.text_after)):
             actions.key("left")
+
+    def insert_formatted(text: str, formatters: List[Callable]) -> None:
+        """Insert ``text``, formatted with ``formatters``."""
+        actions.self.insert_complex(format_contextually(text, formatters))
+
+    def insert_natural(text: str) -> None:
+        """Insert text, formatted as natural language."""
+        actions.self.insert_formatted(text, [apply_sentence])
+
+    def insert_capitalized(text: str) -> None:
+        """Insert text, formatted as capitalized natural language."""
+        actions.self.insert_formatted(text, [apply_capitalized_sentence])
