@@ -1,3 +1,6 @@
+"""Default edit actions for Windows & Linux"""
+
+
 from talon import Context, actions
 
 key = actions.key
