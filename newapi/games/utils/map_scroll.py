@@ -25,8 +25,8 @@ def angle_from_north(center, point):
     return angle
 
 
-class EyeMapScroller(object):
-    """Scrolls the map where the user is looking."""
+class MouseScroller(object):
+    """Scrolls the map where the user is looking, using the mouse."""
 
     _POLL_INTERVAL = "20ms"
 
