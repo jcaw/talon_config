@@ -33,11 +33,11 @@ class MouseScroller(object):
     def __init__(self):
         self._job = None
 
-    def __enter__(self):
+    def start(self):
         self._update_scroll()
         self._job = cron.interval(self._POLL_INTERVAL, self._update_scroll)
 
-    def __exit__(self, *_):
+    def stop(self):
         if self._job:
             cron.cancel(self._job)
         # Move mouse to neutral position
