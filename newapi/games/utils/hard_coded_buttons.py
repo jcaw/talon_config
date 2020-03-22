@@ -69,7 +69,7 @@ class Actions:
         actions.self.corner_hover(Corner)
         actions.mouse_click()
 
-    def print_mouse_positions():
+    def print_mouse_positions() -> None:
         """Print the mouse position relative to each corner.
 
         Use to get hard-codable positions.
