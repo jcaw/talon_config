@@ -6,81 +6,85 @@ situations.
 """
 
 
-from talon import ui, ctrl
-from talon.voice import Context
+from talon import Module, actions, ui, ctrl
 
 
-class CORNERS:
+class Corner:
+    """Holds a position relative to a corner."""
+
     # Map to strings so we can compare to straight strings.
     TOP_LEFT = "top_left"
     TOP_RIGHT = "top_right"
     BOTTOM_LEFT = "bottom_left"
     BOTTOM_RIGHT = "bottom_right"
 
+    def __init__(self, corner: str, x: int, y: int) -> None:
+        assert corner in [
+            self.TOP_LEFT,
+            self.TOP_RIGHT,
+            self.BOTTOM_LEFT,
+            self.BOTTOM_RIGHT,
+        ], corner
+        self.corner = corner
+        self.x = x
+        self.y = y
+
+    @staticmethod
+    def absolute_position(corner: str):
+        """Get the absolute position of a corner.
+
+        :returns tuple[int, int]: the position of this corner.
+
+        """
+        screen = ui.main_screen().rect
+        if corner == Corner.TOP_LEFT:
+            return (0, 0)
+        elif corner == Corner.TOP_RIGHT:
+            return (screen.width, 0)
+        elif corner == Corner.BOTTOM_LEFT:
+            return (0, screen.height)
+        elif corner == Corner.BOTTOM_RIGHT:
+            return (screen.width, screen.height)
+        else:
+            raise ValueError(f'Invalid corner: "{corner}"')
+
 
 # TODO: Can click relative to the screen, allow clicking relative to the window.
 
 
-def corner_move(relative_to, x, y):
-    """Move the mouse to a position relative to a corner."""
-    screen = ui.main_screen().rect
-    if relative_to == CORNERS.TOP_LEFT:
-        corner = (0, 0)
-    elif relative_to == CORNERS.TOP_RIGHT:
-        corner = (screen.width, 0)
-    elif relative_to == CORNERS.BOTTOM_LEFT:
-        corner = (0, screen.height)
-    elif relative_to == CORNERS.BOTTOM_RIGHT:
-        corner = (screen.width, screen.height)
-    else:
-        raise ValueError(f"Invalid corner: {relative_to}")
-    x = corner[0] + x
-    y = corner[1] + y
-    ctrl.mouse_move(x=x, y=y)
+module = Module()
 
 
-def make_corner_move(relative_to, x, y):
-    def do_move(m=None):
-        nonlocal relative_to, x, y
-        corner_move(relative_to, x, y)
+@module.action_class
+class Actions:
+    def corner_hover(position: Corner) -> None:
+        """Move mouse to a specific position, relative to a corner."""
+        corner = Corner.absolute_position(position.corner)
+        x = corner[0] + position.x
+        y = corner[1] + position.y
+        actions.mouse_move(x, y)
 
-    return do_move
+    def corner_click(position: Corner) -> None:
+        """Click a position, relative to a corner."""
+        actions.self.corner_hover(Corner)
+        actions.mouse_click()
 
+    def print_mouse_positions():
+        """Print the mouse position relative to each corner.
 
-def corner_click(relative_to, x, y, **kwargs):
-    """Click a position, relative to a corner."""
-    corner_move(relative_to, x, y)
-    ctrl.mouse_click(**kwargs)
+        Use to get hard-codable positions.
 
-
-def make_corner_click(relative_to, x, y, **kwargs):
-    def do_click(m=None):
-        nonlocal relative_to, x, y, kwargs
-        corner_click(relative_to, x, y, **kwargs)
-
-    return do_click
-
-
-def print_mouse(m):
-    """Print the mouse position relative to each corner.
-
-    Use to get hard-codable positions.
-
-    """
-    pos = ctrl.mouse_pos()
-    print(f"Mouse pos: {pos}")
-    screen = ui.main_screen().rect
-    print(f"Screen:    {screen}")
-    for (position, corner_x, corner_y) in [
-        ("top left", 0, 0),
-        ("top right", screen.width, 0),
-        ("bottom left", 0, screen.height),
-        ("bottom right", screen.width, screen.height),
-    ]:
-        relative = (pos[0] - corner_x, pos[1] - corner_y)
-        print(f"Position relative to {position}: {relative}")
-
-
-# Use for hard-coding buttons.
-print_mouse_context = Context("print_mouse_position")
-print_mouse_context.keymap({"print mouse": print_mouse})
+        """
+        mouse_pos = ctrl.mouse_pos()
+        print(f"Absolute mouse pos: {mouse_pos}")
+        screen = ui.main_screen().rect
+        print(f"Main screen:        {screen}")
+        for corner in [
+            Corner.TOP_LEFT,
+            Corner.TOP_RIGHT,
+            Corner.BOTTOM_LEFT,
+            Corner.BOTTOM_RIGHT,
+        ]:
+            corner_pos = Corner.absolute_position(corner)
+            relative = (mouse_pos[0] - corner_pos[0], mouse_pos[1] - corner_pos[1])
+            print(f"Position relative to {corner}: {relative}")
