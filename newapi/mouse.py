@@ -43,7 +43,7 @@ class Click:
 
 module = Module()
 
-module.list("clicks", "all available click types")
+module.list("clicks", desc="all available click types")
 
 
 @module.action_class
