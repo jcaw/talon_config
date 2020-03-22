@@ -1,6 +1,7 @@
 import math
+from typing import Callable
 
-from talon import cron, ctrl
+from talon import cron, actions
 from talon_plugins import eye_mouse
 
 
@@ -25,13 +26,41 @@ def angle_from_north(center, point):
     return angle
 
 
-class MouseScroller(object):
-    """Scrolls the map where the user is looking, using the mouse."""
+def edge_mouse_scroll(north, south, east, west):
+    """Map scroller that moves the mouse to the edge of the screen."""
+    screen = eye_mouse.main_screen.rect
+    if east:
+        x = 0
+    elif west:
+        x = screen.width
+    else:
+        x = round(screen.width / 2)
+    if north:
+        y = 0
+    elif south:
+        y = screen.height
+    else:
+        y = round(screen.height / 2)
+    # TODO: Maybe figure out a way of not hammering this
+    actions.mouse_move(x, y)
+
+
+class EyeScroller(object):
+    """Scrolls the map where the user is looking."""
 
     _POLL_INTERVAL = "20ms"
 
-    def __init__(self):
+    def __init__(self, move_function: Callable[[bool, bool, bool, bool], None]):
+        """Create a new eye map scroller.
+
+        :param move_function: this function will be called periodically to
+          update the movement direction. It should take four directions, north,
+          east, south and west, indicating which directions it should be moving
+          in.
+
+        """
         self._job = None
+        self._move_function = move_function
 
     def start(self):
         self._update_scroll()
@@ -41,7 +70,7 @@ class MouseScroller(object):
         if self._job:
             cron.cancel(self._job)
         # Move mouse to neutral position
-        self._set_mouse(eye_mouse.main_screen.rect, False, False, False, False)
+        self._move_function(False, False, False, False)
 
     @staticmethod
     def _get_zones(rect):
@@ -93,24 +122,8 @@ class MouseScroller(object):
                 _GAZE_MIDPOINT, (gaze_position.x, gaze_position.y)
             )
             # TODO: Maybe deadzone?
-            east = zones[1] <= gaze_angle < zones[4]
+            west = zones[1] <= gaze_angle < zones[4]
             south = zones[3] <= gaze_angle < zones[6]
-            west = zones[5] <= gaze_angle
+            east = zones[5] <= gaze_angle
             north = zones[7] <= gaze_angle or gaze_angle < zones[2]
-            self._set_mouse(eye_mouse.main_screen.rect, north, east, south, west)
-
-    def _set_mouse(self, screen_rect, north, east, south, west):
-        if west:
-            x = 0
-        elif east:
-            x = screen_rect.width
-        else:
-            x = round(screen_rect.width / 2)
-        if north:
-            y = 0
-        elif south:
-            y = screen_rect.width
-        else:
-            y = round(screen_rect.width / 2)
-        # TODO: Maybe figure out a way of not hammering this
-        ctrl.mouse_move(x, y)
+            self._move_function(north, south, east, west)

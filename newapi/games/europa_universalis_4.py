@@ -323,7 +323,7 @@ app: /eu4\./
 user.zoom_mouse_zooming: False
 """
 
-_map_scroller = map_scroll.MouseScroller()
+_map_scroller = map_scroll.EyeScroller(map_scroll.edge_mouse_scroll)
 
 
 @map_move_context.action_class
