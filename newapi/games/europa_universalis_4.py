@@ -36,7 +36,6 @@
 """
 
 import time
-from typing import List
 
 from talon import Module, Context, actions
 
