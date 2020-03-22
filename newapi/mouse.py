@@ -1,7 +1,7 @@
 from typing import Callable, List
 import time
 
-from talon import Module, Context, actions, ctrl
+from talon import Module, Context, actions, ctrl, ui
 from talon.track.geom import Point2d
 from talon_plugins import eye_mouse, eye_zoom_mouse
 
@@ -48,6 +48,12 @@ module.list("clicks", desc="all available click types")
 
 @module.action_class
 class Actions:
+    def center_mouse() -> None:
+        """Move the mouse to the center of the active window."""
+        rect = ui.active_window().rect
+        center = (rect.x + round(rect.width / 2), rect.y + round(rect.height / 2))
+        actions.mouse_move(*center)
+
     def debug_overlay():
         """Toggle the eye mouse debug overlay."""
         eye_mouse.debug_overlay.toggle()
