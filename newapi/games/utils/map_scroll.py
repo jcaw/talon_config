@@ -45,6 +45,40 @@ def edge_mouse_scroll(north, south, east, west):
     actions.mouse_move(x, y)
 
 
+class KeyMover:
+    """Allows movement by holding keys."""
+
+    def __init__(
+        self, north_key="up", south_key="down", east_key="left", west_key="right"
+    ):
+        """Create a new mover that scrolls with keys."""
+        self.north_key = north_key
+        self.south_key = south_key
+        self.east_key = east_key
+        self.west_key = west_key
+        self._pressed_keys = set()
+
+    def do_move(self, north, south, east, west):
+        """Update scroll with the given directions.
+
+        This method can be passed to `EyeScroller`.
+
+        """
+        for direction, key in [
+            (north, self.north_key),
+            (south, self.south_key),
+            (east, self.east_key),
+            (west, self.west_key),
+        ]:
+            # FIXME: Hammers. Need something persistent.
+            if direction and key not in self._pressed_keys:
+                actions.key(f"{key}:down")
+                self._pressed_keys.add(key)
+            elif not direction and key in self._pressed_keys:
+                actions.key(f"{key}:up")
+                self._pressed_keys.remove(key)
+
+
 class EyeScroller(object):
     """Scrolls the map where the user is looking."""
 
