@@ -27,3 +27,10 @@ find <user.dictation>:
     insert(dictation)
 search: user.search()
 search <user.dictation>: user.search_text(dictation)
+
+
+comment: user.toggle_comment()
+comment <user.dictation>:
+    user.toggle_comment()
+    sleep(500ms)
+    user.insert_capitalized(dictation)
