@@ -38,6 +38,8 @@ app: /opera/
 class AppActions:
     def tab_close():
         key("ctrl-w")
+        # Can't kill tabs too quickly in firefox, or it will drop inputs.
+        time.sleep(0.3)
 
     def tab_next():
         key("ctrl-tab")
