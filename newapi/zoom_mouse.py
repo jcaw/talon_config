@@ -148,7 +148,7 @@ class NoiseActions:
             # This is currently a private module. Use if available.
             from user.newapi.utils import scroll
         except ImportError:
-            return
+            print("Scroll module not found. It must be manually added.")
         if start:
             scroll.start()
         else:
