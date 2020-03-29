@@ -1,11 +1,22 @@
+(sell | select) (file | all): edit.select_all()
+
+(page up | jup): edit.page_up()
+(page down | jown | jan): edit.page_down()
+
+(sell | select) line: edit.select_line()
+kill line: edit.delete_line()
+
 cut: edit.cut()
 copy: edit.copy()
 paste: edit.paste()
 (undo | scrap): edit.undo()
 redo: edit.redo()
 
-(page up | jup): edit.page_up()
-(page down | jown): edit.page_down()
+# TODO: Doc, file - common language here?
+print doc: edit.print()
+save doc: edit.save()
+save [doc] as: edit.save_as()
+save all: edit.save_all()
 
 # TODO: Extract these long-form actions
 # Declared separately to allow for a default implementation with only find() defined.
