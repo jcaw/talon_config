@@ -20,7 +20,7 @@ class KeyValueStore:
     def get(self, key):
         """Get the value associated with ``key``."""
         with self._lock:
-            self._store.get(key)
+            return self._store.get(key)
 
     def get_many(self, *keys):
         """Get the value of multiple keys, as a dict."""
