@@ -17,10 +17,10 @@ class KeyValueStore:
         """Set ``key`` to ``value``."""
         self.update({key: value})
 
-    def get(self, key):
+    def get(self, key, default=None):
         """Get the value associated with ``key``."""
         with self._lock:
-            return self._store.get(key)
+            return self._store.get(key, default)
 
     def get_many(self, *keys):
         """Get the value of multiple keys, as a dict."""
