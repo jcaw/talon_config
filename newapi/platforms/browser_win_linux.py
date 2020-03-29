@@ -23,16 +23,14 @@ context.matches = r"""
 os: windows
 os: linux
 
-app: firefox
-app: /.*firefox\.exe/
-app: chrome
-app: /.*chrome\.exe/
+app: /firefox/
+app: /chrome/
 # NOTE: Doesn't work properly with Internet Explorer. Will need its own module.
-app: /.*iexplore\.exe/
-app: opera
+app: /iexplore/
+app: /opera/
 
 # TODO: Compatibility with Edge?
-# title: /.*- Microsoft Edge/
+# title: /- Microsoft Edge/
 """
 
 
