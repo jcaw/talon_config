@@ -29,9 +29,7 @@ def type_command(command, prefix_arg):
 
 
 def is_command_bound(command):
-    defined_commands = emacs_state.state.get_data().get(
-        emacs_state["defined-commands"], []
-    )
+    defined_commands = emacs_state.get("defined-commands", [])
     return command in defined_commands
 
 
