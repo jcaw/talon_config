@@ -66,7 +66,7 @@ symbols = multi_map(
     {
         ("back tick", "grave"): "`",
         ("comma", "cam"): ",",
-        ("dot", "period", "full stop"): ".",
+        ("dot", "period", "full stop", "point"): ".",
         ("semicolon", "semi"): ";",
         ("apostrophe", "quote"): "'",
         ("double quote", "speech mark", "speech"): '"',
