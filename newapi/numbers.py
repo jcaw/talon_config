@@ -185,8 +185,7 @@ def number_small(m):
 
 # TODO: Also allow repeating digits
 @ctx.capture(
-    "self.natural_number",
-    rule=f"<number_small> [{alt_scales} ([and] (<number_small> | {alt_scales} | <number_small> {alt_scales}))*]",
+    rule=f"<number_small> [{alt_scales} ([and] (<number_small> | {alt_scales} | <number_small> {alt_scales}))*]"
 )
 def natural_number(m) -> int:
     return fuse_num(fuse_scale(fuse_num(fuse_scale(list(m), 3))))[0]
