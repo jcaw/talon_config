@@ -71,7 +71,7 @@ class Actions:
         """
         for command in commands:
             if is_command_bound(command):
-                actions.self.emacs_command(command, prefix_arg)
+                actions.self.emacs_prefix_command(command, prefix_arg=prefix_arg)
                 break
         else:
             if keypress:
