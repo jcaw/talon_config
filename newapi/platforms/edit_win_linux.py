@@ -63,9 +63,3 @@ class BuiltInActions:
     def redo():
         # TODO: Lots of apps use ctrl-shift-z.
         key("ctrl-y")
-
-    def page_up():
-        key("pageup")
-
-    def page_down():
-        key("pagedown")
