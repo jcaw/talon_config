@@ -14,9 +14,15 @@ from talon import Module, Context, actions
 from user.utils import multi_map, dictify
 
 
-default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip".split(
-    " "
+default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip"
+# My setup has trouble with some words. Probably my accent.
+modified_alphabet = (
+    default_alphabet.replace("air", "arch")
+    .replace("bat", "batch")
+    .replace("zip", "zen")
 )
+# chosen_alphabet = default_alphabet.split(" ")
+chosen_alphabet = modified_alphabet.split(" ")
 letters_string = "abcdefghijklmnopqrstuvwxyz"
 
 # TODO: Use digits in number.py?
@@ -105,7 +111,7 @@ ctx.lists["self.modifier"] = {
     "super": "super",
 }
 
-ctx.lists["self.letter"] = dict(zip(default_alphabet, letters_string))
+ctx.lists["self.letter"] = dict(zip(chosen_alphabet, letters_string))
 ctx.lists["self.symbol"] = multi_map(
     {
         ("back tick", "grave"): "`",
