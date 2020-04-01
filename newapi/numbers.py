@@ -160,6 +160,11 @@ def natural_number(m) -> int:
     """Naturally-spoken number. E.g. "five hundred", "twenty four"."""
 
 
+@module.capture
+def optional_number(m) -> int or None:
+    """Optional number. If not spoken, defaults to `None`."""
+
+
 ctx = Context()
 
 
@@ -194,6 +199,14 @@ def natural_number(m) -> int:
 @ctx.capture("number", rule=f"(<self.natural_number> | <digits>)")
 def number(m):
     return m[0]
+
+
+@ctx.capture(rule="[<number>]")
+def optional_number(m) -> int or None:
+    try:
+        return m.number
+    except AttributeError:
+        return None
 
 
 @ctx.capture("number_signed", rule=f"[negative] <number>")
