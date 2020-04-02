@@ -1,5 +1,5 @@
 app: /emacs/
-user.emacs-minor-modes: /,company-mode,/
+user.emacs-minor-mode: company-mode
 user.emacs-company-prompt-open: True
 -
 ^<number>: self.emacs_company_complete(number)

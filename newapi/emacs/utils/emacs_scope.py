@@ -17,22 +17,38 @@ def _add_to_scope(scope, key, value):
     scope[f"emacs-{key}"] = value
 
 
-def _add_scope_list(scope, state, key):
-    """Temporary hack to allow context matching on lists of strings.
+def _add_legal_values(scope, state):
+    """Add all keys with scope-legal values in ``state`` to ``scope``."""
+    for key, value in state.items():
+        if isinstance(key, str):
+            if isinstance(value, LEGAL_SCOPE_TYPES):
+                _add_to_scope(scope, key, value)
+            elif _is_list_of_strings(value):
+                _add_to_scope(scope, key, set(value))
 
-    Add lists as comma-separated strings. Match for individual items by regexp.
+
+def _is_list_of_strings(thing):
+    """Is ``thing`` a list of strings?"""
+    if isinstance(thing, list):
+        for element in thing:
+            if not isinstance(element, str):
+                return False
+        return True
+    else:
+        return False
+
+
+def _duplicate_key(scope, original_key, new_key):
+    """Create another reference to the value of ``original_key``.
+
+    Use to create nicer key names. A reference is only created when the
+    original key exists.
 
     """
-    # Pad the ends so we can search like: /,some-mode,/
-    joined = "," + ",".join(state.get(key, [])) + ","
-    _add_to_scope(scope, key, joined)
-
-
-def _add_string_values(scope, state):
-    """Add all keys with string values in ``state`` to ``scope``."""
-    for key, value in state.items():
-        if isinstance(key, str) and isinstance(value, LEGAL_SCOPE_TYPES):
-            _add_to_scope(scope, key, value)
+    try:
+        scope[f"emacs-{new_key}"] = scope[f"emacs-{original_key}"]
+    except KeyError:
+        pass
 
 
 @module.scope
@@ -41,12 +57,11 @@ def scope(*_):
     state = emacs_state.freeze()
     scope = {}
     # Allow the user to match on any string value.
-    _add_string_values(scope, state)
-    # We have to treat lists of strings differently, for now.
-    #
-    # TODO: Maybe do this automatically?
-    _add_scope_list(scope, state, "minor-modes")
-    _add_scope_list(scope, state, "active-yasnippet-tables")
+    _add_legal_values(scope, state)
+    # Referencing `major-mode` and `minor-mode` in .talon files is nicer than
+    # referencing the set names passed by Voicemacs.
+    _duplicate_key(scope, "major-mode-chain", "major-mode")
+    _duplicate_key(scope, "minor-modes", "minor-mode")
     return scope
 
 
