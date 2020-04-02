@@ -56,7 +56,8 @@ def scope(*_):
     """Update the scope with relevant Emacs keys."""
     state = emacs_state.freeze()
     scope = {}
-    # Allow the user to match on any string value.
+    # Allow the user to automatically match on any value that's legal within a
+    # scope.
     _add_legal_values(scope, state)
     # Referencing `major-mode` and `minor-mode` in .talon files is nicer than
     # referencing the set names passed by Voicemacs.
