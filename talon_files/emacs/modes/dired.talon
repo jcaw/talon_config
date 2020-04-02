@@ -21,7 +21,7 @@ unflag <user.optional_number>:
     user.emacs_dired_command("dired-unmark", optional_number)
 unflag all: user.emacs_command("dired-unmark-all-marks")
 
-copy <user.optional_number>:
+copy [file] <user.optional_number>:
     user.emacs_dired_command("dired-do-copy", optional_number)
 flag [to] (delete | kill) <user.optional_number>:
     user.emacs_dired_command("dired-flag-file-deletion", optional_number)
