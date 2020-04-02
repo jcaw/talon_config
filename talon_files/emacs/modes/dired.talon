@@ -25,7 +25,7 @@ copy <user.optional_number>:
     user.emacs_dired_command("dired-do-copy", optional_number)
 flag [to] (delete | kill) <user.optional_number>:
     user.emacs_dired_command("dired-flag-file-deletion", optional_number)
-(expunge | (delete | kill) flagged): user.emacs_command("dired-do-flagged-delete")
+(expunge | (delete | kill) flagged): user.emacs_command("dired-do-delete")
 
 
 # TODO: Maybe allow the word insert? Clashes with the key.
