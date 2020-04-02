@@ -13,6 +13,6 @@ mark <user.optional_number>:
     user.emacs_helm_command("helm-toggle-visible-mark", optional_number)
 
 # When we need to submit an empty prompt
-empty: user.emacs_command("helm-cr-empty-string")
+(submit | empty): user.emacs_command("helm-cr-empty-string")
 actions <user.optional_number>:
     user.emacs_helm_command("helm-select-action", optional_number)
