@@ -3,8 +3,8 @@ import time
 
 from talon import Module, actions
 
-from user.newapi.emacs.utils import rpc
-from user.newapi.emacs.utils.state import emacs_state
+from user.emacs.utils import rpc
+from user.emacs.utils.state import emacs_state
 
 
 key = actions.key

@@ -4,7 +4,7 @@ from typing import List, Callable
 from talon import Module, Context, ui, actions
 import talon.clip as clip
 
-from user.newapi.utils.formatting import (
+from user.utils.formatting import (
     apply_camel_case,
     apply_studley_case,
     apply_snake,
@@ -115,6 +115,7 @@ def formatted_dictation(m) -> ComplexInsert:
 
 
 @module.action_class
+@context.action_class
 class Actions:
     def surrounding_text() -> SurroundingText:
         """Get the text on either side of the next insert."""

@@ -7,6 +7,8 @@ module = Module()
 module.list("window_align_position", desc="list of window alignment positions")
 
 
+# TODO: Probably restructure this, I think it makes more sense to make it
+#   windows-only.
 @module.capture
 def window_align_position(m) -> str:
     """Get a specific direction to align the window to."""

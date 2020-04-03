@@ -5,8 +5,8 @@ import re
 
 from talon import Context, ui
 
-from user.newapi.emacs.utils import rpc
-from user.newapi.utils.key_value_store import KeyValueStore
+from user.emacs.utils import rpc
+from user.utils.key_value_store import KeyValueStore
 
 
 VOICEMACS_TITLE_PREFIX = "voicemacs:"

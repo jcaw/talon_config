@@ -1,6 +1,7 @@
 import subprocess
 import os
 import logging
+import time
 
 from talon.voice import Context
 
@@ -10,6 +11,8 @@ try:
     import emacs_porthole as porthole
 except ImportError:
     logging.exception("Porthole python client not installed.")
+
+LOGGER = logging.getLogger(__name__)
 
 
 VOICEMACS_SERVER_NAME = "voicemacs"
@@ -37,13 +40,33 @@ context = Context("install_porthole_context")
 context.keymap({"(update | upgrade | install) porthole": install_porthole})
 
 
-def call(function_, params=[], timeout=2):
+def call(function_, params=[], timeout=5, max_attempts=5):
     """Send an RPC call to Emacs."""
-    return porthole.call(
-        VOICEMACS_SERVER_NAME, function_, params=params, timeout=timeout
-    )
+    attempts = 0
+    start_time = time.monotonic()
+    while True:
+        try:
+            attempts += 1
+            return porthole.call(
+                VOICEMACS_SERVER_NAME, function_, params=params, timeout=timeout
+            )
+        except porthole.ServerNotRunningError:
+            # Emacs servers can be volatile. If it appears not to be running, it
+            # might have just rejected our request. With remote command calls, this
+            # matters, so we retry.
+            if attempts >= max_attempts:
+                raise
+            # If we're passed the timeout, always raise.
+            #
+            # TODO: Should this strictly produce a timeout error? Does it matter?
+            if time.monotonic() - start_time > timeout:
+                raise
+        LOGGER.info(
+            f"Failed to call ({function_}, {params}) on attempt {attempts}. Retrying."
+        )
 
 
+# TODO: Audit uses of this
 def Call(function_, params=[], timeout=2):
     """Constuct a command that executes `call`."""
 

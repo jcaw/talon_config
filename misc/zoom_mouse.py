@@ -8,7 +8,7 @@ from talon_plugins import eye_zoom_mouse
 
 from user.misc import basic
 from user.utils import sound
-from user.newapi.mouse import Click
+from user.mouse import Click
 
 
 LOGGER = logging.getLogger(__name__)
@@ -146,7 +146,7 @@ class NoiseActions:
     def on_hiss(start: bool):
         try:
             # This is currently a private module. Use if available.
-            from user.newapi.utils import scroll
+            from user.utils import scroll
         except ImportError:
             print("Scroll module not found. It must be manually added.")
         if start:

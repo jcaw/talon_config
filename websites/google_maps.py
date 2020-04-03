@@ -1,6 +1,6 @@
 from talon import Context
 
-from user.newapi.games.utils.map_scroll import EyeScroller, KeyMover
+from user.games.utils.map_scroll import EyeScroller, KeyMover
 
 
 hiss_move_context = Context()

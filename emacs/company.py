@@ -1,6 +1,6 @@
 from talon import Module
 
-from user.newapi.emacs.utils import rpc
+from user.emacs.utils import rpc
 
 
 module = Module()

@@ -64,8 +64,13 @@ def standalone_arrow(m) -> str:
 
 
 @mod.capture
-def number(m) -> str:
+def number_key(m) -> str:
     """One number key"""
+
+
+@mod.capture
+def number_keys(m) -> str:
+    """Multiple number keys"""
 
 
 @mod.capture
@@ -96,6 +101,11 @@ def any(m) -> str:
 @mod.capture
 def keychord(m) -> str:
     """A single key with modifiers"""
+
+
+@mod.capture
+def character(m) -> str:
+    """Any key that can be typed as a character."""
 
 
 ctx = Context()
@@ -225,7 +235,7 @@ def arrow(m) -> str:
 
 @ctx.capture(rule="<self.arrow>+")
 def arrows(m) -> str:
-    return str(m)
+    return m.arrow_list
 
 
 @ctx.capture(rule="{self.standalone_arrow}")
@@ -233,9 +243,14 @@ def standalone_arrow(m) -> str:
     return m.standalone_arrow
 
 
-@ctx.capture(rule="{self.number}")
-def number(m):
-    return m.number
+@ctx.capture(rule="numb <digits>")
+def number_key(m):
+    return str(m.digits)
+
+
+@ctx.capture(rule="numb <number>")
+def number_keys(m):
+    return str(m.number)
 
 
 @ctx.capture(rule="{self.letter}")
@@ -253,20 +268,24 @@ def symbol(m):
     return m.symbol
 
 
-@ctx.capture(rule="(<self.arrow> | <self.number> | <self.letter> | <self.special>)")
+@ctx.capture(rule="(<self.arrow> | <number> | <self.letter> | <self.special>)")
 def any(m) -> str:
-    return str(m)
+    return str(m[0])
 
 
 @ctx.capture(rule="{self.modifier}+ <self.any>")
 def keychord(m) -> str:
-    mods = list(m.modifier)
-    return "-".join(mods + [m.any])
+    return "-".join(m.modifier_list + [m.any])
 
 
 @ctx.capture(rule="{self.letter}+")
 def letters(m):
     return m.letter
+
+
+@ctx.capture(rule="(<self.letter> | <self.symbol> | <self.number_key>)")
+def character(m) -> str:
+    return m[0]
 
 
 @mod.action_class
@@ -282,6 +301,7 @@ class Actions:
         #   uppercase char?
         actions.insert("".join(chars).upper())
 
+    # TODO: Switch to many_keys
     def many(keys: List[str]):
         """Press a list of keys in sequence."""
         for key in keys:
@@ -289,5 +309,6 @@ class Actions:
 
     def press_number(number: float):
         """Press each key in a number"""
+        # TODO: Allow leading zeros
         for char in str(number):
             actions.key(char)
