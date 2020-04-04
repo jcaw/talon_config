@@ -1,7 +1,6 @@
 from talon.voice import Str, press, Key
 import talon.clip as clip
 from talon import resource
-from ..bundle_groups import FILETYPE_SENSITIVE_BUNDLES
 import json
 import platform
 import time
@@ -155,22 +154,6 @@ def parse_words_as_integer(words):
 
     # Create merged number string and convert to int
     return int("".join(normalized_number_values))
-
-
-def is_in_bundles(bundles):
-    return lambda app, win: any(b in app.bundle for b in bundles)
-
-
-def is_filetype(extensions=()):
-    def matcher(app, win):
-        if is_in_bundles(FILETYPE_SENSITIVE_BUNDLES)(app, win):
-            if any(ext in win.title for ext in extensions):
-                return True
-            else:
-                return False
-        return True
-
-    return matcher
 
 
 class PreserveClipboard:
