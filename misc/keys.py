@@ -7,7 +7,6 @@ https://github.com/knausj85/knausj_talon/blob/d330a6eb1fbfcc13f99a732a097f220fd0
 
 
 from typing import Set, List
-import sys
 
 from talon import Module, Context, actions
 
