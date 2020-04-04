@@ -1,7 +1,7 @@
 import time
 from typing import List, Callable
 
-from talon import Module, Context, ui, actions
+from talon import Module, Context, actions
 import talon.clip as clip
 
 from user.utils.formatting import (
