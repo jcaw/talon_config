@@ -5,7 +5,7 @@ from talon import Module, Context, actions, ctrl, ui
 from talon.track.geom import Point2d
 from talon_plugins import eye_mouse, eye_zoom_mouse
 
-from user.misc import basic
+from user.utils import Modifiers
 from user.utils.eye_mouse import FrozenEyeMouse
 from user.utils.mouse_history import backdated_position
 
@@ -78,34 +78,34 @@ class Actions:
 
     def left_click(modifiers: List[str] = []):
         """Left click at current position."""
-        with basic.Modifiers(modifiers):
+        with Modifiers(modifiers):
             actions.mouse_click(button=0)
 
     def right_click(modifiers: List[str] = []):
         """Right click at current position."""
-        with basic.Modifiers(modifiers):
+        with Modifiers(modifiers):
             actions.mouse_click(button=1)
 
     def middle_click(modifiers: List[str] = []):
         """Middle click at current position."""
-        with basic.Modifiers(modifiers):
+        with Modifiers(modifiers):
             actions.mouse_click(button=2)
 
     def double_click(modifiers: List[str] = []):
         """Double left click at current position."""
-        with basic.Modifiers(modifiers):
+        with Modifiers(modifiers):
             for i in range(2):
                 actions.mouse_click(button=0)
 
     def triple_click(modifiers: List[str] = []):
         """Triple left click at current position."""
-        with basic.Modifiers(modifiers):
+        with Modifiers(modifiers):
             for i in range(3):
                 actions.mouse_click(button=0)
 
     def drag(modifiers: List[str] = []):
         """Hold a mouse button at current position (default left)."""
-        basic.Modifiers(modifiers).__enter__()
+        Modifiers(modifiers).__enter__()
         # TODO: Switch to newapi action once I know the interface
         ctrl.mouse_click(button=0, down=True)
 
@@ -113,7 +113,7 @@ class Actions:
         """Release a mouse button at current position (default left)."""
         # TODO: Switch to newapi action once I know the interface
         ctrl.mouse_click(button=0, up=True)
-        basic.Modifiers(modifiers).__exit__(None, None, None)
+        Modifiers(modifiers).__exit__(None, None, None)
 
     def default_click(click_info: Click):
         """Perform ``click_function`` according to the context."""

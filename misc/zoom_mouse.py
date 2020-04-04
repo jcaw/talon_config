@@ -6,9 +6,8 @@ from talon import Module, Context, actions, settings, ctrl, cron, speech_system,
 from talon.track.geom import Point2d
 from talon_plugins import eye_zoom_mouse
 
-from user.misc import basic
-from user.utils import sound
 from user.mouse import Click
+from user.utils import sound, Modifiers
 
 
 LOGGER = logging.getLogger(__name__)
@@ -115,7 +114,7 @@ class MouseActions:
         time.sleep(0.3)
         # TODO: Port to newapi actions once I know the interface
         ctrl.mouse_click(button=0, up=True)
-        basic.Modifiers(modifiers).__exit__(None, None, None)
+        Modifiers(modifiers).__exit__(None, None, None)
 
     def default_click(click_info: Click):
         modifiers = click_info.modifiers

@@ -2,7 +2,7 @@ import time
 
 from talon import Module, actions
 
-from user.basic.utils import Modifiers
+from user.utils import Modifiers
 
 key = actions.key
 user = actions.user

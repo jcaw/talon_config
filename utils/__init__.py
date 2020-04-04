@@ -1,6 +1,6 @@
 from talon.voice import Str, press, Key
 import talon.clip as clip
-from talon import resource
+from talon import resource, actions
 import json
 import platform
 import time
@@ -154,6 +154,21 @@ def parse_words_as_integer(words):
 
     # Create merged number string and convert to int
     return int("".join(normalized_number_values))
+
+
+class Modifiers(object):
+    """Context manager that holds down modifiers during the context."""
+
+    def __init__(self, modifiers):
+        self.modifiers = modifiers
+
+    def __enter__(self):
+        for modifier in self.modifiers:
+            actions.key(f"{modifier}:down")
+
+    def __exit__(self, *_):
+        for modifier in self.modifiers:
+            actions.key(f"{modifier}:up")
 
 
 class PreserveClipboard:
