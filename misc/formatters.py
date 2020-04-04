@@ -24,7 +24,6 @@ from user.utils.formatting import (
     SurroundingText,
 )
 from user.utils import multi_map, preserve_clipboard
-from user.misc.numbers import extract_number, numeric
 
 
 # TODO: Quote wrapped stuff. Double/single quotes
