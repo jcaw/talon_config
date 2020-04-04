@@ -2,7 +2,7 @@ from typing import List
 
 from talon import Context, actions
 
-from user.mouse import Click
+from user.misc.mouse import Click
 
 
 # TODO: Combine this with zoom_mouse.py

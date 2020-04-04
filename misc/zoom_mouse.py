@@ -6,8 +6,8 @@ from talon import Module, Context, actions, settings, ctrl, cron, speech_system,
 from talon.track.geom import Point2d
 from talon_plugins import eye_zoom_mouse
 
-from user.mouse import Click
 from user.utils import sound, Modifiers
+from user.misc.mouse import Click
 
 
 LOGGER = logging.getLogger(__name__)
