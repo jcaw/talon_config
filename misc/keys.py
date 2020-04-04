@@ -123,6 +123,7 @@ ctx.lists["self.modifier"] = {
 ctx.lists["self.letter"] = dict(zip(chosen_alphabet, letters_string))
 ctx.lists["self.symbol"] = multi_map(
     {
+        ("enter", "return", "slap"): "enter",
         ("back tick", "grave"): "`",
         ("comma", "cam"): ",",
         ("dot", "period", "full stop", "point"): ".",
