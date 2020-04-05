@@ -18,28 +18,6 @@ LOGGER = logging.getLogger(__name__)
 VOICEMACS_SERVER_NAME = "voicemacs"
 
 
-# FIXME: Automatic installer isn't working.
-# TODO: Using Porthole as a stopgap. Remove once Talon has RPC.
-def install_porthole(m=None):
-    print("Installing porthole")
-    if ON_WINDOWS:
-        pip_script = "pip.bat"
-    elif ON_LINUX:
-        raise NotImplementedError("Don't know where pip is on Linux.")
-    elif ON_MAC:
-        raise NotImplementedError("Don't know where pip is on Mac.")
-    else:
-        raise NotImplementedError("Unrecognized platform.")
-    pip_path = os.path.join(".venv/Scripts/", pip_script)
-    subprocess.run(
-        [pip_path, "install", "emacs-porthole", "--upgrade"], capture_output=True
-    )
-
-
-context = Context("install_porthole_context")
-context.keymap({"(update | upgrade | install) porthole": install_porthole})
-
-
 def call(function_, params=[], timeout=5, max_attempts=5):
     """Send an RPC call to Emacs."""
     attempts = 0
