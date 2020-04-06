@@ -40,7 +40,7 @@ import time
 from talon import Module, Context, actions
 
 from user.utils import apply_function, prepend_to_map, multi_map
-from user import zoom_mouse
+from user.misc import zoom_mouse
 from user.games.utils import eu4_locations, map_scroll
 from user.games.utils.switch_input import switch_to_keyboard_module
 from user.games.utils.hard_coded_buttons import Corner
