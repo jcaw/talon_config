@@ -28,12 +28,7 @@ def call(function_, params=[], timeout=5, max_attempts=5):
             return porthole.call(
                 VOICEMACS_SERVER_NAME, function_, params=params, timeout=timeout
             )
-        except (
-            porthole.ServerNotRunningError,
-            # FIXME: Shouldn't need to explicitly compensate for a timeout
-            #   that didn't actually exceed the timeout.
-            porthole.TimeoutError,
-        ):
+        except porthole.ServerNotRunningError:
             # Emacs servers can be volatile. If it appears not to be running, it
             # might have just rejected our request. With remote command calls, this
             # matters, so we retry.
