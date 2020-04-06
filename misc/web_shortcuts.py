@@ -2,6 +2,7 @@
 
 import urllib
 import webbrowser
+from typing import Dict
 
 from talon import Module, actions
 
