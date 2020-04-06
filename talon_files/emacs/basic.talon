@@ -113,3 +113,6 @@ discard: key(ctrl-c ctrl-k)
 
 (next | neck) error | nerror: user.next_error()
 (last | larse) error | larror: user.previous_error()
+
+scratch [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-scratch-buffer")
+messages [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-messages-buffer")
