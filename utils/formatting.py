@@ -224,12 +224,15 @@ def _format_title_word(word):
 #
 # TODO: How to handle terminations within parens? e.g: "(something.) |"
 _RE_SENTENCE_TERMINATOR = re.compile(r"[\.\…\!\?]+[^a-zA-Z0-9]*$")
+_RE_START_OF_DOCUMENT = re.compile(r"^[ \n\t\r]*$")
 
 
 def _is_new_sentence(text_before):
     """Given `text_before`, are we at the start of a new sentence?"""
     # TODO: Benchmark higher limit
-    return _RE_SENTENCE_TERMINATOR.search(text_before)
+    return _RE_SENTENCE_TERMINATOR.search(text_before) or _RE_START_OF_DOCUMENT.match(
+        text_before
+    )
 
 
 def apply_title(text, surrounding_text=None):
