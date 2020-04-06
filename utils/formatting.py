@@ -229,7 +229,7 @@ _RE_SENTENCE_TERMINATOR = re.compile(r"[\.\…\!\?]+[^a-zA-Z0-9]*$")
 def _is_new_sentence(text_before):
     """Given `text_before`, are we at the start of a new sentence?"""
     # TODO: Benchmark higher limit
-    return _RE_SENTENCE_TERMINATOR.match(text_before)
+    return _RE_SENTENCE_TERMINATOR.search(text_before)
 
 
 def apply_title(text, surrounding_text=None):
