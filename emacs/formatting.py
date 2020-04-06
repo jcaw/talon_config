@@ -25,7 +25,6 @@ class UserActions:
             )
         except porthole.PortholeConnectionError:
             return None
-        print(raw_info)
         return SurroundingText(
             text_before=raw_info["text-before"], text_after=raw_info["text-after"]
         )
