@@ -49,17 +49,6 @@ def call(function_, params=[], timeout=5, max_attempts=5):
         )
 
 
-# TODO: Audit uses of this
-def Call(function_, params=[], timeout=2):
-    """Constuct a command that executes `call`."""
-
-    def do_call(m):
-        nonlocal function_, params, timeout
-        return call(function_, params, timeout)
-
-    return do_call
-
-
 def run_command(command, prefix_arg=None):
     return call(
         "voicemacs-inject-command",
