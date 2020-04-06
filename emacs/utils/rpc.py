@@ -39,7 +39,7 @@ def call(function_, params=[], timeout=5, max_attempts=5):
             # matters, so we retry.
             if attempts >= max_attempts:
                 raise
-            # If we're passed the timeout, always raise.
+            # If we're past the timeout, always raise.
             #
             # TODO: Should this strictly produce a timeout error? Does it matter?
             if time.monotonic() - start_time >= timeout:
