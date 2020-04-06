@@ -65,13 +65,7 @@ def run_command(command, prefix_arg=None):
 
 def pull_data(full_refresh=False):
     try:
-        return call(
-            "voicemacs-pull-data",
-            [full_refresh],
-            # Use a very long timeout in case Emacs is processing (e.g. if Helm
-            # being opened).
-            timeout=2,  # TODO: Make sure to comment this
-        )
+        return call("voicemacs-pull-data", [full_refresh])
     except porthole.PortholeCallError:
         # Don't interrupt if it fails.
         #
