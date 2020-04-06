@@ -21,7 +21,7 @@ mark: user.emacs_command("set-mark-command")
 (park | pop mark): user.emacs_prefix_command("set-mark-command")
 swark: user.emacs_command("exchange-point-and-mark")
 [pop] glock: user.emacs_command("pop-global-mark")
-region: user.emacs_command("toggle-region")
+region: user.emacs_command("voicemacs-toggle-region")
 
 
 # Scrolling
