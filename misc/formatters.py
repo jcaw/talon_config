@@ -157,3 +157,11 @@ class Actions:
     def insert_capitalized(text: str) -> None:
         """Insert text, formatted as capitalized natural language."""
         actions.self.insert_formatted(text, [apply_capitalized_sentence])
+
+    def insert_lowercase(text: str) -> None:
+        """Insert text, formatted as lowercase."""
+        actions.self.insert_formatted(text, [apply_lowercase])
+
+    def insert_spine(text: str) -> None:
+        """Insert text, formatted as spine case."""
+        actions.self.insert_formatted(text, [apply_spine])
