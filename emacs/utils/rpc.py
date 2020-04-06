@@ -50,12 +50,7 @@ def call(function_, params=[], timeout=5, max_attempts=5):
 
 
 def run_command(command, prefix_arg=None):
-    return call(
-        "voicemacs-inject-command",
-        params=[command, prefix_arg],
-        # TODO: Is this long enough? What if Emacs is hanging?
-        timeout=2,
-    )
+    return call("voicemacs-inject-command", params=[command, prefix_arg])
 
 
 def pull_data(full_refresh=False):
