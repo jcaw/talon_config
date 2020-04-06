@@ -255,7 +255,7 @@ def apply_sentence(text, surrounding_text=None):
         # When there's no context, we can't tell - so we never capitalize. The
         # user has to explicitly ask for it.
         and surrounding_text
-        and _is_new_sentence(surrounding_text)
+        and _is_new_sentence(surrounding_text.text_before)
     ):
         words[0] = capitalize(words[0])
     return _language_spaced(words, surrounding_text)
