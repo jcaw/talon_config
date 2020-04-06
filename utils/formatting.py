@@ -85,7 +85,7 @@ def _should_space(before, after):
     """
     # We classify some characters as "solid" - these can have a space after.
     solid_before = (
-        _RE_SOLID_BEFORE.match(before)
+        _RE_SOLID_BEFORE.search(before)
         # Asterisk-denoted footnotes are an edge case.
         and not _RE_ASTERISK_FOOTNOTE.match(before)
     ) or _RE_CLOSING_SPEECH.match(before)
