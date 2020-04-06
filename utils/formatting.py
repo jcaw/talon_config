@@ -135,6 +135,8 @@ def apply_camel_case(text, surrounding_text=None):
     for i, word in enumerate(words[1:]):
         words[i + 1] = capitalize(word)
     # TODO: Allow camelling the middle of a word?
+    #   e.g:
+    #   "so|me" -> "soCamelInsertMe" (note the M near the end)
     return ComplexInsert("".join(words))
 
 
