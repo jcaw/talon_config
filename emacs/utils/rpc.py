@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 VOICEMACS_SERVER_NAME = "voicemacs"
 
 
-def call(function_, params=[], timeout=5, max_attempts=5):
+def call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
     """Send an RPC call to Emacs."""
     attempts = 0
     start_time = time.monotonic()
@@ -39,33 +39,33 @@ def call(function_, params=[], timeout=5, max_attempts=5):
             # TODO: Should this strictly produce a timeout error? Does it matter?
             if time.monotonic() - start_time >= timeout:
                 raise
+        except porthole.TimeoutError:
+            # Ignore short timeout errors when possible, so we can try again.
+            # This is a weird `web-server` behavior - Porthole is reporting two
+            # different types of timeout the same way.
+            #
+            # The command still should have gotten through, even though it
+            # didn't return a response, so we can only do this when our command
+            # doesn't change Emacs' state.
+            #
+            # FIXME: Weird short timeout error in Porthole, fix upstream
+            #   - Perhaps could add a nonce to all calls to circumvent it?
+            if changes_state or time.monotonic() - start_time >= timeout:
+                raise
         LOGGER.info(
             f"Failed to call ({function_}, {params}) on attempt {attempts}. Retrying."
         )
 
 
 def run_command(command, prefix_arg=None):
-    timeout = 5
-    start_time = time.monotonic()
-    try:
-        return call(
-            "voicemacs-inject-command", params=[command, prefix_arg], timeout=timeout
-        )
-    except porthole.TimeoutError:
-        # Ignore short timeout errors, Porthole is reporting two different
-        # problems the same way. This is a weird `web-server` behaviour. The
-        # command still should have gotten through, even though it didn't
-        # return a response.
-        #
-        # FIXME: Weird short timeout error in Porthole
-        #   - Perhaps could add a nonce to all calls to circumvent it?
-        if time.monotonic() - start_time >= timeout:
-            raise
+    return call("voicemacs-inject-command", params=[command, prefix_arg])
 
 
 def pull_data(full_refresh=False):
     try:
-        return call("voicemacs-pull-data", [full_refresh])
+        return call(
+            "voicemacs-pull-data", [full_refresh], changes_state=not full_refresh
+        )
     except porthole.PortholeCallError:
         # Don't interrupt if it fails.
         #

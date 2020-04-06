@@ -22,6 +22,7 @@ class UserActions:
                 [":chars-before", 30000, ":chars-after", 30000],
                 # Use a very long timeout
                 timeout=10,
+                changes_state=False,
             )
         except porthole.PortholeConnectionError:
             return None
