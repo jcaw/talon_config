@@ -52,6 +52,9 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 # Buffers
 # TODO: Fallbacks
 [switch] (buffer | buff): user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
+[switch] (buffer | buff) <user.dictation>:
+    user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
+    user.insert_lowercase(dictation)
 (close | kill) (buffer | buff): user.emacs_command("kill-this-buffer")
 (close | kill) other (buffer | buff): user.emacs_command("kill-this-buffer")
 (next | neck) (buffer | buff): user.emacs_command("next-buffer")
