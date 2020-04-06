@@ -93,7 +93,8 @@ buildings:                       user.eu4_open_menu("b 7")
 # TODO: Better solution to the two estates commands
 (production | prod) estates:     user.eu4_open_menu("b 9")
 # Ledger Menus
-ledger:                             user.eu4_open_menu("l")  # TODO: Will this conflict?
+# TODO: Will this conflict?
+ledger:                             user.eu4_open_menu("l")
 country ledger:                     user.eu4_open_menu("l f1")
 # TODO: What's on f2? Colonization?
 (military | mill) ledger:           user.eu4_open_menu("l f3")
