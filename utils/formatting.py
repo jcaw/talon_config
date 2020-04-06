@@ -12,7 +12,7 @@ class SurroundingText:
 
     @property
     def char_after(self):
-        return self.text_after[1] if self.text_after else None
+        return self.text_after[0] if self.text_after else None
 
 
 class ComplexInsert:
