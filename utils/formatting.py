@@ -110,7 +110,7 @@ def _delimiter_spaced(delimiter, text, surrounding_text=None):
     # TODO: Have this cope with delimiters len > 1 (currently, won't extend
     #   partial delimiters)
     pad_start = (
-        (len(text) == 0 or is_alphanumeric(text[-1]))
+        (len(text) == 0 or is_alphanumeric(text[0]))
         and surrounding_text
         and is_alphanumeric(surrounding_text.char_before)
     )
