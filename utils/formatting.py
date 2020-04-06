@@ -161,11 +161,11 @@ def apply_dotword(text, surrounding_text=None):
 def make_apply_delimiter(delimiter):
     """Make a function that applies arbitrary delimiter spacing to the text."""
 
-    def do_apply(text, surrounding_text=None):
+    def do_apply_delimiter(text, surrounding_text=None):
         nonlocal delimiter
         return _delimiter_spaced(delimiter, text, surrounding_text)
 
-    return do_apply
+    return do_apply_delimiter
 
 
 def apply_dunder(text, surrounding_text=None):
