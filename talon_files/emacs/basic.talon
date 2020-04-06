@@ -11,9 +11,9 @@ prefix: user.emacs_prefix()
 prefix <number>: user.emacs_prefix(number)
 prefix dash: user.emacs_prefix("-")
 meta: key(alt-x)
-meta <phrase>:
+meta <user.dictation>:
     key(alt-x)
-    user.insert_spine(phrase)
+    user.insert_lowercase(dictation)
 
 
 # Mark ring
