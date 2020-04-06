@@ -45,7 +45,22 @@ def call(function_, params=[], timeout=5, max_attempts=5):
 
 
 def run_command(command, prefix_arg=None):
-    return call("voicemacs-inject-command", params=[command, prefix_arg])
+    timeout = 5
+    start_time = time.monotonic()
+    try:
+        return call(
+            "voicemacs-inject-command", params=[command, prefix_arg], timeout=timeout
+        )
+    except porthole.TimeoutError:
+        # Ignore short timeout errors, Porthole is reporting two different
+        # problems the same way. This is a weird `web-server` behaviour. The
+        # command still should have gotten through, even though it didn't
+        # return a response.
+        #
+        # FIXME: Weird short timeout error in Porthole
+        #   - Perhaps could add a nonce to all calls to circumvent it?
+        if time.monotonic() - start_time >= timeout:
+            raise
 
 
 def pull_data(full_refresh=False):
