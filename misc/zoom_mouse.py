@@ -136,11 +136,21 @@ class MouseActions:
             cron.after("150ms", queue_drop)
 
 
+# HACK: Unbind the default zoom_mouse pop, manually bind it ourselves so we can
+#   override the pop binding with other contexts.
+#
+#   Unbind before every pop to reset the unbind when the zoom mouse is
+#   restarted.
+noise.register(
+    "pre:pop", lambda *_: noise.unregister("pop", eye_zoom_mouse.zoom_mouse.on_pop)
+)
+
+
 @context.action_class("user")
 class NoiseActions:
     def on_pop():
-        # Explicitly defer to the zoom mouse's implementation.
-        pass
+        # Manually invoke zoom mouse's own handler
+        eye_zoom_mouse.zoom_mouse.on_pop(True)
 
     def on_hiss(start: bool):
         try:
