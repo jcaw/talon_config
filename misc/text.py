@@ -77,11 +77,6 @@ def dictation(m) -> str:
     return extract_dictation(m.phrase)
 
 
-@module.capture
-def formatted_dictation(m) -> ComplexInsert:
-    """Get a complex insert for some dictation."""
-
-
 context = Context()
 context.lists["self.formatters"] = formatter_map.keys()
 
@@ -107,11 +102,6 @@ def formatters(m) -> List[str]:
     global formatter_map
     formatter_words = m.formatters_list
     return [formatter_map[word] for word in formatter_words]
-
-
-@context.capture(rule="<self.formatters> <self.dictation>")
-def formatted_dictation(m) -> ComplexInsert:
-    return format_contextually(m.dictation, m.formatters)
 
 
 @module.action_class
