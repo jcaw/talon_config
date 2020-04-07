@@ -86,8 +86,8 @@ context = Context()
 context.lists["self.formatters"] = formatter_map.keys()
 
 
-def join_punctuation(words):
     # TODO: Extract to formatter_utils
+def join_punctuation(words: List[str]) -> str:
     # TODO: Implement proper punctuation joining.
     return " ".join(words)
 
@@ -97,7 +97,7 @@ def extract_dictation(phrase) -> str:
     return join_punctuation(actions.dictate.parse_words(phrase))
 
 
-def format_contextually(text, formatters):
+def format_contextually(text: str, formatters: List[callable]) -> ComplexInsert:
     surrounding_text = actions.self.surrounding_text()
     return format_text(text, formatters, surrounding_text)
 
