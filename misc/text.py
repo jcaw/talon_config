@@ -114,7 +114,6 @@ def formatted_dictation(m) -> ComplexInsert:
 
 
 @module.action_class
-@context.action_class
 class Actions:
     def surrounding_text() -> SurroundingText:
         """Get the text on either side of the next insert."""
