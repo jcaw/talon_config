@@ -42,7 +42,7 @@ class KeyValueStore:
             with self._lock:
                 for key, value in dict_.items():
                     self._store[key] = value
-                    self._key_hooks[key].run()
+                    self._key_hooks[key].run(self._store)
                 self._update_hook.run(self._store)
 
     def delete(self, *keys):
@@ -59,7 +59,7 @@ class KeyValueStore:
                 if self._store:
                     for key in keys:
                         del self._store[key]
-                        self._key_hooks[key].run()
+                        self._key_hooks[key].run(self._store)
                     self._update_hook.run(self._store)
 
     def reset(self):
