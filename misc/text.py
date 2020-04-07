@@ -81,8 +81,8 @@ context = Context()
 context.lists["self.formatters"] = formatter_map.keys()
 
 
-    # TODO: Extract to formatter_utils
 def join_punctuation(words: List[str]) -> str:
+    # TODO: Extract to formatter_utils?
     # TODO: Implement proper punctuation joining.
     return " ".join(words)
 
