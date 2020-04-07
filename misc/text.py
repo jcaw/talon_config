@@ -92,7 +92,7 @@ def extract_dictation(phrase) -> str:
     return join_punctuation(actions.dictate.parse_words(phrase))
 
 
-def format_contextually(text: str, formatters: List[callable]) -> ComplexInsert:
+def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
     surrounding_text = actions.self.surrounding_text()
     return format_text(text, formatters, surrounding_text)
 
