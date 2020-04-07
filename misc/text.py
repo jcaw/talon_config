@@ -123,18 +123,18 @@ class Actions:
         time.sleep(0.1)
         return clip.get()
 
-    def reformat_left(formatters: List[str], number: int) -> None:
-        """Reformat a number of words left of the cursor."""
-        text = actions.self.cut_words_left(number)
-        surrounding_text = actions.self.surrounding_text()
-        actions.self.insert_complex(reformat_text(text, formatters, surrounding_text))
-
     def insert_complex(complex_insert: ComplexInsert) -> None:
         """Input a ComplexInsert into the current program."""
         actions.insert(complex_insert.insert)
         actions.insert(complex_insert.text_after)
         for i in range(len(complex_insert.text_after)):
             actions.key("left")
+
+    def reformat_left(formatters: List[str], number: int) -> None:
+        """Reformat a number of words left of the cursor."""
+        text = actions.self.cut_words_left(number)
+        surrounding_text = actions.self.surrounding_text()
+        actions.self.insert_complex(reformat_text(text, formatters, surrounding_text))
 
     def insert_formatted(text: str, formatters: List[Callable]) -> None:
         """Insert ``text``, formatted with ``formatters``."""
