@@ -71,10 +71,10 @@ def formatters(m) -> List[str]:
     """List of text formatters."""
 
 
-@module.capture(rule="<dgndictation>++ [over]")
+@module.capture(rule="<phrase>")
 def dictation(m) -> str:
     """Arbitrary dictation, optionally terminated with [over]."""
-    return extract_dictation(m)
+    return extract_dictation(m.phrase)
 
 
 @module.capture
@@ -92,8 +92,9 @@ def join_punctuation(words):
     return " ".join(words)
 
 
-def extract_dictation(m) -> str:
-    return join_punctuation(actions.dictate.parse_words(m.dgndictation))
+def extract_dictation(phrase) -> str:
+    """Extract raw dictation from a <phrase> capture."""
+    return join_punctuation(actions.dictate.parse_words(phrase))
 
 
 def format_contextually(text, formatters):
