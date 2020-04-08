@@ -59,7 +59,9 @@ class Actions:
         rpc.run_command(command, prefix_arg=prefix_arg)
 
     def emacs_fallbacks(
-        commands: List[str], prefix_arg: str = None, keypress: str = None
+        commands: List[str],
+        prefix_arg: str or int or List[int] or None = None,
+        keypress: str = None,
     ) -> None:
         """Run the first bound Emacs command.
 
@@ -84,7 +86,7 @@ class Actions:
                     f"was defined. Commands: {commands}"
                 )
 
-    def emacs_prefix(arg: str = None) -> None:
+    def emacs_prefix(arg: str or int or List[int] or None or True = None) -> None:
         """Input a prefix argument.
 
         :param arg: the argument. Leave as None to type an empty prefix
