@@ -56,6 +56,11 @@ class Actions:
         `[<number>]`.
 
         """
+        # Small helper since we might receive numbers as strings.
+        try:
+            prefix_arg = int(prefix_arg)
+        except ValueError:
+            pass
         rpc.run_command(command, prefix_arg=prefix_arg)
 
     def emacs_fallbacks(
