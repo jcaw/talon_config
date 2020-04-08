@@ -122,3 +122,5 @@ discard: key(ctrl-c ctrl-k)
 
 scratch [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-scratch-buffer")
 messages [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-messages-buffer")
+
+(rectangle | rect): user.emacs_command("rectangle-mark-mode")
