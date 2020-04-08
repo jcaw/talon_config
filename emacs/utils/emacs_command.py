@@ -42,7 +42,9 @@ class Actions:
         """Run an Emacs command."""
         rpc.run_command(command)
 
-    def emacs_prefix_command(command: str, prefix_arg: str = [4]) -> None:
+    def emacs_prefix_command(
+        command: str, prefix_arg: str or int or List[int] or None = [4]
+    ) -> None:
         """Run an Emacs command with a prefix argument.
 
         Leave ``prefix_arg`` blank to supply an empty prefix argument. (You
@@ -54,8 +56,6 @@ class Actions:
         `[<number>]`.
 
         """
-        if isinstance(prefix_arg, int):
-            prefix_arg = str(prefix_arg)
         rpc.run_command(command, prefix_arg=prefix_arg)
 
     def emacs_fallbacks(
