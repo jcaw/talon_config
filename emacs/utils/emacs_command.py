@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import time
 
 from talon import Module, actions
@@ -66,7 +66,7 @@ class Actions:
     def emacs_fallbacks(
         commands: List[str],
         prefix_arg: str or int or List[int] or None = None,
-        keypress: str = None,
+        keypress: Optional[str] = None,
     ) -> None:
         """Run the first bound Emacs command.
 
