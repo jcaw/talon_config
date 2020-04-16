@@ -138,7 +138,7 @@ class Actions:
 
     def insert_formatted(text: str, formatters: List[Callable]) -> None:
         """Insert ``text``, formatted with ``formatters``."""
-        actions.self.insert_complex(format_contextually(text, formatters))
+        actions.self.insert_complex(format_contextually(str(text), formatters))
 
     def insert_natural(text: str) -> None:
         """Insert text, formatted as natural language."""
