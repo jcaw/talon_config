@@ -93,8 +93,8 @@ def special(m) -> str:
 
 
 @mod.capture
-def any(m) -> str:
-    """Any one key"""
+def any_key(m) -> str:
+    """Any single key"""
 
 
 @mod.capture
@@ -269,13 +269,13 @@ def symbol(m):
 
 
 @ctx.capture(rule="(<self.arrow> | <number> | <self.letter> | <self.special>)")
-def any(m) -> str:
+def any_key(m) -> str:
     return str(m[0])
 
 
-@ctx.capture(rule="{self.modifier}+ <self.any>")
+@ctx.capture(rule="{self.modifier}+ <self.any_key>")
 def keychord(m) -> str:
-    return "-".join(m.modifier_list + [m.any])
+    return "-".join(m.modifier_list + [m.any_key])
 
 
 @ctx.capture(rule="{self.letter}+")
