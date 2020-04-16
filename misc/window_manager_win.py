@@ -11,45 +11,25 @@ os: windows
 """
 
 
-# Spoken positions, mapped to alignment key sequences.
-_positions = {
-    "right": ("right", "right"),
-    "left": ("left", "left"),
-    "top right": ("right", "right", "up"),
-    "top left": ("left", "left", "up"),
-    "bottom right": ("right", "right", "down"),
-    "bottom left": ("left", "left", "down"),
-}
-
-
-context.lists["user.window_align_position"] = _positions.keys()
-
-
-def _with_win_press(key_names):
-    """Press ``keys`` with the windows key held down."""
+def _with_win_press(key_sequence):
+    """Press ``keys`` while holding the Windows key down."""
     # TODO: Convert this to newapi once up/down implemented
-    ctrl.key_press("win", down=True)
+    actions.key("win:down")
     try:
-        for key_name in key_names:
-            actions.key(f"{key_name}")
+        # TODO: Better way to get the inter-key pause?
+        print("type: ", key_sequence, type(key_sequence))
+        for keychord in key_sequence.split():
+            actions.key(f"{keychord}")
             # Need a relatively long pause to eliminate errors.
             time.sleep(0.1)
     finally:
-        ctrl.key_press("win", up=True)
+        actions.key("win:up")
 
 
 @context.action_class("user")
 class DefaultUserActions:
-    def align_window(position: List[str]) -> None:
-        position = position[0]
-        if position not in _positions:
-            raise ValueError("This direction is not implemented on Windows.")
-        keys = _positions[position]
-        actions.user.maximize()
-        _with_win_press(keys)
-
     def maximize() -> None:
-        _with_win_press(["up"] * 3)
+        _with_win_press("up up up")
 
     def all_programs() -> None:
         actions.key("win-tab")
@@ -62,6 +42,16 @@ class DefaultUserActions:
 
 @module.action_class
 class WindowsUserActions:
+    def align_window_win(alignment_keys: str) -> None:
+        """Move a window to a specific position (on Windows).
+
+        ``alignment_keys`` should be a string-separated list of keys to press
+        to align the window.
+
+        """
+        actions.user.maximize()
+        _with_win_press(alignment_keys)
+
     # On Windows, to alt-tab through multiple windows, you have to hold alt (or
     # alt-shift) - letting go resets. We need custom actions that eat the
     # repeat to handle this.
