@@ -27,7 +27,7 @@ def _with_win_press(key_sequence):
 
 
 @context.action_class("user")
-class DefaultUserActions:
+class UserActions:
     def maximize() -> None:
         _with_win_press("up up up")
 
@@ -41,7 +41,7 @@ class DefaultUserActions:
 
 
 @module.action_class
-class WindowsUserActions:
+class ModuleActions:
     def align_window_win(alignment_keys: str) -> None:
         """Move a window to a specific position (on Windows).
 
@@ -78,7 +78,7 @@ class WindowsUserActions:
 
 
 @context.action_class("app")
-class BuiltInActions:
+class AppActions:
     def window_hide():
         # This doesn't actually minimize the window, just moves it to the back.
         # The effect should be similar though.
