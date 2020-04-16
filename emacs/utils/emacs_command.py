@@ -59,7 +59,7 @@ class Actions:
         # Small helper since we might receive numbers as strings.
         try:
             prefix_arg = int(prefix_arg)
-        except ValueError:
+        except TypeError:
             pass
         rpc.run_command(command, prefix_arg=prefix_arg)
 
