@@ -1,6 +1,6 @@
 os: windows
 -
-(next | neck) (window | win) <number>: user.window_next_hold(number)
+(next | neck) (window | win) <number>:  user.window_next_hold(number)
 (last | larse) (window | win) <number>: user.window_previous_hold(number)
 
 align right:        user.align_window_win("right right")
