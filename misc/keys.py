@@ -268,7 +268,9 @@ def symbol(m):
     return m.symbol
 
 
-@ctx.capture(rule="(<self.arrow> | <number> | <self.letter> | <self.special>)")
+@ctx.capture(
+    rule="(<self.arrow> | <number> | <self.letter> | <self.special> | <self.symbol>)"
+)
 def any_key(m) -> str:
     return str(m[0])
 
