@@ -226,6 +226,7 @@ def _format_title_word(word):
 # TODO: How to handle terminations within parens? e.g: "(something.) |"
 _RE_SENTENCE_TERMINATOR = re.compile(r"[\.\…\!\?]+[^a-zA-Z0-9]*$")
 _RE_START_OF_DOCUMENT = re.compile(r"^[ \n\t\r]*$")
+_RE_START_OF_TODO = re.compile(r"((TODO)|(FIXME)|(HACK))[-: \t]*$")
 _RE_DOUBLE_NEWLINE = re.compile(r"\n[ \r\t]*\n[ \r\t]*$")
 
 
@@ -235,6 +236,11 @@ def _is_new_sentence(text_before):
     return (
         _RE_SENTENCE_TERMINATOR.search(text_before)
         or _RE_START_OF_DOCUMENT.match(text_before)
+        # E.g in org mode:
+        #   * TODO |
+        # Emacs Lisp:
+        #   ;; TODO: |
+        or _RE_START_OF_TODO.search(text_before)
         # Double newline implies new paragraph.
         or _RE_DOUBLE_NEWLINE.search(text_before)
     )
