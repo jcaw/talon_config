@@ -350,3 +350,14 @@ class Hook(object):
                 func(*args, **kwargs)
             except Exception as e:
                 logging.exception(f"Error running hooked function")
+
+
+def echo(value, prompt="Value"):
+    """Debug function to print a value, then return it.
+
+    Talon debugging is limited. Wrap any value with this function to echo it
+    without affecting functionality.
+
+    """
+    print(f"{prompt}: {value}")
+    return value
