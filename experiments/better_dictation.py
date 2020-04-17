@@ -6,6 +6,9 @@ from user.utils.formatting import preserve_punctuation
 
 
 module = Module()
+module.mode(
+    "formatting", desc="mode that formats dictation with the last used formatter"
+)
 
 
 class BasePart(object):
@@ -81,12 +84,38 @@ def formatted_phrase(m) -> FormattedPhrase:
     return FormattedPhrase(m.formatters, m.mixed_phrase_strict)
 
 
+# Placeholder to signify "use the previous formatter"
+LAST_FORMATTER_SIGNIFIER = "last_formatter"
+
+
+@module.capture(rule="<user.mixed_phrase> | <user.formatted_phrase>")
+def formatted_phrase_loose(m) -> FormattedPhrase:
+    """TODO
+
+    Like `formatted_phrase`, but allows bare dictation to be applied with the
+    last used formatter.
+
+    """
+    if hasattr(m, "mixed_phrase"):
+        return FormattedPhrase(LAST_FORMATTER_SIGNIFIER, m.mixed_phrase)
+    else:
+        return m.formatted_phrase
+
+
+_last_used_formatters = None
+
+
 @module.action_class
 class Actions:
     def insert_formatted_phrase(
         formatters: List[Callable], components: List[BasePart]
     ) -> None:
         """TODO"""
+        global _last_used_formatters
+        if formatters == LAST_FORMATTER_SIGNIFIER:
+            formatters = _last_used_formatters
+        else:
+            _last_used_formatters = formatters
         for component in components:
             if isinstance(component, PhrasePart):
                 actions.user.insert_formatted(component, formatters)
