@@ -6,5 +6,3 @@ quit program: app.window_close()
 (new | open) (window | win): app.window_open()
 [show] programs: user.all_programs()
 fullscreen: user.toggle_fullscreen()
-
-align {user.window_align_position}: user.align_window(window_align_position)
