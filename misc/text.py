@@ -18,6 +18,7 @@ from user.utils.formatting import (
     apply_sentence,
     apply_capitalized_sentence,
     apply_title,
+    apply_programming_keywords,
     format_text,
     reformat_text,
     ComplexInsert,
@@ -49,6 +50,7 @@ formatter_map = multi_map(
         "say": apply_sentence,
         "top": apply_capitalized_sentence,
         "title": apply_title,
+        "key": apply_programming_keywords,
     }
 )
 

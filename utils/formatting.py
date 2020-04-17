@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 
 
 class SurroundingText:
@@ -187,6 +188,29 @@ def apply_dunder(text, surrounding_text=None):
         inner_suffix = "__"
         outer_suffix = ""
     return ComplexInsert(insert=prefix + center + inner_suffix, text_after=outer_suffix)
+
+
+def apply_programming_keywords(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    """Insert lowercase words, leaving a trailing space at the end.
+
+    This is meant to be a fluid way to insert keywords like "return", "if",
+    "public static void", etc.
+
+    """
+    text = text.lower()
+    space_before = surrounding_text and re.search(
+        r"[^ \t\n]\Z", surrounding_text.text_before
+    )
+    if space_before:
+        text = " " + text
+    # We always want a space at the end, so variable/function names can be
+    # inserted easily. For example (pipe is cursor):
+    #
+    #   "keyword static int camel my variable" -> "static int myVariable|"
+    text += " "
+    return ComplexInsert(text)
 
 
 # Words to keep lowercase in titles. Very rough heuristic, add more as needed.
