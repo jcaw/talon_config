@@ -123,7 +123,6 @@ ctx.lists["self.modifier"] = {
 ctx.lists["self.letter"] = dict(zip(chosen_alphabet, letters_string))
 ctx.lists["self.symbol"] = multi_map(
     {
-        ("enter", "slap"): "enter",
         ("back tick", "grave"): "`",
         ("comma", "cam"): ",",
         ("dot", "period", "full stop", "point"): ".",
@@ -215,6 +214,8 @@ alternate_keys = {
     "fill": "delete",
     "scape": "escape",
     "knock": "end",
+    # Explicitly don't allow "return" because it's a common programming keyword.
+    "slap": "enter",
 }
 keys = {**simple_keys, **alternate_keys}
 ctx.lists["self.special"] = keys
