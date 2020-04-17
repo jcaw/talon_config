@@ -156,16 +156,12 @@ ctx.lists["self.symbol"] = multi_map(
         # Brackets
         ("left square", "lack"): "[",
         ("right square", "rack"): "]",
-        "squares": "[ ] left",
         ("left paren", "lub"): "(",
         ("right paren", "rub"): ")",
-        "parens": "( ) left",
         ("left brace", "lace"): "{",
         ("right brace", "race"): "}",
-        "braces": "{ } left",
         ("left angle", "langle"): "<",
         ("right angle", "rangle"): ">",
-        "angles": "< > left",
     }
 )
 
@@ -216,6 +212,11 @@ alternate_keys = {
     "knock": "end",
     # Explicitly don't allow "return" because it's a common programming keyword.
     "slap": "enter",
+    # TODO: Extract compound keys, shouldn't really be here
+    "squares": "[ ] left",
+    "parens": "( ) left",
+    "braces": "{ } left",
+    "angles": "< > left",
 }
 keys = {**simple_keys, **alternate_keys}
 ctx.lists["self.special"] = keys
