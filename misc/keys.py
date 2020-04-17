@@ -203,7 +203,6 @@ simple_keys = dictify(
     ]
 )
 alternate_keys = {
-    #
     # b[ackward k]ill
     "bill": "backspace",
     # f[orward k]ill
