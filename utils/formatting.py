@@ -72,7 +72,8 @@ _RE_OPENING_SPEECH = re.compile(r"^\"[a-zA-Z0-9]")
 # *A footnote about the word "information"
 _RE_ASTERISK_FOOTNOTE = re.compile(r"[\n\r][ \t]*\*+[ \t]?$")
 # See `_should_space` for how these are used.
-_RE_SOLID_BEFORE = re.compile(r"[^ \t\n\r\(\{\[\<\£\$\€\@\-\_\\\/\`\'\"]$")
+# TODO: why does the \Z anchor work here but $ doesn't? Switch all to \Z?
+_RE_SOLID_BEFORE = re.compile(r"[^ \t\n\r\(\{\[\<\£\$\€\@\-\_\\\/\`\'\"]\Z")
 _RE_SOLID_AFTER = re.compile(r"^[^ \t\n\r\,\.\!\?\…\;\:\@\*\%\'\"\/\\\)\}\]\>\-\_]")
 
 
