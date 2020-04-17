@@ -308,9 +308,9 @@ _KEEP_PUNCTUATION = [
 def _preserve_punctuation(formatters):
     """Do all these ``formatters`` want punctuation preserved?"""
     for formatter in formatters:
-        if formatter in _KEEP_PUNCTUATION:
-            return True
-    return False
+        if formatter not in _KEEP_PUNCTUATION:
+            return False
+    return True
 
 
 def _chain_formatters(text, formatters, surrounding_text=None):
