@@ -100,9 +100,13 @@ module.list(
 )
 
 
-@module.capture
+@module.capture(rule="({self.standalone_formatters} | {self.chainable_formatters}+)")
 def formatters(m) -> str:
     """One or more text formatters, as a space-separated string."""
+    if hasattr(m, "standalone_formatters"):
+        return m.standalone_formatters
+    else:
+        return " ".join(m.chainable_formatters_list)
 
 
 @module.capture(rule="<phrase>")
@@ -136,14 +140,6 @@ def to_formatter_funcs(formatters: str) -> List[Callable]:
 def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
     surrounding_text = actions.self.surrounding_text()
     return format_text(text, formatters, surrounding_text)
-
-
-@context.capture(rule="({self.standalone_formatters} | {self.chainable_formatters}+)")
-def formatters(m) -> str:
-    if hasattr(m, "standalone_formatters"):
-        return m.standalone_formatters
-    else:
-        return " ".join(m.chainable_formatters_list)
 
 
 @module.action_class
