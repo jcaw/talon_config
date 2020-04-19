@@ -20,6 +20,7 @@ from user.utils.formatting import (
     apply_capitalized_sentence,
     apply_title,
     apply_programming_keywords,
+    add_prefix,
     format_text,
     reformat_text,
     ComplexInsert,
@@ -47,6 +48,8 @@ formatter_functions = {
     "capitalized_sentence": apply_capitalized_sentence,
     "title": apply_title,
     "keywords": apply_programming_keywords,
+    # Language-specific
+    "python_private": add_prefix("_", apply_snake),
 }
 
 
@@ -66,6 +69,9 @@ _chainable_formatters = multi_map(
         "upper": "uppercase",
         # TODO: Maybe don't allow this to be chained?
         ("lower", "bot"): "lowercase",
+        # Language-specific
+        # TODO: Maybe move this into a context-specific list
+        "private": "python_private",
     }
 )
 # Only one of these formatters can be applied to each chunk.

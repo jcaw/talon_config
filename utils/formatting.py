@@ -1,5 +1,5 @@
 import re
-from typing import Optional
+from typing import Optional, Callable
 
 
 class SurroundingText:
@@ -20,6 +20,10 @@ class ComplexInsert:
     def __init__(self, insert, text_after=""):
         self.insert = insert
         self.text_after = text_after
+
+
+# All formatting functions must conform to this type signature.
+FORMATTING_FUNC_TYPE = Callable[[str, Optional[SurroundingText]], ComplexInsert]
 
 
 _RE_ALL_ALPHANUMERIC = re.compile(r"^[a-zA-Z0-9]+$")
@@ -324,6 +328,20 @@ def apply_spaced(text, surrounding_text=None):
     prefix = "" if is_whitespace(surrounding_text.char_before) else " "
     suffix = " " if is_whitespace(surrounding_text.char_after) else " "
     return ComplexInsert(prefix + text + suffix)
+
+
+def add_prefix(prefix: str, formatting_func: FORMATTING_FUNC_TYPE):
+    """Create a function that adds a prefix, then applies ``formatting_func``."""
+
+    def apply_formatting(
+        text: str, surrounding_text: Optional[SurroundingText] = None
+    ) -> ComplexInsert:
+        """Apply prefix, then the formatter."""
+        nonlocal prefix, formatting_func
+        text = prefix + text
+        return formatting_func(text, surrounding_text)
+
+    return apply_formatting
 
 
 _KEEP_PUNCTUATION = [
