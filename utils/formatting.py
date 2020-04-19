@@ -377,10 +377,12 @@ def _chain_formatters(
 
 
 def single_spaces(text: str):
+    """Convert multiple spaces to single spaces in ``text``."""
     return _RE_MANY_SPACES.sub(" ", text)
 
 
 def _separate_punctuation(text: str):
+    """Separate ``text`` into a list of words and punctuation."""
     components = []
     last_char = ""
     for char in text:
@@ -396,15 +398,19 @@ def _separate_punctuation(text: str):
 
 
 def is_alpha(text: str):
+    """Is ``text`` solely composed of alphabetical characters?"""
     return _RE_ALPHA.match(text)
 
 
 def is_numeric(text: str):
+    """Is ``text`` solely composed of numeric characters?"""
     return _RE_NUMERIC.match(text)
 
 
 def _split_word(word: str) -> str:
     """Split a word into component camel/studley components.
+
+    E.g: thisIsATest -> this Is A Test
 
     This method assumes `word` is entirely alphanumeric.
 
@@ -424,6 +430,14 @@ def _split_word(word: str) -> str:
 
 
 def _separate_words(text) -> str:
+    """Separate ``text`` into a string of its constituent words.
+
+    E.g:
+
+        thisIsATest -> this Is A Test
+        This, is a sentence. -> This, is a sentence.
+
+    """
     # Separate off each word, *then* split each word into component words.
     result = ""
     for component in _separate_punctuation(text):
