@@ -258,7 +258,7 @@ _RE_START_OF_TODO = re.compile(r"((TODO)|(FIXME)|(HACK))[-: \t]*$")
 _RE_DOUBLE_NEWLINE = re.compile(r"\n[ \r\t]*\n[ \r\t]*$")
 
 
-def _is_new_sentence(text_before):
+def _is_new_sentence(text_before: str) -> bool:
     """Given `text_before`, are we at the start of a new sentence?"""
     # TODO: Benchmark higher limit
     return (
@@ -361,7 +361,11 @@ def _preserve_punctuation(formatters):
     return True
 
 
-def _chain_formatters(text, formatters, surrounding_text=None):
+def _chain_formatters(
+    text: str,
+    formatters: List[FORMATTING_FUNC_TYPE],
+    surrounding_text: SurroundingText = None,
+):
     if not formatters:
         raise ValueError("Must provide at least 1 formatter.")
     # There's no consistent way to combine complex inserts, so we convert all
@@ -372,11 +376,11 @@ def _chain_formatters(text, formatters, surrounding_text=None):
     return formatters[-1](text, surrounding_text)
 
 
-def single_spaces(text):
+def single_spaces(text: str):
     return _RE_MANY_SPACES.sub(" ", text)
 
 
-def _separate_punctuation(text):
+def _separate_punctuation(text: str):
     components = []
     last_char = ""
     for char in text:
@@ -391,15 +395,15 @@ def _separate_punctuation(text):
     return components
 
 
-def is_alpha(text):
+def is_alpha(text: str):
     return _RE_ALPHA.match(text)
 
 
-def is_numeric(text):
+def is_numeric(text: str):
     return _RE_NUMERIC.match(text)
 
 
-def _split_word(word):
+def _split_word(word: str) -> str:
     """Split a word into component camel/studley components.
 
     This method assumes `word` is entirely alphanumeric.
@@ -419,7 +423,7 @@ def _split_word(word):
     return result.strip()
 
 
-def _separate_words(text):
+def _separate_words(text) -> str:
     # Separate off each word, *then* split each word into component words.
     result = ""
     for component in _separate_punctuation(text):
@@ -430,13 +434,17 @@ def _separate_words(text):
     return result
 
 
-def _strip_formatting(text):
+def _strip_formatting(text: str) -> str:
     return (
         single_spaces(_RE_PUNCTUATION.sub(" ", text.replace("'", ""))).lower().strip()
     )
 
 
-def format_text(text, formatters, surrounding_text=None):
+def format_text(
+    text: str,
+    formatters: List[FORMATTING_FUNC_TYPE],
+    surrounding_text: SurroundingText = None,
+) -> ComplexInsert:
     # TODO: Some way to force capitalization for natural language, e.g. if
     #   we're at the start of a comment
     if not _preserve_punctuation(formatters):
@@ -444,5 +452,9 @@ def format_text(text, formatters, surrounding_text=None):
     return _chain_formatters(text, formatters, surrounding_text)
 
 
-def reformat_text(text, formatters, surrounding_text=None):
+def reformat_text(
+    text: str,
+    formatters: List[FORMATTING_FUNC_TYPE],
+    surrounding_text: SurroundingText = None,
+) -> ComplexInsert:
     return format_text(_separate_words(text), formatters, surrounding_text)
