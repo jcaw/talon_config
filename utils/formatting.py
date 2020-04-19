@@ -34,7 +34,7 @@ _RE_ALPHA = re.compile(r"^[a-zA-Z]+$")
 _RE_MANY_SPACES = re.compile(r"\ +")
 
 
-# TODO: Extract generic string methods
+# TODO: Extract generic string methods?
 def is_alphanumeric(string):
     """Is `string` alphanumeric?"""
     if string:
