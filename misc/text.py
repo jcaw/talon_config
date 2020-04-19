@@ -40,7 +40,6 @@ formatter_functions = {
     "spine": apply_spine,
     "dotword": apply_dotword,
     "squash": apply_squash,
-    "c_path": make_apply_delimiter("::"),
     "dunder": apply_dunder,
     "uppercase": apply_uppercase,
     "lowercase": apply_lowercase,
@@ -49,6 +48,7 @@ formatter_functions = {
     "title": apply_title,
     "keywords": apply_programming_keywords,
     # Language-specific
+    "c_path": make_apply_delimiter("::"),
     "python_private": add_prefix("_", apply_snake),
 }
 
@@ -63,13 +63,13 @@ _chainable_formatters = multi_map(
         # TODO: Maybe change this command. Dotty?
         "dotword": "dotword",
         "squash": "squash",
-        # TODO: Where is this delimiter used again?
-        "see path": "c_path",  # c path
         "dunder": "dunder",
         "upper": "uppercase",
         # TODO: Maybe don't allow this to be chained?
         ("lower", "bot"): "lowercase",
         # Language-specific
+        # TODO: Where is this delimiter used again?
+        "see path": "c_path",  # c path
         # TODO: Maybe move this into a context-specific list
         "private": "python_private",
     }
