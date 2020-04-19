@@ -117,7 +117,7 @@ def formatters(m) -> str:
 
 @module.capture(rule="<phrase>")
 def dictation(m) -> str:
-    """Arbitrary dictation, optionally terminated with [over]."""
+    """Arbitrary dictation."""
     return extract_dictation(m.phrase)
 
 
