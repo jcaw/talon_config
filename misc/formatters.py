@@ -276,13 +276,6 @@ class Actions:
                 phrase.formatters or default_formatter,
             )
 
-    # TODO: Need to solve how to do stuff like:
-    #
-    # "meta [dictation]" <- allow formatters here?
-    #
-    #    - How to Allow transitions? Special action that takes a
-    #      loosely-chunked formatter?
-
     def insert_previous_formatter(phrase_chunks: List[BasePhraseChunk]) -> None:
         """Insert a chunked phrase using the last used formatter."""
         actions.self.insert_complex(phrase_chunks, "previous")
