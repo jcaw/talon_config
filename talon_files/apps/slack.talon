@@ -1,7 +1,6 @@
 app: /.*slack\.exe/
 app: slack
 -
-# TODO: Pull actions into linux/windows module?
 # Actions
 
 action(user.next_channel): key(alt-down)
