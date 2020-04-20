@@ -11,9 +11,9 @@ prefix: user.emacs_prefix()
 prefix <number>: user.emacs_prefix(number)
 prefix dash: user.emacs_prefix("-")
 meta: key(alt-x)
-meta <user.dictation>:
+meta <user.chunked_phrase>$:
     key(alt-x)
-    user.insert_lowercase(dictation)
+    user.insert_chunked(chunked_phrase, "lowercase")
 
 
 # Mark ring
@@ -55,9 +55,9 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 # Buffers
 # TODO: Fallbacks
 [switch] (buffer | buff): user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
-[switch] (buffer | buff) <user.dictation>:
+[switch] (buffer | buff) <user.chunked_phrase>$:
     user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
-    user.insert_lowercase(dictation)
+    user.insert_chunked(chunked_phrase, "lowercase")
 (close | kill) (buffer | buff): user.emacs_command("kill-this-buffer")
 (close | kill) other (buffer | buff): user.emacs_command("kill-this-buffer")
 (next | neck) (buffer | buff): user.emacs_command("next-buffer")
