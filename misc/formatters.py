@@ -276,6 +276,7 @@ class Actions:
                 phrase.formatters or default_formatter,
             )
 
+    # TODO: Still need this? Works as an example I guess
     def insert_previous_formatter(phrase_chunks: List[BasePhraseChunk]) -> None:
         """Insert a chunked phrase using the last used formatter."""
         actions.self.insert_complex(phrase_chunks, "previous")
