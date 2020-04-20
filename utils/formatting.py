@@ -415,6 +415,7 @@ def _split_word(word: str) -> str:
     This method assumes `word` is entirely alphanumeric.
 
     """
+    # TODO: Cope with non-alphanumeric
     result = ""
     last_char = ""
     for char in word:
