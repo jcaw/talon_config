@@ -72,10 +72,6 @@ _RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r][\"']$")
 # immediately after close. However, openings will probably not have punctuation
 # at the start - it'll be an alphanumeric char (normally a letter).
 _RE_OPENING_SPEECH = re.compile(r"^\"[a-zA-Z0-9]")
-# Some information* being written
-#
-# *A footnote about the word "information"
-_RE_ASTERISK_FOOTNOTE = re.compile(r"[\n\r][ \t]*\*+[ \t]?$")
 # See `_should_space` for how these are used.
 # TODO: why does the \Z anchor work here but $ doesn't? Switch all to \Z?
 _RE_SOLID_BEFORE = re.compile(r"[^ \t\n\r\(\{\[\<\£\$\€\@\-\_\\\/\`\'\"]\Z")
@@ -90,11 +86,7 @@ def _should_space(before, after):
 
     """
     # We classify some characters as "solid" - these can have a space after.
-    solid_before = (
-        _RE_SOLID_BEFORE.search(before)
-        # Asterisk-denoted footnotes are an edge case.
-        and not _RE_ASTERISK_FOOTNOTE.match(before)
-    ) or _RE_CLOSING_SPEECH.match(before)
+    solid_before = _RE_SOLID_BEFORE.search(before) or _RE_CLOSING_SPEECH.match(before)
     solid_after = _RE_SOLID_AFTER.match(after) or _RE_OPENING_SPEECH.match(after)
     return solid_before and solid_after
 
