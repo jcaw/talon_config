@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 import time
 
 from talon import Module, actions
@@ -43,7 +43,7 @@ class Actions:
         rpc.run_command(command)
 
     def emacs_prefix_command(
-        command: str, prefix_arg: str or int or List[int] or None = [4]
+        command: str, prefix_arg: Optional[Union[str, int, List[int]]] = [4]
     ) -> None:
         """Run an Emacs command with a prefix argument.
 
@@ -65,7 +65,7 @@ class Actions:
 
     def emacs_fallbacks(
         commands: List[str],
-        prefix_arg: str or int or List[int] or None = None,
+        prefix_arg: Optional[Union[str, int, List[int]]] = None,
         keypress: Optional[str] = None,
     ) -> None:
         """Run the first bound Emacs command.
@@ -91,7 +91,7 @@ class Actions:
                     f"was defined. Commands: {commands}"
                 )
 
-    def emacs_prefix(arg: str or int or List[int] or None or True = None) -> None:
+    def emacs_prefix(arg: Optional[Union[str, int, List[int], bool]] = None) -> None:
         """Input a prefix argument.
 
         :param arg: the argument. Leave as None to type an empty prefix
