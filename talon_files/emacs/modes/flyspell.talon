@@ -1,4 +1,4 @@
 app: /emacs/
 user.emacs-minor-mode: flyspell-mode
 -
-correct: user.emacs_command("flyspell-correct-previous-word-generic")
+(flyspell | spellcheck): user.emacs_command("flyspell-correct-previous-word-generic")
