@@ -353,7 +353,7 @@ _KEEP_PUNCTUATION = [
 ]
 
 
-def _preserve_punctuation(formatters):
+def preserve_punctuation(formatters):
     """Do all these ``formatters`` want punctuation preserved?"""
     for formatter in formatters:
         if formatter not in _KEEP_PUNCTUATION:
@@ -461,7 +461,7 @@ def format_text(
 ) -> ComplexInsert:
     # TODO: Some way to force capitalization for natural language, e.g. if
     #   we're at the start of a comment
-    if not _preserve_punctuation(formatters):
+    if not preserve_punctuation(formatters):
         text = _strip_formatting(text)
     return _chain_formatters(text, formatters, surrounding_text)
 
