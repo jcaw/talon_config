@@ -9,6 +9,4 @@ number lines: user.emacs_command("rectangle-number-lines")
 clear: user.emacs_command("clear-rectangle")
 (kill | delete) whitespace: user.emacs_command("delete-whitespace-rectangle")
 replace (rect | rectangle): user.emacs_command("string-rectangle")
-insert [<dictation>]:
-    user.emacs_command("string-insert-rectangle")
-    insert(dictation or "")
+insert: user.emacs_command("string-insert-rectangle")
