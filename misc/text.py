@@ -1,6 +1,7 @@
 from typing import List
+import time
 
-from talon import Module, actions
+from talon import Module, actions, clip
 from user.utils import preserve_clipboard
 
 
