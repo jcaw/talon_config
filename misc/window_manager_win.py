@@ -42,7 +42,7 @@ class UserActions:
 
 @module.action_class
 class ModuleActions:
-    def align_window_win(alignment_keys: str) -> None:
+    def snap_window_win(alignment_keys: str) -> None:
         """Move a window to a specific position (on Windows).
 
         ``alignment_keys`` should be a string-separated list of keys to press
