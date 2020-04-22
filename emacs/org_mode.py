@@ -1,11 +1,16 @@
 import re
 import itertools
-from typing import List, Dict
+from typing import List, Dict, Optional
 
-from talon import Module, Context
+from talon import Module, Context, actions
 
 from user.emacs.utils import rpc
 from user.emacs.utils.state import emacs_state
+
+key = actions.key
+insert = actions.insert
+emacs_command = actions.self.emacs_command
+insert_formatted = actions.user.insert_formatted
 
 
 module = Module()
@@ -58,3 +63,21 @@ class Actions:
     def org_set_todo(state: str) -> None:
         """Set the current item to a specific TODO state."""
         rpc.call("org-todo", [str(state)])
+
+    def org_code_block(language: Optional[str] = None) -> None:
+        """Insert an `org-mode` code block.
+
+        :param language: Optional. The block's language, this will be formatted
+          as spine-case.
+
+        """
+        insert("#+BEGIN_SRC ")
+        if language:
+            insert_formatted(language, "spine")
+        insert("\n\n#+END_SRC\n")
+        if language:
+            key("up:2")
+        else:
+            # Still need to input the language.
+            key("up:3")
+            emacs_command("end-of-line")
