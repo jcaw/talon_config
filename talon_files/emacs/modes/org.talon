@@ -16,6 +16,9 @@ status none | (clear | kill) status: user.org_set_todo("")
 priority <user.letter>:
     user.emacs_command("org-priority")
     key(letter)
+pririty none | (clear | kill) priority:
+    user.emacs_command("org-priority")
+    key(space)
 
 # Unsorted
 code block [<user.dictation>]: user.org_code_block(dictation or "")
