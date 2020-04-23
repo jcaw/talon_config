@@ -5,6 +5,7 @@ import re
 
 from talon import Module, Context
 
+from user.utils import spoken_form
 from user.emacs.utils import rpc
 from user.emacs.utils.state import emacs_state
 
@@ -49,15 +50,6 @@ def emacs_snippet(m) -> str:
     return getattr(m, SNIPPET_LIST_NAME)
 
 
-_RE_NONALPHABETIC_CHAR = re.compile(r"[^a-zA-Z]")
-
-
-def _spoken_form(text):
-    """Convert ``text`` into a format compatible with speech lists."""
-    # TODO: Replace numeric digits with spoken digits
-    return _RE_NONALPHABETIC_CHAR.sub(" ", text).strip()
-
-
 def _speech_snippet_list(state):
     """Extract active snippets, in speakable form."""
     new_snippets = {}
@@ -67,8 +59,8 @@ def _speech_snippet_list(state):
         for snippet in snippet_tables.get(table_name, []):
             key = snippet["key"]
             name = snippet["name"]
-            spoken_name = _spoken_form(name)
-            spoken_key = _spoken_form(key)
+            spoken_name = spoken_form(name)
+            spoken_key = spoken_form(key)
             if spoken_key:
                 new_snippets[spoken_key] = name
             # Names are generally a better way to speak a snippet. Update names

@@ -7,6 +7,7 @@ import time
 import logging
 import threading
 from functools import wraps
+import re
 
 
 ON_WINDOWS = platform.system() == "Windows"
@@ -361,3 +362,12 @@ def echo(value, prompt="Value"):
     """
     print(f"{prompt}: {value}")
     return value
+
+
+_RE_NONALPHABETIC_CHAR = re.compile(r"[^a-zA-Z]")
+
+
+def spoken_form(text: str) -> str:
+    """Convert ``text`` into a format compatible with speech lists."""
+    # TODO: Replace numeric digits with spoken digits
+    return _RE_NONALPHABETIC_CHAR.sub(" ", text.replace("'", " ")).strip()
