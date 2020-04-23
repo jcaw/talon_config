@@ -18,7 +18,7 @@ LOGGER = logging.getLogger(__name__)
 VOICEMACS_SERVER_NAME = "voicemacs"
 
 
-def call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
+def _call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
     """Send an RPC call to Emacs."""
     attempts = 0
     start_time = time.monotonic()
@@ -55,6 +55,32 @@ def call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
         LOGGER.info(
             f"Failed to call ({function_}, {params}) on attempt {attempts}. Retrying."
         )
+
+
+def call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
+    """Send an RPC call to Emacs (safely)."""
+    # HACK: We empty the command loop first to ensure all input (keyboard,
+    #   command injection & direct RPC) is processed in the same order it was
+    #   issued.
+
+    # t1 = time.monotonic()
+
+    # _call("voicemacs-process-input", [], timeout, max_attempts, changes_state=False)
+    # remaining_time = time.monotonic() - t1
+    # if remaining_time < 0:
+    #     raise porthole.TimeoutError("Command loop could not be emptied in time.")
+
+    remaining_time = timeout
+    start_time = time.monotonic()
+    while True:
+        if not _call(
+            "voicemacs-input-pending?", [], timeout, max_attempts, changes_state=False
+        ):
+            break
+        remaining_time = time.monotonic() - start_time
+        if remaining_time <= 0:
+            raise porthole.TimeoutError("Command loop could not be emptied in time.")
+    return _call(function_, params, remaining_time, max_attempts, changes_state)
 
 
 def run_command(command, prefix_arg=None):
