@@ -5,3 +5,7 @@
 (mic | mike) (test | check): user.mic_test()
 
 (copy app | app info): user.copy_current_app_info()
+
+talon (repl | reppull): user.talon_open_repl()
+talon user [dir]: user.talon_open_user_dir()
+talon [show] log: user.talon_show_log()
