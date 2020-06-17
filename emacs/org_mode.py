@@ -48,8 +48,6 @@ def _update_todo_keywords(new_state: Dict):
 
 
 emacs_state.hook_key("org-todo-keywords", _update_todo_keywords)
-# Sync with current state immediately.
-_update_todo_keywords(emacs_state.freeze())
 
 
 @module.capture(rule="{self.org_todo_keywords}")

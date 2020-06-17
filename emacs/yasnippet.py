@@ -85,7 +85,6 @@ def _update_snippets(state):
         context.lists[SNIPPET_LIST_PATH] = new_snippets
 
 
-emacs_state.hook_key(SNIPPET_TABLES_KEY, _update_snippets)
-emacs_state.hook_key(ACTIVE_TABLES_KEY, _update_snippets)
-# Update now just in case
-_update_snippets(emacs_state.freeze())
+# Wait until the second add to run.
+emacs_state.hook_key(SNIPPET_TABLES_KEY, _update_snippets, run_now=False)
+emacs_state.hook_key(ACTIVE_TABLES_KEY, _update_snippets, run_now=True)

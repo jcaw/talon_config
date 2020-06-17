@@ -42,4 +42,3 @@ def _set_mode_commands(emacs_state: Dict) -> List[str]:
 
 
 emacs_state.hook_key(DEFINED_COMMANDS_KEY, _set_mode_commands)
-_set_mode_commands(emacs_state.freeze())

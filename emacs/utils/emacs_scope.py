@@ -68,5 +68,3 @@ def scope(*_):
 
 # Update the scope whenever the Emacs state updates.
 emacs_state.hook(scope.update)
-# Update immediately.
-scope.update()

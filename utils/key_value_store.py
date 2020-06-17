@@ -66,14 +66,18 @@ class KeyValueStore:
         """Delete all keys."""
         self.delete(*self._store.keys())
 
-    def hook(self, function):
+    def hook(self, function, run_now=True):
         """Hook a function to fire whenever the store is updated.
 
         `function` should take the store as its argument.
 
         """
         self._update_hook.add(function)
+        if run_on_add:
+            function(self.freeze())
 
-    def hook_key(self, key, function):
+    def hook_key(self, key, function, run_now=True):
         """Hook a function to fire when `key` is updated."""
         self._key_hooks[key].add(function)
+        if run_now:
+            function(self.freeze())
