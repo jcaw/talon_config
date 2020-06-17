@@ -1,4 +1,4 @@
-from talon import Module, Context, registry, clip, ui
+from talon import Module, Context, registry, clip, ui, actions
 
 from user.utils import sound
 
@@ -38,7 +38,8 @@ class Actions:
 
     def mic_test() -> None:
         """Test recognition. Prints and plays a sound when successful."""
-        print("Recognition working!")
+        print("Mic check: recognition working!")
+        actions.app.notify("Mic Check", "Recognition working.")
         sound.play(sound.GLASS_TAP)
         # TODO: Ping short notification
 
