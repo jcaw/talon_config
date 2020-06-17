@@ -71,7 +71,7 @@ _chainable_formatters = multi_map(
         "camel": "camel",
         "studley": "studley",
         ("snake", "snik"): "snake",
-        "spine": "spine",
+        ("spine", "spin"): "spine",
         # TODO: Maybe change this command. Dotty?
         "dotword": "dotword",
         "squash": "squash",
