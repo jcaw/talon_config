@@ -1,5 +1,8 @@
 from talon import Module, actions
 
+from user.utils import Modifiers
+
+user = actions.user
 
 module = Module()
 
@@ -37,3 +40,8 @@ class Action:
 
     def mark_channel_read() -> None:
         """Mark one channel as read."""
+
+    def discord_switch_server(number: int) -> None:
+        """Switch to a numbered server in Discord."""
+        with Modifiers(["ctrl"]):
+            user.type_number(number)
