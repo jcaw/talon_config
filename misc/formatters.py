@@ -280,3 +280,14 @@ class Actions:
     def insert_previous_formatter(phrase_chunks: List[BasePhraseChunk]) -> None:
         """Insert a chunked phrase using the last used formatter."""
         actions.self.insert_complex(phrase_chunks, "previous")
+
+
+# Because the default limitation of `surrounding_text` returns `None`, we need
+# to overwrite to explicitly or Talon will think there is no implementation.
+context = Context()
+
+
+@context.action_class
+class DefaultActions:
+    def surrounding_text() -> SurroundingText:
+        return None
