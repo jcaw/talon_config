@@ -310,7 +310,7 @@ class Actions:
         for key in keys:
             actions.key(key)
 
-    def press_number(number: float):
+    def type_number(number: float):
         """Press each key in a number"""
         # TODO: Allow leading zeros
         for char in str(number):
