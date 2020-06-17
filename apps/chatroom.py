@@ -22,7 +22,7 @@ class Action:
     def code_block() -> None:
         """Insert a code block."""
         actions.insert("```")
-        actions.key("enter:2")
+        actions.key("shift-enter:2")
         actions.insert("```")
         actions.key("up")
 
