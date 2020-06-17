@@ -1,5 +1,4 @@
-app: /.*slack\.exe/
-app: slack
+app: /slack/
 -
 # Commands
 
