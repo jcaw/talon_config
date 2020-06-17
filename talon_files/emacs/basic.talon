@@ -26,11 +26,11 @@ region: user.emacs_command("voicemacs-toggle-region")
 
 # Scrolling
 cursor top <user.optional_number>:
-    user.emacs_prefix_command("voicemacs-scroll-cursor-top", optional_number)
+    user.emacs_prefix_command("evil-scroll-line-to-top", optional_number)
 cursor bottom <user.optional_number>:
-    user.emacs_prefix_command("voicemacs-scroll-cursor-bottom", optional_number)
-cursor middle <user.optional_number>:
-    user.emacs_prefix_command("voicemacs-scroll-cursor-middle", optional_number)
+    user.emacs_prefix_command("evil-scroll-line-to-bottom", optional_number)
+cursor (middle | center) <user.optional_number>:
+    user.emacs_prefix_command("evil-scroll-line-to-center", optional_number)
 scroll top: user.emacs_command("beginning-of-buffer")
 scroll bottom: user.emacs_command("end-of-buffer")
 # TODO: Scroll up/down by single lines
