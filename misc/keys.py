@@ -271,7 +271,7 @@ def symbol(m):
 
 
 @ctx.capture(
-    rule="(<self.arrow> | <number> | <self.letter> | <self.special> | <self.symbol>)"
+    rule="(<self.arrow> | <self.digit> | <self.letter> | <self.special> | <self.symbol>)"
 )
 def any_key(m) -> str:
     return str(m[0])
