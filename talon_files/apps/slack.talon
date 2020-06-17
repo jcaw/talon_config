@@ -17,4 +17,4 @@ directory: user.slack_directory()
 # Misc
 channel info: user.slack_channel_info()
 [attach] snippet: user.slack_attach_snippet()
-edit (last | larse) [message]: user.edit_last_message()
+edit [(last | larse)] [message]: user.edit_last_message()
