@@ -156,6 +156,11 @@ module = Module()
 
 
 @module.capture
+def digit(m) -> int:
+    """A single digit."""
+
+
+@module.capture
 def natural_number(m) -> int:
     """Naturally-spoken number. E.g. "five hundred", "twenty four"."""
 
@@ -168,9 +173,14 @@ def optional_number(m) -> int or None:
 ctx = Context()
 
 
-@ctx.capture("digits", rule=f"{alt_digits}++")
-def digits(m):
-    return int("".join([str(digits_map[n]) for n in m]))
+@ctx.capture(rule=f"{alt_digits}")
+def digit(m) -> int:
+    return int(digits_map[m[0]])
+
+
+@ctx.capture("digits", rule=f"<self.digit>++")
+def digits(m) -> int:
+    return int("".join(map(str, m)))
 
 
 @ctx.capture(
