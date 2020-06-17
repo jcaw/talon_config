@@ -125,7 +125,7 @@ ctx.lists["self.symbol"] = multi_map(
     {
         ("back tick", "grave"): "`",
         ("comma", "cam"): ",",
-        ("dot", "period", "full stop", "point"): ".",
+        ("dot", "period", "full stop"): ".",
         ("semicolon", "semi"): ";",
         ("apostrophe", "quote"): "'",
         ("double quote", "dub quote", "speech mark", "speech"): '"',
