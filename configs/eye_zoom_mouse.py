@@ -11,6 +11,8 @@ config.img_scale = 6
 config.eye_avg = 5
 # Move the mouse while zoomed?
 config.track_mouse = False
+# Zoom frames
+config.frames = 5
 
 ZOOM_BOX_WIDTH = 1200
 ZOOM_BOX_HEIGHT = 900
