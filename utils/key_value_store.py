@@ -73,7 +73,7 @@ class KeyValueStore:
 
         """
         self._update_hook.add(function)
-        if run_on_add:
+        if run_now:
             function(self.freeze())
 
     def hook_key(self, key, function, run_now=True):
