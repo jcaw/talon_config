@@ -199,7 +199,8 @@ simple_keys = dictify(
         "backspace",
         "delete",
         "home",
-        "end",
+        # Interferes with dictation
+        # "end",
     ]
 )
 alternate_keys = {
