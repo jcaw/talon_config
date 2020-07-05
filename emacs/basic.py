@@ -41,6 +41,12 @@ class EditActions:
 
 @context.action_class("user")
 class UserActions:
+    def open_file() -> None:
+        emacs_fallbacks(
+            ["helm-projectile-find-file", "projectile-find-file"],
+            keypress="ctrl-x ctrl-f",
+        )
+
     def next_error() -> None:
         emacs_fallbacks(["spacemacs/next-error", "flycheck-next-error", "next-error"])
 

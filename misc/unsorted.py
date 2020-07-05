@@ -8,6 +8,9 @@ module = Module()
 
 @module.action_class
 class ModuleActions:
+    def open_file() -> None:
+        """Bring up a dialogue to open a file."""
+
     def next_error() -> None:
         """Go to the next error."""
 
