@@ -26,6 +26,9 @@ mapping = json.load(resource.open("../overrides.json"))
 punctuation = set(".,-!?")
 
 
+# TODO: Remove all the old functions here I'm no longer using.
+
+
 def remove_dragon_junk(word):
     return str(word).lstrip("\\").split("\\", 1)[0]
 
@@ -269,6 +272,7 @@ def multi_map(mapping):
     return result
 
 
+# TODO: Rename to `apply_dict`
 def apply_function(function, dict_):
     """Apply a function to each value in a dict."""
     for command, args in dict_.items():
@@ -303,6 +307,8 @@ def prepend_to_map(arg, dict_):
 
     """
     for key, arg_list in dict_.items():
+        # TODO: Documentation implies this is a list. Should it be a tuple like
+        #   this?
         dict_[key] = (arg, *arg_list)
     return dict_
 
