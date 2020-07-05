@@ -101,10 +101,12 @@ class EyeScroller(object):
         self._job = cron.interval(self._POLL_INTERVAL, self._update_scroll)
 
     def stop(self):
+        # Guard everything in case of spurious stops
         if self._job:
             cron.cancel(self._job)
-        # Move mouse to neutral position
-        self._move_function(False, False, False, False)
+            self._job = None
+            # Move mouse to neutral position
+            self._move_function(False, False, False, False)
 
     @staticmethod
     def _get_zones(rect):
