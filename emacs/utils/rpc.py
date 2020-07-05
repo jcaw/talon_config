@@ -13,6 +13,7 @@ except ImportError:
     logging.exception("Porthole python client not installed.")
 
 LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 
 VOICEMACS_SERVER_NAME = "voicemacs"
@@ -52,7 +53,7 @@ def _call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
             #   - Perhaps could add a nonce to all calls to circumvent it?
             if changes_state or time.monotonic() - start_time >= timeout:
                 raise
-        LOGGER.info(
+        LOGGER.debug(
             f"Failed to call ({function_}, {params}) on attempt {attempts}. Retrying."
         )
 
