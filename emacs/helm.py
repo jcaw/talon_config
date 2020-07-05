@@ -1,4 +1,4 @@
-from talon import Module, actions
+from talon import Module, Context, actions
 
 from user.emacs.utils import rpc
 
@@ -24,3 +24,18 @@ class GlobalActions:
         if isinstance(line_number, int):
             actions.self.emacs_helm_goto_line(line_number)
         actions.self.emacs_command(command_name)
+
+
+context = Context()
+context.matches = r"""
+app: /emacs/
+user.emacs-minor-mode: helm-mode
+"""
+
+
+@context.action_class
+class HelmActions:
+    def find_text(text) -> None:
+        # `swoop` can be slow to open on large documents because it initially
+        # matches every line. It's much faster if text is provided up-front.
+        rpc.call("voicemacs-helm-swoop", [text])
