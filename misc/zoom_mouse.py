@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, List, Optional
 import logging
 import time
 
