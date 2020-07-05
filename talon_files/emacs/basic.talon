@@ -117,8 +117,9 @@ dired other: user.emacs_command("dired-jump-other-window")
 # TODO: Perform the next "switch-to-buffer" command in the other window.
 # with other: user.emacs_command("")
 
-# Double ctrl-c means "submit", but the binding is context dependent. Easier to
-# just bind the keypress than try and bind each implementation.
+# Double `ctrl-c` means "submit", but the specific command varies based on
+# context. Easier to just bind the keypress than try and bind each
+# implementation.
 submit:  key(ctrl-c ctrl-c)
 discard: key(ctrl-c ctrl-k)
 
