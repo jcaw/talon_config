@@ -40,6 +40,14 @@ class UserActions:
         actions.key("f11")
 
 
+def _alt_tab(number: int):
+    """Alt-tab without releasing alt."""
+    with Modifiers(["alt"]):
+        for i in range(number):
+            actions.key(tab)
+            time.sleep(0.1)
+
+
 @module.action_class
 class ModuleActions:
     def snap_window_win(alignment_keys: str) -> None:
@@ -56,25 +64,14 @@ class ModuleActions:
     # alt-shift) - letting go resets. We need custom actions that eat the
     # repeat to handle this.
 
-    def window_next_hold(number: int):
-        """Windows-specific implementation that holds alt while tabbing."""
-        # TODO: Port to newapi once down/up implemented
-        ctrl.key_press("alt", down=True)
-        for i in range(number):
-            actions.key("tab")
-            time.sleep(0.1)
-        ctrl.key_press("alt", up=True)
+    def alt_tab_win(number: int):
+        """Windows-specific - holds alt while tabbing."""
+        _alt_tab(number)
 
-    def window_previous_hold(number: int):
-        """Windows-specific implementation that holds alt while tabbing."""
-        # TODO: Port to newapi once down/up implemented
-        ctrl.key_press("alt", down=True)
-        ctrl.key_press("shift", down=True)
-        for i in range(number):
-            actions.key("tab")
-            time.sleep(0.1)
-        ctrl.key_press("shift", up=True)
-        ctrl.key_press("alt", up=True)
+    def alt_backtab_win(number: int):
+        """Windows-specific - holds shift+alt while tabbing."""
+        with Modifiers(["shift"]):
+            _alt_tab(number)
 
 
 @context.action_class("app")
