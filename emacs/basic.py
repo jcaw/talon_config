@@ -17,6 +17,7 @@ module = Module()
 
 @module.action_class
 class Actions:
+    # TODO: Extract from emacs module
     def select_number(number: int):
         """Select item ``number``. Meaning of \"select\" depends on context."""
 
