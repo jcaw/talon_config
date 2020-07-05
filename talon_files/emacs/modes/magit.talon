@@ -9,6 +9,7 @@ unstage <number>:
     user.magit_mark_lines(number)
     user.emacs_command("magit-unstage")
 
+
 # Staging
 stage [that]: user.emacs_command("magit-stage")
 stage all: user.emacs_command("magit-stage-modified")
