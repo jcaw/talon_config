@@ -1,12 +1,10 @@
 # TODO: Switch to tags
 
-app: firefox
-app: /.*firefox\.exe/
-app: chrome
-app: /.*chrome\.exe/
-app: /.*iexplore\.exe/
-app: /.*edge\.exe/
-app: opera
+app: /firefox/
+app: /chrome/
+app: /iexplore/
+app: /edge/
+app: /opera/
 -
 # Browser GUI
 # TODO: Optional dictation
