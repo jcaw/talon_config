@@ -73,6 +73,19 @@ class ModuleActions:
         with Modifiers(["shift"]):
             _alt_tab(number)
 
+    def snap_screen_win(direction: str):
+        """Move current window to another screen, by direction (left or right).
+
+        MS Windows only. Maximizes the window.
+
+        """
+        assert direction in ("left", "right")
+        actions.user.maximize()
+        # 4 times so the arrangement dialogue doesn't pop
+        _with_win_press(f"{direction} " * 4)
+        # Maximize to normalize position
+        actions.user.maximize()
+
 
 @context.action_class("app")
 class AppActions:
