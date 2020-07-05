@@ -284,9 +284,6 @@ class Actions:
 
 # Because the default limitation of `surrounding_text` returns `None`, we need
 # to overwrite to explicitly or Talon will think there is no implementation.
-context = Context()
-
-
 @context.action_class
 class DefaultActions:
     def surrounding_text() -> SurroundingText:
