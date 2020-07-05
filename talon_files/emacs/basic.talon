@@ -119,10 +119,10 @@ dired other: user.emacs_command("dired-jump-other-window")
 
 # Double ctrl-c means "submit", but the binding is context dependent. Easier to
 # just bind the keypress than try and bind each implementation.
-submit: key(ctrl-c ctrl-c)
+submit:  key(ctrl-c ctrl-c)
 discard: key(ctrl-c ctrl-k)
 
-(next | neck) error | nerror: user.next_error()
+(next | neck) error | nerror:  user.next_error()
 (last | larse) error | larror: user.previous_error()
 
 scratch [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-scratch-buffer")
