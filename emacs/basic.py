@@ -14,16 +14,6 @@ class Actions:
     def select_number(number: int):
         """Select item ``number``. Meaning of \"select\" depends on context."""
 
-    def next_error() -> None:
-        """Go to the next error."""
-        emacs_fallbacks(["spacemacs/next-error", "flycheck-next-error", "next-error"])
-
-    def previous_error() -> None:
-        """Go to the previous error."""
-        emacs_fallbacks(
-            ["spacemacs/previous-error", "flycheck-previous-error", "previous-error"]
-        )
-
 
 context = Context()
 context.matches = """
@@ -47,3 +37,16 @@ class EditActions:
 
     def redo():
         emacs_fallbacks(["undo-tree-redo"], keypress="ctrl-shift-/")
+
+
+@context.action_class("user")
+class UserActions:
+    def next_error() -> None:
+        """Go to the next error."""
+        emacs_fallbacks(["spacemacs/next-error", "flycheck-next-error", "next-error"])
+
+    def previous_error() -> None:
+        """Go to the previous error."""
+        emacs_fallbacks(
+            ["spacemacs/previous-error", "flycheck-previous-error", "previous-error"]
+        )
