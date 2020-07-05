@@ -42,11 +42,9 @@ class EditActions:
 @context.action_class("user")
 class UserActions:
     def next_error() -> None:
-        """Go to the next error."""
         emacs_fallbacks(["spacemacs/next-error", "flycheck-next-error", "next-error"])
 
     def previous_error() -> None:
-        """Go to the previous error."""
         emacs_fallbacks(
             ["spacemacs/previous-error", "flycheck-previous-error", "previous-error"]
         )
