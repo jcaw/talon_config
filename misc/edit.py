@@ -40,7 +40,7 @@ class Actions:
         actions.insert(text)
 
     def find_text(text: str) -> None:
-        """Like `edit.find`, but must take `text`."""
+        """Like `edit.find`, but finds `text`."""
         actions.edit.find()
         time.sleep(0.5)
         actions.insert(text)
