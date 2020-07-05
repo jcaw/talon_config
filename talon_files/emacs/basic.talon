@@ -126,7 +126,7 @@ discard: key(ctrl-c ctrl-k)
 (next | neck) error | nerror:  user.next_error()
 (last | larse) error | larror: user.previous_error()
 
-scratch [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-scratch-buffer")
-messages [(buff | buffer)]: user.emacs_command("spacemacs/switch-to-messages-buffer")
+[(buff | buffer)] scratch:  user.emacs_command("spacemacs/switch-to-scratch-buffer")
+[(buff | buffer)] messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
 
 (rectangle | rect): user.emacs_command("rectangle-mark-mode")
