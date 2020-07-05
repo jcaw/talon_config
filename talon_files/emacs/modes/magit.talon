@@ -2,6 +2,12 @@ app: /emacs/
 user.emacs-major-mode: magit-status-mode
 -
 mark <number>: user.magit_mark_lines(number)
+stage <number>:
+    user.magit_mark_lines(number)
+    user.emacs_command("magit-stage")
+unstage <number>:
+    user.magit_mark_lines(number)
+    user.emacs_command("magit-unstage")
 
 # Staging
 stage [that]: user.emacs_command("magit-stage")
