@@ -52,7 +52,7 @@ overlay: key(shift-tab)
 # Named maps
 (terrain | train) map:      user.eu4_switch_map(1)
 (political | poly) map:     user.eu4_switch_map(2)
-trade map map:              user.eu4_switch_map(3)
+trade map:                  user.eu4_switch_map(3)
 (religion | religious) map: user.eu4_switch_map(4)
 (diplomatic | diplo) map:   user.eu4_switch_map(5)
 (areas | regions) map:      user.eu4_switch_map(6)
