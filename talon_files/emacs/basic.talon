@@ -130,3 +130,6 @@ discard: key(ctrl-c ctrl-k)
 [(buff | buffer)] messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
 
 (rectangle | rect): user.emacs_command("rectangle-mark-mode")
+
+restart emacs: user.emacs_command("spacemacs/restart-emacs-resume-layouts")
+exit emacs:    user.emacs_command("spacemacs/prompt-kill-emacs")
