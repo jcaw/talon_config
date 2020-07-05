@@ -86,6 +86,9 @@ set theme: user.emacs_command("spacemacs/helm-themes")
 
 # TODO: Stuff to pull to more generic modules.
 open [file]: user.open_file()
+open [file] <user.dictation>:
+    user.open_file()
+    insert(dictation)
 action(edit.select_all):
     user.emacs_command("mark-whole-buffer")
 
