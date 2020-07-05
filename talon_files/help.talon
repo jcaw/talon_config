@@ -1,4 +1,4 @@
-(print | copy | get) actions: user.print_copy_actions()
+(print | copy | get) actions:  user.print_copy_actions()
 (print | copy | get) captures: user.print_copy_captures()
 
 # Useful when dragon hangs. Say "mic check", it'll ping when it's ready.
