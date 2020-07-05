@@ -14,3 +14,5 @@ dark (mode | reader): key(alt-shift-d)
     edit.undo()
     edit.undo()
     browser.focus_page()
+read (aloud | it):
+    key(alt-p)
