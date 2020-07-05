@@ -13,6 +13,7 @@ import math
 import logging
 import sys
 from copy import deepcopy
+from typing import Tuple
 
 from talon import cron, ctrl
 from talon.track.geom import Point2d
@@ -144,13 +145,22 @@ def actual_word_start(word):
     return estimate / 1000.0
 
 
-def backdated_position(word_meta):
+def backdated_position(word_meta) -> Optional[Tuple[int, int]]:
     """Get the position of the mouse the user started to speak ``word_meta``.
 
-    Note that on Windows, Draconity's timestamps seem to be able to drift out
-    of sync with our timestamps, giving us the *wrong position*. If this
-    happens, restarting Dragon seems to help.
+    Note: on Windows, Draconity's timestamps can drift out of sync with
+    Talon's, giving us the wrong position. Restarting Dragon re-syncs.
 
     """
-    _, position = position_at_time(actual_word_start(word_meta))
-    return position
+
+    def backdated_warn(message):
+        LOGGER.warn(f"[backdated_position] {message}")
+
+    try:
+        _, position = position_at_time(actual_word_start(word_meta))
+        if not position:
+            backdated_warn(f"No backdated position returned. Was: `{position}`")
+        return position
+    except Exception as e:
+        backdated_warn(f'Error getting backdated position: "{e}"')
+        return None
