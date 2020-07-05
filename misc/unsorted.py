@@ -8,7 +8,11 @@ module = Module()
 
 @module.action_class
 class ModuleActions:
-    pass
+    def next_error() -> None:
+        """Go to the next error."""
+
+    def previous_error() -> None:
+        """Go to the previous error."""
 
 
 global_context = Context()
