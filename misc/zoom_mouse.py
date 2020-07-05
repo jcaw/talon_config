@@ -48,7 +48,7 @@ def scope(*_):
 
 speech_system.register("pre:phrase", scope.update)
 # Noises won't trigger pre:phrase - bind them so we definitely catch the zoom.
-noise.register("post:pop", scope.update)
+noise.register("pre:pop", scope.update)
 noise.register("pre:hiss", scope.update)
 
 
