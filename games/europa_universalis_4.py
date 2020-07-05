@@ -52,8 +52,8 @@ insert = actions.insert
 
 
 class Buttons:
-    ZOOM_IN = Corner(Corner.BOTTOM_RIGHT, -41, -36)
-    ZOOM_OUT = Corner(Corner.BOTTOM_RIGHT, -15, -36)
+    ZOOM_IN = Corner(Corner.BOTTOM_RIGHT, -14, -43)
+    ZOOM_OUT = Corner(Corner.BOTTOM_RIGHT, -14, -11)
     SPEED_UP = Corner(Corner.TOP_RIGHT, -77, 26)
     SPEED_DOWN = Corner(Corner.TOP_RIGHT, -65, 51)
     # Use the bottom right position so the mouse doesn't obscure the
