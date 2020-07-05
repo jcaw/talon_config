@@ -65,6 +65,7 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 (next | neck) (buffer | buff): user.emacs_command("next-buffer")
 (last | larse) (buffer | buff): user.emacs_command("previous-buffer")
 
+
 # Macros
 record [macro]: user.emacs_command("kmacro-start-macro")
 finish [macro]: user.emacs_command("kmacro-finish-macro")
