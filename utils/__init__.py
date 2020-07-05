@@ -161,6 +161,10 @@ class Modifiers(object):
     """Context manager that holds down modifiers during the context."""
 
     def __init__(self, modifiers):
+        # Catch easy mistake that otherwise will bite later
+        assert not isinstance(
+            modifiers, str
+        ), "Provide a list of modifiers, not one modifier."
         self.modifiers = modifiers
 
     def __enter__(self):
