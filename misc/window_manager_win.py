@@ -62,7 +62,7 @@ class ModuleActions:
 
     # On Windows, to alt-tab through multiple windows, you have to hold alt (or
     # alt-shift) - letting go resets. We need custom actions that eat the
-    # repeat to handle this.
+    # repeat.
 
     def alt_tab_win(number: int):
         """Windows-specific - holds alt while tabbing."""
