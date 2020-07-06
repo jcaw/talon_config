@@ -13,7 +13,7 @@ import math
 import logging
 import sys
 from copy import deepcopy
-from typing import Tuple
+from typing import Tuple, Optional
 
 from talon import cron, ctrl
 from talon.track.geom import Point2d
