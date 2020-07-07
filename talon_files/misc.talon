@@ -4,3 +4,5 @@
 (start | search ) program | search windows [<phrase>]:
     key(win-s)
     insert(phrase)
+
+(refresh | reload) words: user.update_custom_words()
