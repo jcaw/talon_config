@@ -57,6 +57,15 @@ class Actions:
         user.emacs_command("projectile-find-file")
         insert(text)
 
+    def emacs_open_custom_words() -> None:
+        """Open the custom words file in Emacs."""
+        from user.misc.text import CUSTOM_WORDS_PATH
+
+        user.open_in_emacs(CUSTOM_WORDS_PATH)
+        user.emacs_command("end-of-buffer")
+        user.emacs_command("sp-skip-backward-to-symbol")
+        key("enter")
+
 
 context = Context()
 context.matches = """
