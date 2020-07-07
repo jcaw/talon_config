@@ -5,5 +5,5 @@
 <user.formatted_phrases> over:
     user.insert_many_formatted(formatted_phrases)
 
-<user.formatters> <number>:
-    user.reformat_left(formatters, number)
+<user.formatters> <user.digit>:
+    user.reformat_left(formatters, digit)
