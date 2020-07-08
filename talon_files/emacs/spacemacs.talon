@@ -15,3 +15,9 @@ split (three | triple) [columns]: user.emacs_command("spacemacs/window-split-tri
 split (four | grid): user.emacs_command("spacemacs/window-split-grid")
 # Custom function - not in Spacemacs by default
 split ([(two | double)] rows | five): user.emacs_command("spacemacs/window-split-double-rows")
+
+
+## Misc
+set theme [<user.dictation>]:
+    user.emacs_command("spacemacs/helm-themes")
+    user.insert_lowercase(dictation or "")
