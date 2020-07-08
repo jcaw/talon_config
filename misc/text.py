@@ -153,3 +153,15 @@ class Actions:
         _clip_set_unique()
         with WaitForClipChange(5):
             edit.cut()
+
+    def get_highlighted() -> None:
+        """Get the currently highlighted text, without altering clipboard."""
+        old_clip = clip.get()
+        try:
+            user.copy_safe()
+            return clip.get()
+        except Exception as e:
+            app.notify("Error getting highlighted text", str(e))
+            raise
+        finally:
+            clip_set_safe(old_clip)
