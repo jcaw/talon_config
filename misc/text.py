@@ -129,6 +129,10 @@ def _clip_set_unique():
 
 @module.action_class
 class Actions:
+    def insert_lowercase(text: str):
+        """Insert `text`, lowercase."""
+        actions.insert(text.lower())
+
     @preserve_clipboard
     def cut_words_left(number: int) -> str:
         """Cut `number` words left of the cursor."""
