@@ -135,3 +135,20 @@ discard: key(ctrl-c ctrl-k)
 
 restart emacs: user.emacs_command("spacemacs/restart-emacs-resume-layouts")
 exit emacs:    user.emacs_command("spacemacs/prompt-kill-emacs")
+
+
+# Kill to a specific character
+zap <user.character> [<number>]:
+    user.emacs_prefix_command("zap-up-to-char", number or 1)
+    key(character)
+zapley <user.character> [<number>]:
+    user.emacs_prefix_command("zap-to-char", number or 1)
+    key(character)
+bazap <user.character> [<number>]:
+    number = number or 1
+    user.emacs_prefix_command("zap-up-to-char", number * -1)
+    key(character)
+bazapley <user.character> [<number>]:
+    number = number or 1
+    user.emacs_prefix_command("zap-to-char", number * -1)
+    key(character)
