@@ -136,8 +136,7 @@ class Actions:
             # TODO: Use generic action
             actions.key("ctrl-shift-left")
         time.sleep(0.1)
-        actions.edit.cut()
-        time.sleep(0.1)
+        actions.user.cut_safe()
         return clip.get()
 
     def copy_safe() -> None:
