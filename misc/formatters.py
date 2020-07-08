@@ -244,8 +244,6 @@ class Actions:
             _last_used_formatters = formatters
         formatter_funcs = to_formatter_funcs(formatters)
 
-        # TODO: Split function
-
         for chunk in phrase_chunks:
             if isinstance(chunk, DictationChunk):
                 insert_formatted(chunk, formatters)
