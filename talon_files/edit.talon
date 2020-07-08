@@ -27,7 +27,5 @@ search <user.dictation>: user.search_text(dictation)
 
 
 comment: user.toggle_comment()
-comment <user.dictation>:
-    user.toggle_comment()
-    sleep(500ms)
-    user.insert_capitalized(dictation)
+comment <user.complex_phrase>$:     user.insert_comment(complex_phrase)
+comment <user.complex_phrase> over: user.insert_comment(complex_phrase)

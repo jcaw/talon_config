@@ -1,13 +1,16 @@
 """Default edit actions for all platforms"""
 
 import time
+from typing import Optional, List
 
 from talon import Module, Context, actions, clip, ctrl
 
 from user.utils import PreserveClipboard
+from user.misc import chunked_phrase
 
 key = actions.key
 edit = actions.edit
+user = actions.user
 
 
 module = Module()
@@ -48,6 +51,11 @@ class Actions:
     def toggle_comment() -> None:
         """Toggle whether the current line/region is commented."""
 
+    def insert_comment(complex_phrase: List[chunked_phrase.BasePhraseChunk]) -> None:
+        """Add a comment and insert `complex_phrase` into it."""
+        user.toggle_comment()
+        actions.sleep("500ms")
+        user.insert_complex(complex_phrase, "capitalized_sentence")
 
 # We use this abstraction to allow for mark-based selection, e.g. Emacs.
 class ExtendSelection:
