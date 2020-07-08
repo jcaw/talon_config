@@ -179,6 +179,34 @@ class Modifiers(object):
             actions.key(f"{modifier}:up")
 
 
+class WaitForClipChange:
+    """Context manager that only exits when the clipboard has changed."""
+
+    def __init__(self, timeout=2):
+        self.original_clip = None
+        self.timeout = timeout
+        self.end_time = None
+
+    def __enter__(self):
+        self.original_clip = clip.get()
+        self.end_time = time.monotonic() + self.timeout
+
+    def __exit__(self, *_):
+        while clip.get() == self.original_clip:
+            if time.monotonic() > self.end_time:
+                raise TimeoutError("Clipboard did not change before timeout.")
+            else:
+                time.sleep(0.01)
+
+
+def clip_set_safe(new_value, timeout=2):
+    """Set clipboard to `new_value`"""
+    if clip.get() == new_value:
+        return
+    with WaitForClipChange(timeout):
+        clip.set(new_value)
+
+
 class PreserveClipboard:
     def __init__(self):
         self.old_clipboard = None

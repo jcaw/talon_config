@@ -4,12 +4,17 @@ from itertools import chain
 from os import path
 import re
 import logging
+from uuid import uuid4
 
 from talon import Module, Context, actions, clip, app, cron
 from talon_init import TALON_USER
-from user.utils import preserve_clipboard
+
+from user.utils import preserve_clipboard, WaitForClipChange, clip_set_safe
 
 LOGGER = logging.getLogger(__name__)
+
+edit = actions.edit
+user = actions.user
 
 
 CUSTOM_WORDS_PATH = path.join(TALON_USER, "words.dict")
@@ -117,6 +122,11 @@ def dictation(m) -> str:
     return join_punctuation(chain(*normalized))
 
 
+def _clip_set_unique():
+    # Note there's a (negligible) chance of a clash here.
+    clip_set_safe(str(uuid4()))
+
+
 @module.action_class
 class Actions:
     @preserve_clipboard
@@ -129,3 +139,17 @@ class Actions:
         actions.edit.cut()
         time.sleep(0.1)
         return clip.get()
+
+    def copy_safe() -> None:
+        """Like `edit.copy` but waits for the clipboard to change."""
+        # Note this approach will pepper UUIDs through the clipboard history.
+        _clip_set_unique()
+        with WaitForClipChange(5):
+            edit.copy()
+
+    def cut_safe() -> None:
+        """Like `edit.cut` but waits for the clipboard to change."""
+        # Note this approach will pepper UUIDs through the clipboard history.
+        _clip_set_unique()
+        with WaitForClipChange(5):
+            edit.cut()
