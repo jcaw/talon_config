@@ -57,6 +57,7 @@ class Actions:
         actions.sleep("500ms")
         user.insert_complex(complex_phrase, "capitalized_sentence")
 
+
 # We use this abstraction to allow for mark-based selection, e.g. Emacs.
 class ExtendSelection:
     def __init__(self):
