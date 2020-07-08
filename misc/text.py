@@ -135,6 +135,7 @@ class Actions:
         for i in range(number):
             # TODO: Use generic action
             actions.key("ctrl-shift-left")
+        # TODO: Something more reliable than a wait here?
         time.sleep(0.1)
         actions.user.cut_safe()
         return clip.get()
