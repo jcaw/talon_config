@@ -8,10 +8,10 @@ user.emacs-major-mode: shell-mode
 # TODO: Move to current input
 (input | bottom | output end): user.emacs_command("comint-show-maximum-output")
 # TODO: input + dictation?
-input <user.open_formatted_phrases>:
+input <user.complex_phrase>:
     user.emacs_command("comint-show-maximum-output")
     # TODO: Maybe clear?
-    user.insert_many_formatted(open_formatted_phrases)
+    user.insert_complex(complex_phrase)
 (clear | kill) input: user.emacs_command("comint-kill-input")
 interrupt [shell]: user.emacs_command("comint-interrupt-subjob")
 stop shell: user.emacs_command("comint-stop-subjob")
