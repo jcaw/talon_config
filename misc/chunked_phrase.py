@@ -243,6 +243,17 @@ def dictation_phrase(m) -> List[BasePhraseChunk]:
         return list(m)
 
 
+@module.capture(rule="<user.formatter_chunk> <user.dictation_phrase>")
+def formatter_phrase(m) -> List[BasePhraseChunk]:
+    """A formatter, dictation, then a regular complex phrase.
+
+    This capture can be used to have phrase insertion be triggered exclusively
+    by a formatter.
+
+    """
+    return [m[0], *m[1]]
+
+
 def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
     """Format `text`, taking into account the surrounding text (if possible).
 
@@ -317,13 +328,13 @@ class ModuleActions:
             formatters = _last_used_formatters
         else:
             _last_used_formatters = formatters
-        formatter_funcs = to_formatter_funcs(formatters)
 
         for chunk in phrase_chunks:
             if isinstance(chunk, DictationChunk):
                 actions.self.insert_formatted(chunk, formatters)
             elif isinstance(chunk, CharacterChunk):
-                # TODO: Letters will be inserted with padding in natural language.
+                formatter_funcs = to_formatter_funcs(formatters)
+                # FIXME: Letters will be inserted with padding in natural language.
                 if preserve_punctuation(formatter_funcs):
                     # Format contextually if the formatter preserves
                     # punctuation.
