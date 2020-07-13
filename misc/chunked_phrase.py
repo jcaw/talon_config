@@ -234,6 +234,15 @@ def complex_phrase(m) -> List[BasePhraseChunk]:
     return list(m)
 
 
+@module.capture(rule="<user.dictation_chunk> [<user.complex_phrase>]")
+def dictation_phrase(m) -> List[BasePhraseChunk]:
+    """A phrase that must start with a dictation chunk."""
+    if hasattr(m, "complex_phrase"):
+        return [m[0], *m[1]]
+    else:
+        return list(m)
+
+
 def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
     """Format `text`, taking into account the surrounding text (if possible).
 
