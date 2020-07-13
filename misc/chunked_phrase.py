@@ -211,9 +211,13 @@ def formatter_chunk(m) -> None:
 
 @module.capture(
     rule=(
-        "(<user.dictation_chunk> | <user.character_chunk>"
-        " | <user.keypress_chunk> | <user.action_chunk>"
-        " | (<user.formatter_chunk> <user.dictation_chunk>))+"
+        "("
+        "   <user.dictation_chunk>"
+        " | <user.character_chunk>"
+        " | <user.keypress_chunk>"
+        " | <user.action_chunk>"
+        " | (<user.formatter_chunk> <user.dictation_chunk>)"
+        ")+"
     )
 )
 def complex_phrase(m) -> List[BasePhraseChunk]:
