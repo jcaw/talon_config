@@ -3,5 +3,4 @@
 <user.formatter_phrase>$:     user.insert_complex(formatter_phrase)
 <user.formatter_phrase> over: user.insert_complex(formatter_phrase)
 
-<user.formatters> <user.digit>:
-    user.reformat_left(formatters, digit)
+re-<user.formatters> <user.digit>: user.reformat_left(formatters, digit)
