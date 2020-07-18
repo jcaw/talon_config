@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-in-comment: True
 -
 # Allow free dictation when the cursor is in a comment

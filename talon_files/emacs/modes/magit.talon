@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-major-mode: magit-status-mode
 -
 mark <number>: user.magit_mark_lines(number)

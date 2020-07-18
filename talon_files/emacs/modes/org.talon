@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-major-mode: org-mode
 -
 # Basic Structure

@@ -28,7 +28,7 @@ class GlobalActions:
 
 context = Context()
 context.matches = r"""
-app: /emacs/
+tag: emacs
 user.emacs-minor-mode: helm-mode
 """
 

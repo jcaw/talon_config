@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-major-mode: dired-mode
 -
 ^<number>: user.emacs_dired_command("dired-find-file", number)

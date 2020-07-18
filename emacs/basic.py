@@ -13,6 +13,7 @@ emacs_fallbacks = actions.user.emacs_fallbacks
 
 
 module = Module()
+module.tag("emacs", "Active when Emacs focused.")
 
 
 @module.action_class
@@ -71,6 +72,7 @@ context = Context()
 context.matches = """
 app: /emacs/
 """
+context.tags_set(["emacs"])
 
 
 @context.action_class("edit")

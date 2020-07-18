@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 -
 {user.dynamic_commands}: user.emacs_command(dynamic_commands)
 {user.dynamic_prefix_commands} <user.optional_number>:

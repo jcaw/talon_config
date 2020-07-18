@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 -
 # Fundamental Commands
 

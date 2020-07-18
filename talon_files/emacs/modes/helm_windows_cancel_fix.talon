@@ -1,6 +1,6 @@
 # TODO: Does the helm cancel bug occur on other OSes?
 os: windows
-app: /emacs/
+tag: emacs
 user.emacs-in-helm-prompt: True
 -
 # On Windows, regular keyboard interrupt has to be pressed twice for Helm to

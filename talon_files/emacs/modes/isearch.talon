@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-minor-modes: isearch-mode
 -
 (forward | for): user.emacs_command("isearch-repeat-forward")

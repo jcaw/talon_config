@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 -
 eval defun: user.emacs_command("eval-defun")
 eval (last|that): user.emacs_command("eval-last-sexp")

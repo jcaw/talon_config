@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 -
 action(edit.find): user.emacs_command("helm-swoop")
 action(user.search): user.emacs_command("spacemacs/helm-project-smart-do-search")

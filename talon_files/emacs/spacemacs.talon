@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-is-spacemacs: True
 -
 ## Text Alignment

@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-major-mode: emacs-lisp-mode
 -
 test all: key(alt-m m t a)

@@ -9,7 +9,7 @@ from user.utils.formatting import SurroundingText
 context = Context()
 
 context.matches = r"""
-app: /emacs/
+tag: emacs
 """
 
 

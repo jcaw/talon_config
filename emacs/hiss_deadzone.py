@@ -3,7 +3,7 @@ from talon import Context
 
 hiss_context = Context()
 hiss_context.matches = r"""
-app: /emacs/
+tag: emacs
 # Currently, the way Talon parses contexts means the basic context would
 # override hiss-to-cancel too, so we manually exclude it.
 user.zoom_mouse_zooming: False

@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-minor-mode: yas-global-mode
 user.emacs-minor-mode: yas-minor-mode
 -

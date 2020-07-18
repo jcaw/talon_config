@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 -
 (magit | git status): user.emacs_command("magit-status")
 git init: user.emacs_command("magit-init")

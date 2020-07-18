@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-minor-mode: winum-mode
 -
 # NOTE: This will only work with windows up to 10.

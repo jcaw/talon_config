@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-minor-mode: git-commit-mode
 -
 # TODO: Extract free dictation enabling into a mode, share the mode

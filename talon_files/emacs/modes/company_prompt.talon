@@ -1,4 +1,4 @@
-app: /emacs/
+tag: emacs
 user.emacs-minor-mode: company-mode
 user.emacs-company-prompt-open: True
 -

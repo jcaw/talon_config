@@ -17,7 +17,7 @@ module.list("dynamic_commands", "Dynamic commands for manipulating semantic obje
 
 context = Context()
 context.matches = r"""
-app: /emacs/
+tag: emacs
 """
 
 context.lists["user.dynamic_commands"] = {}
