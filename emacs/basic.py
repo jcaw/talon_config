@@ -70,7 +70,12 @@ class Actions:
 
 context = Context()
 context.matches = """
+# Most OSes
 app: /emacs/
+
+# Cygwin X on Windows, displaying WSL Emacs
+app: /XWin/
+and title: /^emacs@/
 """
 context.tags_set(["emacs"])
 
