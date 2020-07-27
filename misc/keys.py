@@ -212,6 +212,8 @@ alternate_keys = {
     "fill": "delete",
     "scape": "escape",
     "knock": "end",
+    # "home" is unreliable and requires a lot of "h" sound - tiring
+    "con": "home",
     # Explicitly don't allow "return" because it's a common programming keyword.
     "slap": "enter",
     # TODO: Extract compound keys, shouldn't really be here
