@@ -77,7 +77,7 @@ app: /emacs/
 app: /XWin/
 and title: /^emacs@/
 """
-context.tags_set(["emacs"])
+context.tags = ["emacs"]
 
 
 @context.action_class("edit")
