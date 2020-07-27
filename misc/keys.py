@@ -127,8 +127,8 @@ ctx.lists["self.symbol"] = multi_map(
         ("comma", "cam"): ",",
         ("dot", "period", "full stop"): ".",
         ("semicolon", "semi"): ";",
-        ("apostrophe", "quote"): "'",
-        ("double quote", "dub quote", "speech mark", "speech"): '"',
+        ("apostrophe", "post", "poess"): "'",
+        ("speech mark", "speech", "quote"): '"',
         # FIXME: slash and blash recognition conflicts
         ("forward slash", "slash"): "/",
         ("backslash", "blash"): "\\",
