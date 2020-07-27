@@ -9,6 +9,9 @@ grab <user.any_key>$:
 kill <user.any_key>$:
     user.emacs_command("voicemacs-avy-kill")
     key(any_key)
+(sell | select | mark) <user.any_key>$:
+    user.emacs_command("voicemacs-avy-mark")
+    key(any_key)
 (teleport | telly) <user.any_key>$:
     user.emacs_command("voicemacs-avy-teleport")
     key(any_key)
