@@ -178,6 +178,8 @@ ctx.lists["self.arrow"] = {
     #
     **basic_arrows,
     "up": "up",
+    # Allow dropping the "t" in left
+    "leff": "left",
 }
 ctx.lists["self.standalone_arrow"] = {
     #
