@@ -28,6 +28,9 @@ class GlobalActions:
 
 context = Context()
 context.matches = r"""
+os: windows
+os: linux
+os: mac
 tag: emacs
 user.emacs-minor-mode: helm-mode
 """

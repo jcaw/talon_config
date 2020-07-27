@@ -1,4 +1,9 @@
 tag: emacs
+# HACK: Tag extraction like this doesn't override OS based stuff, so manually
+#   specify it.
+os: windows
+os: linux
+os: mac
 -
 # Fundamental Commands
 
