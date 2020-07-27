@@ -113,3 +113,8 @@ class UserActions:
         emacs_fallbacks(
             ["spacemacs/previous-error", "flycheck-previous-error", "previous-error"]
         )
+
+    def search(text: str = None) -> None:
+        emacs_command("spacemacs/helm-project-smart-do-search")
+        if text:
+            insert(text)

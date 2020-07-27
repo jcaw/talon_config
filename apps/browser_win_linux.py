@@ -65,14 +65,12 @@ class EditActions:
 
 @context.action_class("user")
 class UserActions:
-    def search() -> None:
+    def search(text: str = None) -> None:
         browser.focus_search()
-
-    def search_text(text: str) -> None:
-        user.search()
-        time.sleep(0.2)
-        actions.insert(text)
-        key("enter")
+        if text:
+            time.sleep(0.2)
+            actions.insert(text)
+            key("enter")
 
 
 @context.action_class("browser")

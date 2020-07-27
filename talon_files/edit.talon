@@ -18,12 +18,20 @@ save doc: edit.save()
 save [doc] as: edit.save_as()
 save all: edit.save_all()
 
-# TODO: Extract these long-form actions
 # Declared separately to allow for a default implementation with only find() defined.
-find: edit.find()
-find <user.dictation>: user.find_text(dictation)
-search: user.search()
-search <user.dictation>: user.search_text(dictation)
+#
+# TODO: Probably pull the <dictation> ones out into just emacs? Just have a
+#   <complex> implementation.
+find [<user.dictation>]$: edit.find(dictation or "")
+find <user.complex_phrase>$:
+    user.search()
+    sleep(500ms)
+    user.insert_complex(complex_phrase, "lowercase")
+search [<user.dictation>]$: user.search(dictation or "")
+search <user.complex_phrase>$:
+    user.search()
+    sleep(500ms)
+    user.insert_complex(complex_phrase, "lowercase")
 
 
 comment: user.toggle_comment()

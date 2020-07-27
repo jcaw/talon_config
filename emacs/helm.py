@@ -33,9 +33,12 @@ user.emacs-minor-mode: helm-mode
 """
 
 
-@context.action_class
-class HelmActions:
-    def find_text(text) -> None:
-        # `swoop` can be slow to open on large documents because it initially
-        # matches every line. It's much faster if text is provided up-front.
-        rpc.call("voicemacs-helm-swoop", [text])
+@context.action_class("edit")
+class EditActions:
+    def find(text: str = None):
+        if text:
+            # `swoop` can be slow to open on large documents because it initially
+            # matches every line. It's much faster if text is provided up-front.
+            rpc.call("voicemacs-helm-swoop", [text])
+        else:
+            emacs_command["helm-swoop"]

@@ -28,25 +28,16 @@ class Actions:
         # TODO: Swap to newapi once I know the interface
         ctrl.key("shift", up=True)
 
-    def search() -> None:
-        """Open a search dialogue. The dialogue depends on the program.
+    def search(text: str = None) -> None:
+        """Perform some generic "search". Behavior depends on the program.
 
-        This is distinct from find in that it's more powerful. It doesn't just
-        find text in the current document.
+        Provide `text` to search for some text.
 
         """
-
-    def search_text(text: str) -> None:
-        """Like `search`, but searches for `text`."""
         actions.user.search()
-        time.sleep(0.5)
-        actions.insert(text)
-
-    def find_text(text: str) -> None:
-        """Like `edit.find`, but finds `text`."""
-        actions.edit.find()
-        time.sleep(0.5)
-        actions.insert(text)
+        actions.sleep("500ms")
+        if text:
+            actions.insert(text)
 
     def toggle_comment() -> None:
         """Toggle whether the current line/region is commented."""

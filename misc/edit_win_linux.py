@@ -27,8 +27,11 @@ class BuiltInActions:
     def file_start():
         key("ctrl-start")
 
-    def find():
+    def find(text: str = None):
         key("ctrl-f")
+        actions.sleep("500ms")
+        if text:
+            actions.insert(text)
 
     def paragraph_end():
         key("ctrl-down")
