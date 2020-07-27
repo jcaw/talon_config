@@ -21,3 +21,6 @@ split ([(two | double)] rows | five): user.emacs_command("spacemacs/window-split
 set theme [<user.dictation>]:
     user.emacs_command("spacemacs/helm-themes")
     user.insert_lowercase(dictation or "")
+[toggle] debug on error: user.emacs_command("spacemacs/toggle-debug-on-error")
+(follow | definition | nishion ): user.emacs_command("spacemacs/jump-to-definition")
+backtrack: user.emacs_command("pop-tag-mark")
