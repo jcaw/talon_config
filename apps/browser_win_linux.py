@@ -32,6 +32,7 @@ app: /opera/
 # TODO: Compatibility with Edge?
 # title: /- Microsoft Edge/
 """
+context.tags = ["browser"]
 
 
 @context.action_class("app")

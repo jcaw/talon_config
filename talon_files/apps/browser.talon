@@ -1,10 +1,4 @@
-# TODO: Switch to tags
-
-app: /firefox/
-app: /chrome/
-app: /iexplore/
-app: /edge/
-app: /opera/
+tag: browser
 -
 # Browser GUI
 # TODO: Optional dictation
