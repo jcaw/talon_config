@@ -58,3 +58,13 @@ class Actions:
         standard_search(
             "https://en.wikipedia.org/wiki/Special:Search", {"search": text}
         )
+
+    def reddit_search(text: str) -> None:
+        """Search Reddit for some ``text``"""
+        actions.self.web_search(text + "    site:reddit.com")
+
+    def stackoverflow_search(text: str) -> None:
+        """Search StackOverflow (and StackExchange) for ``text``"""
+        actions.self.google_search(
+            text + "    site:stackoverflow.com OR site:stackexchange.com"
+        )
