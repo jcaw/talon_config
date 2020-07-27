@@ -34,6 +34,7 @@ os: mac
 tag: emacs
 user.emacs-minor-mode: helm-mode
 """
+context.tags = ["emacs-helm-enabled"]
 
 
 @context.action_class("edit")
