@@ -4,7 +4,7 @@ tag: browser
 # TODO: Optional dictation
 address [bar]: browser.focus_address()
 # TODO: Optional dictation
-search [bar]: browser.focus_search()
+search bar: browser.focus_search()
 [focus] page: browser.focus_page()
 # TODO: Copy address?
 # TODO: Copy page title?
