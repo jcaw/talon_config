@@ -84,6 +84,16 @@ finish [macro]: user.emacs_command("kmacro-finish-macro")
 store macro: user.emacs_command("kmacro-to-register")
 
 
+# Indentation
+dent [<number>]: user.emacs_prefix_command("voicemacs-relative-indent", number or 0)
+indent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-right", number or 1)
+dedent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-left", number or 1)
+
+
+# ---------------------------------------------------------------------------
+
+# Unsorted
+
 # TODO: Stuff to sort elsewhere
 pop (message | messages): user.emacs_command("popwin:messages")
 (close | kill) pop (win | window): user.emacs_command("popwin:close-popup-window")
