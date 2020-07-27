@@ -73,14 +73,14 @@ def call(function_, params=[], timeout=5, max_attempts=5, changes_state=True):
 
     remaining_time = timeout
     start_time = time.monotonic()
-    while True:
-        if not _call(
-            "voicemacs-input-pending?", [], timeout, max_attempts, changes_state=False
-        ):
-            break
+    while _call(
+        "voicemacs-input-pending?", [], timeout, max_attempts, changes_state=False
+    ):
         remaining_time = time.monotonic() - start_time
         if remaining_time <= 0:
             raise porthole.TimeoutError("Command loop could not be emptied in time.")
+        #  TODO: Seemed like this sleep is needed but not actually sure
+        time.sleep(0.1)
     return _call(function_, params, remaining_time, max_attempts, changes_state)
 
 
