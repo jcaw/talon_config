@@ -10,8 +10,13 @@ module = Module()
 
 @module.action_class
 class Actions:
-    def emacs_jump(keys: List[str]) -> None:
-        """Jump to a char or sequence of chars."""
-        user.emacs_command("avy-goto-word-or-subword-1")
-        for current_key in keys:
-            key(current_key)
+    def emacs_jump(char: str) -> None:
+        """Jump to a specific character."""
+        user.emacs_command("avy-goto-char-timer")
+        key(char)
+
+    def emacs_jump_chars(chars: List[str]) -> None:
+        """Jump to a sequence of chars."""
+        user.emacs_fallbacks(["evil-avy-goto-char-timer", "avy-goto-char-timer"])
+        for char in chars:
+            key(char)
