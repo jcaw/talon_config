@@ -123,7 +123,11 @@ action(edit.zoom_out): user.emacs_command("voicemacs-dencrease-text")
 action(edit.save): user.emacs_command("save-buffer")
 # TODO: save as
 # action(edit.save_as): user.emacs_command("")
-action(edit.save_all): user.emacs_command("save-some-buffers")
+# FIXME: Doesn't work, "wrong type argument, listp". RPC problem?
+# action(edit.save_all): user.emacs_command("save-some-buffers")
+# Fall back to keypress for now. Should work everywhere anyway, who rebinds
+# this?
+action(edit.save_all): key(ctrl-x s)
 
 # TODO: Fallbacks
 [show] kill ring: user.emacs_command("helm-show-kill-ring")
