@@ -186,8 +186,6 @@ ctx.lists["self.standalone_arrow"] = {
     **basic_arrows,
     "pup": "up",
 }
-# TODO: Separate standalone arrow list, use "pup" or something similar to
-#   mitigate "up" misrecognition
 
 simple_keys = dictify(
     [
