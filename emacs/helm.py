@@ -2,6 +2,8 @@ from talon import Module, Context, actions
 
 from user.emacs.utils import rpc
 
+emacs_command = actions.user.emacs_command
+
 
 module = Module()
 
@@ -23,7 +25,7 @@ class GlobalActions:
         """
         if isinstance(line_number, int):
             actions.self.emacs_helm_goto_line(line_number)
-        actions.self.emacs_command(command_name)
+        emacs_command(command_name)
 
 
 context = Context()
@@ -45,4 +47,4 @@ class EditActions:
             # matches every line. It's much faster if text is provided up-front.
             rpc.call("voicemacs-helm-swoop", [text])
         else:
-            emacs_command["helm-swoop"]
+            emacs_command("helm-swoop")
