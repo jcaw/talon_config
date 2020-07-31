@@ -6,7 +6,7 @@ import re
 import logging
 from uuid import uuid4
 
-from talon import Module, Context, actions, clip, app, cron
+from talon import Module, Context, actions, clip, app, cron, fs
 from talon_init import TALON_USER
 
 from user.utils import preserve_clipboard, WaitForClipChange, clip_set_safe
@@ -77,7 +77,7 @@ def parse_dict_file(file_path: str) -> Dict[str, str]:
 context = Context()
 
 
-def _update_custom_words() -> None:
+def _update_custom_words(*args) -> None:
     global context
     LOGGER.info("Updating custom words")
     words = parse_dict_file(CUSTOM_WORDS_PATH)
@@ -86,6 +86,7 @@ def _update_custom_words() -> None:
 
 
 _update_custom_words()
+fs.watch(SETTINGS_DIR, _update_custom_words)
 
 
 @module.action
