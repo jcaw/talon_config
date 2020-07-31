@@ -68,9 +68,10 @@ def parse_dict_file(file_path: str) -> Dict[str, str]:
                     line_count, line, "spoken form may contain only letters and spaces"
                 )
             if len(mapping) == 1:
-                words[spoken_form] = spoken_form
+                # Have to lowercase these for wav2letter compatibility
+                words[spoken_form.lower()] = spoken_form
             elif len(mapping) == 2:
-                words[spoken_form] = mapping[1]
+                words[spoken_form.lower()] = mapping[1]
     return words
 
 
