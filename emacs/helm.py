@@ -45,6 +45,6 @@ class EditActions:
         if text:
             # `swoop` can be slow to open on large documents because it initially
             # matches every line. It's much faster if text is provided up-front.
-            rpc.call("voicemacs-helm-swoop", [text])
+            rpc.call("voicemacs-helm-swoop", [text.lower()])
         else:
             emacs_command("helm-swoop")

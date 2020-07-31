@@ -60,7 +60,7 @@ class EditActions:
     def find(text: str = None):
         key("ctrl-f")
         if text:
-            actions.insert(text)
+            actions.insert(text.lower())
 
 
 @context.action_class("user")
@@ -69,7 +69,7 @@ class UserActions:
         browser.focus_search()
         if text:
             time.sleep(0.2)
-            actions.insert(text)
+            actions.insert(text.lower())
             key("enter")
 
 
