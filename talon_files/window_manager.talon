@@ -6,3 +6,7 @@ quit program: app.window_close()
 (new | open) (window | win): app.window_open()
 [show] programs: user.all_programs()
 fullscreen: user.toggle_fullscreen()
+
+(focus | cooss | kiss | cuss) <user.running_applications>: user.switcher_focus(running_applications)
+(list | show) running: user.switcher_list_running()
+(kill | close | hide) running: user.switcher_hide_running()
