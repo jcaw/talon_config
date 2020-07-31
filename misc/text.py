@@ -79,6 +79,7 @@ context = Context()
 
 def _update_custom_words() -> None:
     global context
+    LOGGER.info("Updating custom words")
     words = parse_dict_file(CUSTOM_WORDS_PATH)
     context.lists["user.custom_words"] = words
     return words
