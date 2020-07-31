@@ -214,7 +214,6 @@ def formatter_chunk(m) -> None:
         "("
         "   <user.dictation_chunk>"
         " | <user.character_chunk>"
-        " | <user.keypress_chunk>"
         # For now, disallow keypresses because they are too intrusive
         # " | <user.keypress_chunk>"
         " | <user.action_chunk>"
