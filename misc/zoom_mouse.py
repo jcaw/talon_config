@@ -154,8 +154,7 @@ class NoiseActions:
 
     def on_hiss(start: bool):
         try:
-            # This is currently a private module. Use if available.
-            from user.utils import scroll
+            from user.settings import scroll
         except ImportError:
             print("Scroll module not found. It must be manually added.")
         if start:
