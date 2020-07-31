@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 import time
 from itertools import chain
 from os import path
@@ -42,7 +42,7 @@ if not path.isfile(CUSTOM_WORDS_PATH):
         )
 
 
-def parse_dict_file(file_path):
+def parse_dict_file(file_path: str) -> Dict[str, str]:
     def invalid_line(line_count, line, description="no description"):
         LOGGER.warn(
             f'Invalid mapping "{line}" on line {line_count + 1} of'
