@@ -17,7 +17,8 @@ edit = actions.edit
 user = actions.user
 
 
-CUSTOM_WORDS_PATH = path.join(TALON_USER, "words.dict")
+SETTINGS_DIR = path.join(TALON_USER, "settings")
+CUSTOM_WORDS_PATH = path.join(SETTINGS_DIR, "words.dict")
 RE_SPEAKABLE = re.compile(r"^[a-zA-Z ]+$")
 RE_EMPTY = re.compile(r"^[ \t]*$")
 RE_COMMENT = re.compile(r"^[ \t]*[#]")
