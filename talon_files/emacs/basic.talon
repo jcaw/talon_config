@@ -132,8 +132,9 @@ action(edit.save_all): key(ctrl-x s)
 # TODO: Fallbacks
 [show] kill ring: user.emacs_command("helm-show-kill-ring")
 
-dired: user.emacs_command("dired-jump")
-dired other: user.emacs_command("dired-jump-other-window")
+# Wav2letter has trouble with "dired". Add alternate pronunciation.
+(dired | dyad): user.emacs_command("dired-jump")
+(dired | dyad) other: user.emacs_command("dired-jump-other-window")
 
 # TODO: Perform the next "switch-to-buffer" command in the other window.
 # with other: user.emacs_command("")
