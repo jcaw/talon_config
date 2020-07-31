@@ -247,12 +247,12 @@ def standalone_arrow(m) -> str:
     return m.standalone_arrow
 
 
-@ctx.capture(rule="numb <digits>")
+@ctx.capture(rule="(numb | num) <digits>")
 def number_key(m):
     return str(m.digits)
 
 
-@ctx.capture(rule="numb <number>")
+@ctx.capture(rule="(numb | num) <number>")
 def number_keys(m):
     return str(m.number)
 
