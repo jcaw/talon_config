@@ -1,5 +1,6 @@
 import os
 import logging
+from talon import Module
 
 from ._wav import load_wav, play_wav
 
@@ -54,3 +55,19 @@ def play_ding(**kwargs):
 def play_cancel(**kwargs):
     """Play a gentle cancellation sound."""
     play(FAILURE, **kwargs)
+
+
+# TODO: Refactor whole module into actions, use strings to reference sounds
+module = Module()
+
+
+@module.action
+def play_thunk():
+    """Play a thunk sound."""
+    play(THUNK)
+
+
+@module.action
+def play_glass_tap():
+    """Play a glass tap sound."""
+    play(GLASS_TAP)
