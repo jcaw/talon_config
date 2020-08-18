@@ -140,6 +140,10 @@ class ActionChunk(BasePhraseChunk):
         self.payload()
 
 
+class FileSuffixChunk(BasePhraseChunk):
+    """Holds the dotted suffix for a filetype (or URL)."""
+
+
 class FormatterChunk(BasePhraseChunk):
     """Holds a space-separated string of formatter(s)."""
 
@@ -165,6 +169,11 @@ def character_chunk(m) -> CharacterChunk:
 def keypress_chunk(m) -> KeypressChunk:
     """Chunk corresponding to a keypress or key sequence."""
     return KeypressChunk(m.special)
+
+
+@module.capture(rule="<user.file_suffix>")
+def file_suffix_chunk(m) -> FileSuffixChunk:
+    return FileSuffixChunk(m.file_suffix)
 
 
 # FIXME: Why can't I just create an empty capture that's only implemented by
@@ -217,6 +226,7 @@ def formatter_chunk(m) -> None:
         # For now, disallow keypresses because they are too intrusive
         # " | <user.keypress_chunk>"
         " | <user.action_chunk>"
+        " | <user.file_suffix_chunk>"
         " | (<user.formatter_chunk> <user.dictation_chunk>)"
         ")+"
     )
@@ -350,6 +360,10 @@ class ModuleActions:
             elif isinstance(chunk, FormatterChunk):
                 assert isinstance(chunk.payload, str), type(chunk.payload)
                 _last_used_formatters = formatters = chunk.payload
+            elif isinstance(chunk, FileSuffixChunk):
+                # File suffixes should be inserted without formatting or
+                # padding.
+                insert(chunk.payload)
             else:
                 raise ValueError(f"Unrecognized chunk type, {type(component)}.")
 

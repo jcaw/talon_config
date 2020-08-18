@@ -7,3 +7,5 @@
     insert(phrase)
 
 (refresh | reload) words: user.update_custom_words()
+
+<user.file_suffix>: insert(file_suffix)

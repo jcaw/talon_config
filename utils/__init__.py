@@ -402,10 +402,50 @@ def echo(value, prompt="Value"):
     return value
 
 
+_RE_DOUBLE_SPACES = re.compile("  +")
+
+
+def single_spaces(text: str) -> str:
+    """Return ``text``, but with instances of multiple spaces removed."""
+    return _RE_DOUBLE_SPACES.sub(" ", text)
+
+
+# TODO: This is repeated from the numbers module, probably
+spoken_digits = {
+    "1": "one",
+    "2": "two",
+    "3": "three",
+    "4": "four",
+    "5": "five",
+    "6": "six",
+    "7": "seven",
+    "8": "eight",
+    "9": "nine",
+    "0": "zero",
+}
+
+
+def _digits_to_words(text: str) -> str:
+    """convert digits in ``text`` to their English words.
+
+    Note this will NOT create multiple-digit forms. Digits will be separated."""
+    for digit, english in spoken_digits.items():
+        text = text.replace(digit, f" {english} ")
+    return single_spaces(text)
+
+
 _RE_NONALPHABETIC_CHAR = re.compile(r"[^a-zA-Z]")
 
 
 def spoken_form(text: str) -> str:
     """Convert ``text`` into a format compatible with speech lists."""
     # TODO: Replace numeric digits with spoken digits
-    return _RE_NONALPHABETIC_CHAR.sub(" ", text.replace("'", " ")).strip()
+    text = text.replace("'", " ")
+    text = _digits_to_words(text)
+    text = _RE_NONALPHABETIC_CHAR.sub(text, " ")
+    return text.strip()
+
+
+def expand_acronym(acronym: str) -> str:
+    """Create a spoken form for an acronym, e.g. "mp3" -> "M P three"."""
+    return spoken_form(" ".join(acronym).upper())
