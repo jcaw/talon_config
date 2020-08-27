@@ -67,6 +67,32 @@ class Actions:
         emacs_command("sp-skip-backward-to-symbol")
         key("enter")
 
+    def emacs_switch_buffer() -> None:
+        """Switch the current buffer."""
+        emacs_fallbacks(
+            [
+                # Spacemacs
+                "spacemacs-layouts/non-restricted-buffer-list-helm",
+                # Doom
+                "+helm/workspace-mini",
+                "switch-buffer",
+            ]
+        )
+
+    def emacs_switch_theme() -> None:
+        """Open the themes menu."""
+        emacs_fallbacks(
+            ["spacemacs/helm-themes", "load-theme",]
+        )
+
+    def emacs_restart() -> None:
+        """Restart Emacs. The implementation may restore the workspace."""
+        emacs_command("restart-emacs")
+
+    def emacs_quit() -> None:
+        """Exit Emacs."""
+        emacs_command("save-buffers-kill-emacs")
+
 
 context = Context()
 context.matches = """

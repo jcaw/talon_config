@@ -6,21 +6,16 @@ align <user.character>: user.spacemacs_align(character)
 align (math|operator): user.emacs_command("spacemacs/align-repeat-math-oper")
 align regex: user.emacs_command("spacemacs/align-repeat")
 
+## Navigation
+action(user.emacs_find_definition): user.emacs_command("spacemacs/jump-to-definition")
 
-## Window Layouts
-# Commands to pop various basic window layouts
-split (one | single) [column]: user.emacs_command("spacemacs/window-split-single-column")
-split (two | double) [columns]: user.emacs_command("spacemacs/window-split-double-columns")
-split (three | triple) [columns]: user.emacs_command("spacemacs/window-split-triple-columns")
-split (four | grid): user.emacs_command("spacemacs/window-split-grid")
-# Custom function - not in Spacemacs by default
-split ([(two | double)] rows | five): user.emacs_command("spacemacs/window-split-double-rows")
-
-
-## Misc
-set theme [<user.dictation>]:
-    user.emacs_command("spacemacs/helm-themes")
-    user.insert_lowercase(dictation or "")
+## Unsorted
+# TODO: Why use Spacemacs' indirection?
 [toggle] debug on error: user.emacs_command("spacemacs/toggle-debug-on-error")
-(follow | definition | nishion ): user.emacs_command("spacemacs/jump-to-definition")
-backtrack: user.emacs_command("pop-tag-mark")
+
+[(buff | buffer)] scratch:  user.emacs_command("spacemacs/switch-to-scratch-buffer")
+[(buff | buffer)] messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
+# TODO: Pop mesages
+
+action(user.emacs_restart): user.emacs_command("spacemacs/restart-emacs-resume-layouts")
+action(user.emacs_exit):    user.emacs_command("spacemacs/prompt-kill-emacs")

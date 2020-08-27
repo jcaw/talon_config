@@ -62,9 +62,9 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 # Buffers
 # TODO: Fallbacks
 (buffer | buff):
-    user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
+    user.emacs_switch_buffer()
 (buffer | buff) <user.complex_phrase>$:
-    user.emacs_command("spacemacs-layouts/non-restricted-buffer-list-helm")
+    user.emacs_switch_buffer()
     user.insert_complex(complex_phrase, "lowercase")
 (close | kill) (buffer | buff): user.emacs_command("kill-this-buffer")
 (close | kill) other (buffer | buff): user.emacs_command("kill-this-buffer")
@@ -98,8 +98,9 @@ dedent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-left", nu
 pop (message | messages): user.emacs_command("popwin:messages")
 (close | kill) pop (win | window): user.emacs_command("popwin:close-popup-window")
 
-set theme: user.emacs_command("spacemacs/helm-themes")
-
+set theme [<user.dictation>]:
+    user.emacs_switch_theme()
+    user.insert_lowercase(dictation or "")
 
 # TODO: Stuff to pull to more generic modules.
 open [file]: user.open_file()
@@ -148,13 +149,7 @@ discard: key(ctrl-c ctrl-k)
 (next | neck) error | nerror:  user.next_error()
 (last | larse) error | larror: user.previous_error()
 
-[(buff | buffer)] scratch:  user.emacs_command("spacemacs/switch-to-scratch-buffer")
-[(buff | buffer)] messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
-
 (rectangle | rect): user.emacs_command("rectangle-mark-mode")
-
-restart emacs: user.emacs_command("spacemacs/restart-emacs-resume-layouts")
-exit emacs:    user.emacs_command("spacemacs/prompt-kill-emacs")
 
 
 # Kill to a specific character
@@ -172,3 +167,6 @@ bazapley <user.character> [<number>]:
     number = number or 1
     user.emacs_prefix_command("zap-to-char", number * -1)
     key(character)
+
+
+[toggle] debug on error: user.emacs_command("toggle-debug-on-error")
