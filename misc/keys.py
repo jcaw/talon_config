@@ -227,6 +227,7 @@ alternate_keys = {
     "parens": "( ) left",
     "braces": "{ } left",
     "angles": "< > left",
+    "loon": "end enter",
 }
 keys = {**simple_keys, **alternate_keys}
 ctx.lists["self.special"] = keys
