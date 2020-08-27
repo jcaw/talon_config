@@ -114,6 +114,13 @@ class UserActions:
         )
 
     def search(text: str = None) -> None:
-        emacs_command("spacemacs/helm-project-smart-do-search")
+        emacs_fallbacks(
+            [
+                # Spacemacs
+                "spacemacs/helm-project-smart-do-search",
+                # Doom
+                "+default/search-project",
+            ]
+        )
         if text:
             insert(text.lower())
