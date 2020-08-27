@@ -209,6 +209,90 @@ def apply_programming_keywords(
     return ComplexInsert(text)
 
 
+def apply_euler_function_call(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    # We don't want the vanilla `text_after` but we do want the text before, so
+    # allow it to be generated then discard it.
+    complex = apply_snake(text, surrounding_text)
+
+    if (
+        surrounding_text
+        and is_alphanumeric(surrounding_text.char_after)
+        or surrounding_text.char_after == "_"
+    ):
+        complex.text_after = ") "
+    else:
+        complex.text_after = ")"
+    complex.insert += "("
+    return complex
+
+
+def apply_elisp_private(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    complex = apply_spine(text, surrounding_text)
+    # Note this can do two quite different things:
+    #
+    # "this-is-a-var"  -> "this--is-a-var"
+    #
+    # "-this-is-a-var" -> "--this-is-a-var"
+    #
+    # Both are desirable. It's up to the user to use spine if they want to
+    # extend an existing private var.
+    complex.insert = complex.insert.replace("-", "--", 1)
+    return complex
+
+
+def _lisp_pad_after(surrounding_text):
+    """Helper for lisps that determines whether trailing padding is needed."""
+    return surrounding_text and surrounding_text.char_after not in [
+        *")]}\n\r\t ",
+        "",
+        None,
+    ]
+
+
+def _lisp_pad_before(surrounding_text):
+    """Helper for lisps that determines whether leading padding is needed."""
+    return not (
+        surrounding_text and surrounding_text.char_before in [*"([{@,\n\r\t ", "", None]
+    )
+
+
+def apply_lisp_function_call(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    # TODO: Nicer apply spaced.
+
+    # Note we explicitly ignore the surrounding text.
+    complex = apply_spine(text, surrounding_text=None)
+
+    # Does it need a space before?
+    if _lisp_pad_before(surrounding_text):
+        prefix = " ("
+    else:
+        prefix = "("
+    complex.insert = prefix + complex.insert
+
+    # Does it need a space after?
+    if _lisp_pad_after(surrounding_text):
+        complex.text_after = ") "
+    else:
+        complex.text_after = ")"
+    return complex
+
+
+def apply_lisp_keyword(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    complex = add_prefix(":", apply_spine)(text, surrounding_text)
+    # We can space the leader on keyword args automatically
+    if _lisp_pad_before(surrounding_text):
+        complex.insert = " " + complex.insert
+    return complex
+
+
 # Words to keep lowercase in titles. Very rough heuristic, add more as needed.
 LOWERCASE_TITLE_WORDS = [
     # Keep these sorted alphabetically.
@@ -324,6 +408,10 @@ def apply_spaced(text, surrounding_text=None):
 
 def add_prefix(prefix: str, formatting_func: FORMATTING_FUNC_TYPE):
     """Create a function that adds a prefix, then applies ``formatting_func``."""
+
+    # TODO: A prefix here probably implies we always want this to be a new
+    #   object, so add a leading space when necessary. Or at least expose that
+    #   option.
 
     def apply_formatting(
         text: str, surrounding_text: Optional[SurroundingText] = None

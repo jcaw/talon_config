@@ -8,25 +8,29 @@ key = actions.key
 insert = actions.insert
 
 from user.utils.formatting import (
-    preserve_punctuation,
+    add_prefix,
     apply_camel_case,
-    apply_studley_case,
+    apply_capitalized_sentence,
+    apply_dotword,
+    apply_dunder,
+    apply_elisp_private,
+    apply_euler_function_call,
+    apply_lisp_function_call,
+    apply_lisp_keyword,
+    apply_lowercase,
+    apply_programming_keywords,
+    apply_sentence,
     apply_snake,
     apply_spine,
-    apply_dotword,
     apply_squash,
-    make_apply_delimiter,
-    apply_dunder,
-    apply_uppercase,
-    apply_lowercase,
-    apply_sentence,
-    apply_capitalized_sentence,
+    apply_studley_case,
     apply_title,
-    apply_programming_keywords,
-    add_prefix,
-    format_text,
-    reformat_text,
+    apply_uppercase,
     ComplexInsert,
+    format_text,
+    make_apply_delimiter,
+    preserve_punctuation,
+    reformat_text,
     SurroundingText,
 )
 from user.utils import multi_map
@@ -57,10 +61,14 @@ formatter_functions = {
     # Language-specific
     "c_path": make_apply_delimiter("::"),
     "python_private": add_prefix("_", apply_snake),
+    "elisp_private": apply_elisp_private,
+    "lisp_keyword_arg": apply_lisp_keyword,
+    "lisp_function_call": apply_lisp_function_call,
+    "euler_function_call": apply_euler_function_call,
 }
 
 # Many of these formatters may be chained and applied to a single chunk.
-_chainable_formatters = multi_map(
+chainable_formatters = multi_map(
     {
         "camel": "camel",
         "studley": "studley",
@@ -73,19 +81,21 @@ _chainable_formatters = multi_map(
         "upper": "uppercase",
         # TODO: Maybe don't allow this to be chained?
         ("lower", "bot"): "lowercase",
+        # Function calls are euler-style by default. Lisps can override this.
+        "funk": "euler_function_call",
         # Language-specific
         # TODO: Where is this delimiter used again?
         "see path": "c_path",  # c path
-        # TODO: Maybe move this into a context-specific list
-        "private": "python_private",
     }
 )
 # Only one of these formatters can be applied to each chunk.
-_standalone_formatters = {
+standalone_formatters = {
     "say": "sentence",
     "top": "capitalized_sentence",
     "title": "title",
-    "key": "keywords",
+    # TODO: Settle on one of these
+    "prog": "keywords",
+    "pog": "keywords",
 }
 # TODO: Wrapped, e.g. parens and string?
 # wrapped_commands = multi_map(
@@ -97,7 +107,7 @@ _standalone_formatters = {
 
 # Sanity check
 for spoken_form, formatter_name in itertools.chain(
-    _chainable_formatters.items(), _standalone_formatters.items()
+    chainable_formatters.items(), standalone_formatters.items()
 ):
     assert formatter_name in formatter_functions, f"{spoken_form}: {formatter_name}"
 
@@ -194,8 +204,8 @@ module.list(
     "standalone_formatters", desc="List of text formatters that cannot be chained"
 )
 
-context.lists["self.chainable_formatters"] = _chainable_formatters
-context.lists["self.standalone_formatters"] = _standalone_formatters
+context.lists["self.chainable_formatters"] = chainable_formatters
+context.lists["self.standalone_formatters"] = standalone_formatters
 
 
 def to_formatter_funcs(formatters: str) -> List[Callable]:
