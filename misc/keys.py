@@ -168,6 +168,12 @@ ctx.lists["self.symbol"] = multi_map(
         ("left angle", "langle"): "<",
         ("right angle", "rangle"): ">",
         ("space", "gap"): " ",
+        # TODO: Extract these into a separate list
+        ("walrus", "wally"): ": =",
+        "rittoe": "- >",
+        "leffoe": "< -",
+        "riteek": "= >",
+        "leffeek": "< =",
     }
 )
 
