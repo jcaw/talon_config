@@ -1,3 +1,5 @@
+file start: edit.file_start()
+file end: edit.file_end()
 (sell | select) (file | all): edit.select_all()
 
 (page up | jup): edit.page_up()
