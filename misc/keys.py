@@ -133,7 +133,12 @@ ctx.lists["self.symbol"] = multi_map(
         ("forward slash", "slash"): "/",
         ("backslash", "blash"): "\\",
         ("minus", "dash"): "-",
-        ("equals", "eek"): "=",
+        (
+            "equals",
+            # "eek",
+            "quals",
+            "qual",
+        ): "=",
         "plus": "+",
         ("question mark", "question", "quest"): "?",
         "tilde": "~",
