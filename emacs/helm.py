@@ -1,6 +1,6 @@
-from talon import Module, Context, actions
+from talon import Module, Context, actions, settings
 
-from user.emacs.utils import rpc
+from user.emacs.utils.voicemacs import rpc_call
 
 emacs_command = actions.user.emacs_command
 
@@ -40,9 +40,21 @@ context.tags = ["emacs-helm-enabled"]
 @context.action_class("edit")
 class EditActions:
     def find(text: str = None):
-        if text:
-            # `swoop` can be slow to open on large documents because it initially
-            # matches every line. It's much faster if text is provided up-front.
-            rpc.call("voicemacs-helm-swoop", [text.lower()])
+        text = text.lower()
+        # Other fallbacks to add
+        #
+        # Doom
+        if settings.get("user.is-spacemacs"):
+            if text:
+                # `swoop` can be slow to open on large documents because it initially
+                # matches every line. It's much faster if text is provided up-front.
+                rpc_call("voicemacs-helm-swoop", [text])
+            else:
+                emacs_command("helm-swoop")
         else:
-            emacs_command("helm-swoop")
+            # TODO: Clean this up, the abstraction is wrong
+            actions.user.emacs_fallbacks(
+                ["+default/search-buffer", "swiper", "isearch",]
+            )
+            if text:
+                actions.insert(text)
