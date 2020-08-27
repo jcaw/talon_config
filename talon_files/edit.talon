@@ -9,7 +9,8 @@ kill line: edit.delete_line()
 cut: edit.cut()
 copy: edit.copy()
 paste: edit.paste()
-(undo | scrap): edit.undo()
+
+(undo | scrap | scrub): edit.undo()
 redo: edit.redo()
 
 # TODO: Doc, file - common language here?
