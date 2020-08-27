@@ -1,7 +1,8 @@
 tag: emacs
 user.emacs-minor-modes: isearch-mode
 -
-(forward | for): user.emacs_command("isearch-repeat-forward")
-(backward | back): user.emacs_command("isearch-repeat-backward")
-action(user.on_pop): user.emacs_command("voicemacs-isearch-dwim")
+(forward | for): key("C-s")
+(backward | back): key("C-r")
+# TODO: Don't just go forwards, repeat prior
+action(user.on_pop): key("C-s")
 cancel: user.emacs_command("isearch-cancel")
