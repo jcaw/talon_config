@@ -12,9 +12,7 @@ module = Module()
 class GlobalActions:
     def emacs_helm_goto_line(line_number: int):
         """Move to a specific line in the helm buffer."""
-        # HACK: Technically it does change the state, but it doesn't mater if
-        #   we do it multiple times.
-        rpc.call("voicemacs-helm-goto-line", [line_number], changes_state=False)
+        rpc_call("voicemacs-helm-goto-line", [line_number])
 
     def emacs_helm_command(command_name: str, line_number: int = None) -> None:
         """Perform a Helm command, optionally on item ``number``.

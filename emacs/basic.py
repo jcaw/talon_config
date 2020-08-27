@@ -3,7 +3,7 @@ from typing import Optional
 from talon import Context, Module, actions, ui
 from talon_init import TALON_USER
 
-from user.emacs.utils import rpc
+from user.emacs.utils.voicemacs import rpc_call
 
 key = actions.key
 insert = actions.insert
@@ -29,10 +29,10 @@ class Actions:
 
         """
         # TODO: Start Emacs if it's not already running.
-        rpc.call("x-focus-frame", [None])
+        rpc_call("x-focus-frame", [None])
         if path:
             # FIXME: Porthole can't handle unencodable return values
-            rpc.call("voicemacs-find-file", [path])
+            rpc_call("voicemacs-find-file", [path])
 
     def emacs_search_directory(text: Optional[str] = None) -> None:
         """Search for some `text` in the current project."""
@@ -70,14 +70,13 @@ class Actions:
 
 context = Context()
 context.matches = """
-# Most OSes
-app: /emacs/
+tag: emacs
 
-# Cygwin X on Windows, displaying WSL Emacs
-app: /XWin/
-and title: /^emacs@/
+# HACK: Circumvent tags losing priority
+os: windows
+os: linux
+os: mac
 """
-context.tags = ["emacs"]
 
 
 @context.action_class("edit")

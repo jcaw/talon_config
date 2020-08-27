@@ -5,7 +5,7 @@ from typing import List, Dict
 from talon import Module, Context
 
 from user.utils import spoken_form
-from user.emacs.utils.state import emacs_state
+from user.emacs.utils.voicemacs import emacs_state
 
 
 DEFINED_COMMANDS_KEY = "defined-commands"

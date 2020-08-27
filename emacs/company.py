@@ -3,8 +3,6 @@ from talon import Module, actions
 user = actions.user
 emacs_prefix_command = actions.user.emacs_prefix_command
 
-from user.emacs.utils import rpc
-
 
 module = Module()
 

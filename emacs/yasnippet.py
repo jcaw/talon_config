@@ -6,8 +6,7 @@ import re
 from talon import Module, Context
 
 from user.utils import spoken_form
-from user.emacs.utils import rpc
-from user.emacs.utils.state import emacs_state
+from user.emacs.utils.voicemacs import rpc_call, emacs_state
 
 
 SNIPPET_TABLES_KEY = "yasnippets"
@@ -32,7 +31,7 @@ def emacs_snippet(m) -> str:
 class Actions:
     def emacs_insert_yasnippet(snippet_name: str) -> None:
         """Insert a yasnippet by name."""
-        rpc.call("voicemacs-insert-snippet", [snippet_name])
+        rpc_call("voicemacs-insert-snippet", [snippet_name])
 
 
 context = Context()

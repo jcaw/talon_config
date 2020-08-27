@@ -2,7 +2,7 @@
 
 from talon import Module
 
-from user.emacs.utils.state import emacs_state
+from user.emacs.utils.voicemacs import emacs_state
 
 
 # Valid types for scope values.

@@ -3,8 +3,8 @@ import time
 
 from talon import Module, actions
 
-from user.emacs.utils import rpc
-from user.emacs.utils.state import emacs_state
+from user.emacs.utils import voicemacs
+from user.emacs.utils.voicemacs import emacs_state
 
 
 key = actions.key
@@ -40,7 +40,7 @@ module = Module()
 class Actions:
     def emacs_command(command: str) -> None:
         """Run an Emacs command."""
-        rpc.run_command(command)
+        voicemacs.run_command(command)
 
     def emacs_prefix_command(
         command: str, prefix_arg: Optional[Union[str, int, List[int]]] = [4]
@@ -61,7 +61,7 @@ class Actions:
             prefix_arg = int(prefix_arg)
         except TypeError:
             pass
-        rpc.run_command(command, prefix_arg=prefix_arg)
+        voicemacs.run_command(command, prefix_arg=prefix_arg)
 
     def emacs_fallbacks(
         commands: List[str],
@@ -86,6 +86,8 @@ class Actions:
                     typed_prefix_arg(prefix_arg)
                 key(keypress)
             else:
+                # FIXME: This error will ping when Voicemacs isn't connected.
+                #   Need a better error.
                 raise ValueError(
                     "None of these commands appear bound, and no fallback key "
                     f"was defined. Commands: {commands}"

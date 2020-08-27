@@ -2,7 +2,7 @@ import emacs_porthole as porthole
 
 from talon import Context
 
-from user.emacs.utils import rpc
+from user.emacs.utils.voicemacs import rpc_call
 from user.utils.formatting import SurroundingText
 
 
@@ -17,12 +17,11 @@ tag: emacs
 class UserActions:
     def surrounding_text() -> SurroundingText:
         try:
-            raw_info = rpc.call(
+            raw_info = rpc_call(
                 "voicemacs-surrounding-text",
                 [":chars-before", 30000, ":chars-after", 30000],
                 # Use a very long timeout
                 timeout=10,
-                changes_state=False,
             )
         except porthole.PortholeConnectionError:
             return None

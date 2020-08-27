@@ -4,8 +4,7 @@ from typing import List, Dict, Optional
 
 from talon import Module, Context, actions
 
-from user.emacs.utils import rpc
-from user.emacs.utils.state import emacs_state
+from user.emacs.utils.voicemacs import rpc_call, emacs_state
 
 key = actions.key
 insert = actions.insert
@@ -60,7 +59,7 @@ def org_todo_keyword(m) -> str:
 class Actions:
     def org_set_todo(state: str) -> None:
         """Set the current item to a specific TODO state."""
-        rpc.call("org-todo", [str(state)])
+        rpc_call("org-todo", [str(state)])
 
     def org_code_block(language: Optional[str] = None) -> None:
         """Insert an `org-mode` code block.

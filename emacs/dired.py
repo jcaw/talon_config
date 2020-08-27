@@ -1,6 +1,6 @@
 from talon import Module, actions
 
-from user.emacs.utils import rpc
+from user.emacs.utils.voicemacs import rpc_call
 
 
 module = Module()
@@ -12,7 +12,7 @@ class Actions:
         """Move cursor to a Dired candidate by number."""
         # HACK: Technically it does change the state, but it doesn't mater if
         #   we do it multiple times.
-        rpc.call("voicemacs-dired-move-to-item", [number], changes_state=False)
+        rpc_call("voicemacs-dired-move-to-item", [number])
 
     def emacs_dired_command(command_name: str, number: int = None) -> None:
         """Perform a Dired command, optionally on item ``number``.
