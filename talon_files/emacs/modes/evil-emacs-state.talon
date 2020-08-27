@@ -2,5 +2,6 @@ tag: emacs
 
 user.emacs-evil-state: emacs
 -
-menu: key(alt-m)
-((mode | mod) (menu | you) | modju | modyu): key(alt-m m)
+(menu | men): key(alt-m)
+# What about just "mod"?
+(mode | mod) (menu | men): key(alt-m m)
