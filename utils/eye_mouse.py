@@ -2,8 +2,13 @@ import logging
 
 from talon_plugins import eye_mouse, eye_zoom_mouse
 
-from ..utils import sound
-from ..patches import better_zoom_mouse
+from user.utils import sound
+
+try:
+    from user.settings import better_zoom_mouse
+except:
+    print("Couldn't import `better_zoom_mouse`. Skipping it.")
+    better_zoom_mouse = None
 
 LOGGER = logging.getLogger(__name__)
 
