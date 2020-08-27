@@ -55,7 +55,7 @@ class Actions:
     def emacs_find_file_talon_user(text: Optional[str] = None) -> None:
         """Open Emacs & find a file in Talon user w/ name matching `text`."""
         user.emacs_open_talon_user()
-        user.emacs_command("projectile-find-file")
+        emacs_command("projectile-find-file")
         insert(text)
 
     def emacs_open_custom_words() -> None:
@@ -63,8 +63,8 @@ class Actions:
         from user.misc.text import CUSTOM_WORDS_PATH
 
         user.open_in_emacs(CUSTOM_WORDS_PATH)
-        user.emacs_command("end-of-buffer")
-        user.emacs_command("sp-skip-backward-to-symbol")
+        emacs_command("end-of-buffer")
+        emacs_command("sp-skip-backward-to-symbol")
         key("enter")
 
 
