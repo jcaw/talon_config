@@ -18,7 +18,7 @@ kill <user.any_key>$:
 put <user.any_key>$:
     user.emacs_command("voicemacs-avy-yank")
     key(any_key)
-(pluck | bring) <user.any_key>$:
+(pluck | bring | kate) <user.any_key>$:
     user.emacs_command("voicemacs-avy-duplicate")
     key(any_key)
 pad <user.any_key>$:
