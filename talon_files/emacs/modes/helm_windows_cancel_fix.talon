@@ -6,4 +6,4 @@ user.emacs-in-helm-prompt: True
 # On Windows, regular keyboard interrupt has to be pressed twice for Helm to
 # recognize it and terminate. Emulating the keypress (within Emacs) fixes the
 # behavior.
-cancel: user.emacs_command("my-simulate-C-g")
+cancel: user.emacs_command("jcaw-simulate-C-g")
