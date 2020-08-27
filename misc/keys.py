@@ -196,6 +196,8 @@ ctx.lists["self.standalone_arrow"] = {
     "pup": "up",
 }
 
+
+# TODO: Merge these into one dictionary, use multi map
 simple_keys = dictify(
     [
         #
