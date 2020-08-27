@@ -167,6 +167,7 @@ ctx.lists["self.symbol"] = multi_map(
         ("right brace", "race"): "}",
         ("left angle", "langle"): "<",
         ("right angle", "rangle"): ">",
+        ("space", "gap"): " ",
     }
 )
 
@@ -198,7 +199,6 @@ simple_keys = dictify(
         "tab",
         "escape",
         "enter",
-        "space",
         "pageup",
         "pagedown",
         "backspace",
