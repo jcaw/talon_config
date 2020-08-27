@@ -178,20 +178,17 @@ ctx.lists["self.symbol"] = multi_map(
 )
 
 ctx.lists["self.number"] = dict(zip(default_digits, ints))
-basic_arrows = dictify(
-    [
-        #
-        "left",
-        "right",
-        "down",
-    ]
-)
+basic_arrows = {
+    "left": "left",
+    # Allow dropping the "t" in left
+    "leff": "left",
+    "right": "right",
+    "down": "down",
+}
 ctx.lists["self.arrow"] = {
     #
     **basic_arrows,
     "up": "up",
-    # Allow dropping the "t" in left
-    "leff": "left",
 }
 ctx.lists["self.standalone_arrow"] = {
     #
