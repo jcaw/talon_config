@@ -116,4 +116,4 @@ class UserActions:
     def search(text: str = None) -> None:
         emacs_command("spacemacs/helm-project-smart-do-search")
         if text:
-            insert(text)
+            insert(text.lower())
