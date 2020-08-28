@@ -122,6 +122,9 @@ tight reflow: user.emacs_command("jcaw-fill-this-line")
 action(edit.zoom_in): user.emacs_command("voicemacs-increase-text")
 action(edit.zoom_out): user.emacs_command("voicemacs-dencrease-text")
 action(edit.save): user.emacs_command("save-buffer")
+save and kill:
+    edit.save()
+    user.emacs_command("kill-this-buffer")
 # TODO: save as
 # action(edit.save_as): user.emacs_command("")
 # FIXME: Doesn't work, "wrong type argument, listp". RPC problem?
