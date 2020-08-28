@@ -1,8 +1,12 @@
 # TODO: Derive scope from data
+import logging
 
 from talon import Module
 
 from user.emacs.utils.voicemacs import emacs_state
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 
 # Valid types for scope values.
@@ -63,6 +67,8 @@ def scope(*_):
     # referencing the set names passed by Voicemacs.
     _duplicate_key(scope, "major-mode-chain", "major-mode")
     _duplicate_key(scope, "minor-modes", "minor-mode")
+    LOGGER.debug("Emacs scope synced. Keys: {}".format(list(scope.keys())))
+    LOGGER.debug("Emacs state keys:         {}".format(list(state.keys())))
     return scope
 
 
