@@ -35,3 +35,10 @@ synonyms: user.emacs_command("+lookup/synonyms")
 dictionary: user.emacs_command("+lookup/dictionary-definition")
 
 # TODO: lookup file: user.emacs_command("+lookup/file")
+
+
+# Unsorted
+open out [<user.complex_phrase>]$:
+    user.emacs_command("doom/find-file-in-other-project")
+    user.insert_complex(complex_praise or "", "lowercase")
+find projects: user.emacs_command("+default/discover-projects")
