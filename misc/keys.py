@@ -10,7 +10,7 @@ from typing import Set, List
 
 from talon import Module, Context, actions
 
-from user.utils import multi_map, dictify
+from user.utils import dictify, multi_map, spoken_form
 
 
 default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip"
@@ -230,6 +230,13 @@ alternate_keys = {
     "braces": "{ } left",
     "angles": "< > left",
     "loon": "end enter",
+}
+f_keys = {
+    # Auto-generate 1-9
+    **{spoken_form(f"F {i}"): f"{i}" for i in range(1, 9)},
+    "F ten": "f10",
+    "F eleven": "f11",
+    "F twelve": "f12",
 }
 keys = {**simple_keys, **alternate_keys}
 ctx.lists["self.special"] = keys
