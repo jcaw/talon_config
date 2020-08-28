@@ -1,8 +1,9 @@
 tag: emacs
 user.emacs-minor-modes: isearch-mode
 -
-(forward | for): key("C-s")
-(backward | back): key("C-r")
+(forward | for):      user.emacs_isearch_forward()
+(backward | back):    user.emacs_isearch_backward()
 # TODO: Don't just go forwards, repeat prior
-action(user.on_pop): key("C-s")
+action(user.on_pop):  user.emacs_isearch_forward()
+action(user.on_hiss): user.emacs_isearch_backward()
 cancel: user.emacs_command("isearch-cancel")
