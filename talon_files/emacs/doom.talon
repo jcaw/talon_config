@@ -1,7 +1,7 @@
 tag: emacs
 user.emacs-is-doom: True
 -
-## Text Alignment
+# Text Alignment
 # TODO: Port Spacemacs text alignment
 # align <user.character>: user.spacemacs_align(character)
 # align (math|operator): user.emacs_command("spacemacs/align-repeat-math-oper")
