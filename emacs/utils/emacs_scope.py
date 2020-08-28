@@ -1,4 +1,3 @@
-# TODO: Derive scope from data
 import logging
 
 from talon import Module
