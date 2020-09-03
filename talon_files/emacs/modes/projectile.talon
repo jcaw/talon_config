@@ -18,7 +18,7 @@ run (proj | project): user.emacs_command("projectile-run-project")
 # (proj | project) test: user.emacs_command("projectile-test-project")
 test (proj | project): user.emacs_command("projectile-test-project")
 # (proj | project) compile: user.emacs_command("projectile-compile-project")
-compile (proj | project): user.emacs_command("projectile-compile-project")
+compile [proj | project]: user.emacs_command("projectile-compile-project")
 (proj | project) repeat: user.emacs_command("projectile-repeat-last-command")
 
 [proj | project] durr locals: user.emacs_command("projectile-edit-dir-locals")
