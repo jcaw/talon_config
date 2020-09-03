@@ -173,3 +173,8 @@ bazapley <user.character> [<number>]:
 
 
 [toggle] debug on error: user.emacs_command("toggle-debug-on-error")
+
+# Add trailing comment
+trail [<user.complex_phrase>]$:
+    user.emacs_command("comment-indent")
+    user.insert_complex(complex_phrase or "", "capitalized_sentence")
