@@ -65,6 +65,8 @@ formatter_functions = {
     "lisp_keyword_arg": apply_lisp_keyword,
     "lisp_function_call": apply_lisp_function_call,
     "euler_function_call": apply_euler_function_call,
+    "dot_prefix_snake": add_prefix(".", apply_snake),
+    "rparen_prefix_snake": add_prefix("(", apply_snake),
 }
 
 # Many of these formatters may be chained and applied to a single chunk.
