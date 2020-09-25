@@ -2,8 +2,7 @@ import threading
 import logging
 import inspect
 
-from talon import cron, noise
-from talon.voice import Context
+from talon import cron, noise, Context
 
 
 class _LongNoiseHandler(object):
