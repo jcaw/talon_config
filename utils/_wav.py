@@ -12,7 +12,7 @@ import threading
 import wave
 import functools
 
-from talon import cubeb
+from talon.lib import cubeb
 
 
 class _WavSource:
