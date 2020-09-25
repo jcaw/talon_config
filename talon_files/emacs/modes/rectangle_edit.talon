@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 emacs.emacs-minor-mode: rectangle-edit-mode
 -
 action(edit.cut): user.emacs_command("kill-rectangle")

@@ -6,6 +6,7 @@ emacs_command = actions.user.emacs_command
 
 
 module = Module()
+module.tag("emacs-helm-enabled", desc="Active when Helm is currently enabled.")
 
 
 @module.action_class
@@ -31,10 +32,10 @@ context.matches = r"""
 os: windows
 os: linux
 os: mac
-tag: emacs
+tag: user.emacs
 user.emacs-minor-mode: helm-mode
 """
-context.tags = ["emacs-helm-enabled"]
+context.tags = ["user.emacs-helm-enabled"]
 
 
 @context.action_class("edit")

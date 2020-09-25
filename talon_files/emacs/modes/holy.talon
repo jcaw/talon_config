@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 
 user.emacs-minor-mode: holy-mode
 -

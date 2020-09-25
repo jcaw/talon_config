@@ -11,12 +11,15 @@ TODO: Audit on Linux
 
 import time
 
-from talon import Context, actions
+from talon import Context, Module, actions
 
 key = actions.key
 user = actions.user
 browser = actions.browser
 
+
+module = Module()
+module.tag("browser", desc="Active when one of the major browsers is active.")
 
 context = Context()
 context.matches = r"""
@@ -32,7 +35,7 @@ app: /opera/
 # TODO: Compatibility with Edge?
 # title: /- Microsoft Edge/
 """
-context.tags = ["browser"]
+context.tags = ["user.browser"]
 
 
 @context.action_class("app")

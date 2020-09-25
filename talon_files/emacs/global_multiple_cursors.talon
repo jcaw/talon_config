@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 # From region
 multi [region]: user.emacs_command("mc/edit-lines")

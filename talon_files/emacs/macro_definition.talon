@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-defining-macro: True
 -
 # Can't use helm-swoop during a macro, so revert to isearch.

@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-minor-mode: hs-minor-mode
 -
 hide: user.emacs_command("hs-hide-block")

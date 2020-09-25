@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 # FIXME: This command only takes one char. Allow it to take many?
 (jump | jum) <user.any_key>$: user.emacs_jump(any_key)

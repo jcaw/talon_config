@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-is-doom: True
 -
 # Text Alignment

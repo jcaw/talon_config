@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-major-mode: shell-mode
 -
 # TODO: Extract comint features to comint file

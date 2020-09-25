@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-in-helm-prompt: True
 -
 ^<number>:

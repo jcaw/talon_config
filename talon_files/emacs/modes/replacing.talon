@@ -1,6 +1,6 @@
 # Active during a find/replace session
 
-tag: emacs
+tag: user.emacs
 # This covers projectile-replace too.
 user.emacs-current-message: /Query replacing /
 -

@@ -96,7 +96,7 @@ class Actions:
 
 context = Context()
 context.matches = """
-tag: emacs
+tag: user.emacs
 
 # HACK: Circumvent tags losing priority
 os: windows

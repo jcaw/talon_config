@@ -36,7 +36,7 @@ class Actions:
 
 context = Context()
 context.matches = r"""
-tag: emacs
+tag: user.emacs
 user.emacs-minor-mode: yas-global-mode
 user.emacs-minor-mode: yas-minor-mode
 """

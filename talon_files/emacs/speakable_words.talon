@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 correct {user.selectable_words}:
     user.emacs_command("voicemacs-avy-kill-word")

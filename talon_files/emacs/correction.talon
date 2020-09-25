@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 # Two methods to correct misrecognitions:
 

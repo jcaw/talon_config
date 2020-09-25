@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 # HACK: Tag extraction like this doesn't override OS based stuff, so manually
 #   specify it.
 os: windows

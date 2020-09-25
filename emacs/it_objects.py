@@ -199,7 +199,7 @@ module.list(
 
 context = Context()
 context.matches = r"""
-tag: emacs
+tag: user.emacs
 """
 
 context.lists["user.emacs_object_commands"] = {}

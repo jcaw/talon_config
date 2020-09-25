@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 replace: user.emacs_command("replace-string")
 i search [forward] [<user.complex_phrase>]$:

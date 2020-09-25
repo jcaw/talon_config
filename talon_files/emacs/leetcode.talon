@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 # Note Emacs Leetcode won't work directly on windows. It requires running Emacs
 # under Windows Subsystem for Linux, + some hacking

@@ -1,4 +1,4 @@
-tag: browser
+tag: user.browser
 -
 # Browser GUI
 # TODO: Optional dictation

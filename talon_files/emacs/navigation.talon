@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 (follow | definition | nishion): user.find_definition()
 (follow | definition | nishion) other: user.find_definition_other_window()

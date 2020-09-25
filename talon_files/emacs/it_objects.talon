@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 {user.emacs_object_commands}: user.emacs_command(emacs_object_commands)
 {user.emacs_object_prefix_commands} <user.optional_number>:

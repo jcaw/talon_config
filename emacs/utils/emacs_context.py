@@ -1,4 +1,8 @@
-from talon import Context
+from talon import Context, Module
+
+
+module = Module()
+module.tag("emacs", desc="Active when Emacs is focussed.")
 
 
 emacs_context = Context()
@@ -10,4 +14,4 @@ app: /emacs/
 app: /XWin/
 and title: /^emacs@/
 """
-emacs_context.tags = ["emacs"]
+emacs_context.tags = ["user.emacs"]

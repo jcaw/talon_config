@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 [find] command name: user.emacs_command("describe-key-briefly")
 describe key: user.emacs_describe_key()

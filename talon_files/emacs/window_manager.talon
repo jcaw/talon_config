@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 -
 # These commands are from Spacemacs, but I've extracted them into my own config.
 #

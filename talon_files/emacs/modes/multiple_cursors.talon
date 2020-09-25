@@ -1,4 +1,4 @@
-tag: emacs
+tag: user.emacs
 user.emacs-minor-mode: multiple-cursors-mode
 -
 exit: user.emacs_command("mc/keyboard-quit")
