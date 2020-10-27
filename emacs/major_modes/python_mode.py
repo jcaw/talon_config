@@ -5,7 +5,7 @@ from user.misc.chunked_phrase import chainable_formatters
 
 context = Context()
 context.matches = """
-tag: emacs
+tag: user.emacs
 user.emacs-major-mode: python-mode
 """
 context.lists["user.chainable_formatters"] = {
