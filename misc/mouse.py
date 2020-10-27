@@ -130,17 +130,13 @@ class Actions:
         click_info.function()
 
 
-@module.capture
-def click(m) -> Click:
-    """Get click info from a phrase."""
-
-
 context = Context()
 context.lists["self.clicks"] = CLICKS_MAP.keys()
 
 
-@context.capture(rule="<user.modifiers> {self.clicks}")
+@module.capture(rule="<user.modifiers> {self.clicks}")
 def click(m) -> Click:
+    """Get click info from a phrase."""
     click_command = m["clicks"]
     click_function = CLICKS_MAP[click_command]
     # TODO: Cover no backdated position
