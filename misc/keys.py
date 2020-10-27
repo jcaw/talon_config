@@ -36,75 +36,7 @@ mod.list("standalone_arrow", desc="Arrow keys that can be spoken on their own")
 mod.list("number", desc="All number keys")
 mod.list("modifier", desc="All modifier keys")
 mod.list("special", desc="All special keys")
-
-
-@mod.capture
-def modifiers(m) -> Set[str]:
-    """Zero or more modifier keys"""
-
-
-@mod.capture
-def arrow(m) -> str:
-    """One directional arrow key"""
-
-
-@mod.capture
-def arrows(m) -> str:
-    """One or more arrows separate by a space"""
-
-
-@mod.capture
-def standalone_arrow(m) -> str:
-    """One arrow that can be spoken on its own (without modifiers).
-
-    Standalone arrows are separated to avoid "up" being misrecognized.
-
-    """
-
-
-@mod.capture
-def number_key(m) -> str:
-    """One number key"""
-
-
-@mod.capture
-def number_keys(m) -> str:
-    """Multiple number keys"""
-
-
-@mod.capture
-def letter(m) -> str:
-    """One letter key"""
-
-
-@mod.capture
-def letters(m) -> list:
-    """Multiple letter keys"""
-
-
-@mod.capture
-def symbol(m) -> str:
-    """One symbol key"""
-
-
-@mod.capture
-def special(m) -> str:
-    """One special key"""
-
-
-@mod.capture
-def any_key(m) -> str:
-    """Any single key"""
-
-
-@mod.capture
-def keychord(m) -> str:
-    """A single key with modifiers"""
-
-
-@mod.capture
-def character(m) -> str:
-    """Any key that can be typed as a character."""
+mod.list("complex_symbol", desc="Symbols that take multiple characters, e.g. := or ->")
 
 
 ctx = Context()
@@ -242,73 +174,96 @@ keys = {**simple_keys, **alternate_keys}
 ctx.lists["self.special"] = keys
 
 
-@ctx.capture(rule="[{self.modifier}+]")
+@mod.capture(rule="[{self.modifier}+]")
 def modifiers(m) -> Set[str]:
+    """Zero or more modifier keys"""
     try:
         return set(m.modifier)
     except AttributeError:
         return set()
 
 
-@ctx.capture(rule="{self.arrow}")
+@mod.capture(rule="{self.arrow}")
 def arrow(m) -> str:
+    """One directional arrow key"""
     return m.arrow
 
 
-@ctx.capture(rule="<self.arrow>+")
+@mod.capture(rule="<self.arrow>+")
 def arrows(m) -> str:
+    """One or more arrows separate by a space"""
     return m.arrow_list
 
 
-@ctx.capture(rule="{self.standalone_arrow}")
+@mod.capture(rule="{self.standalone_arrow}")
 def standalone_arrow(m) -> str:
+    """One arrow that can be spoken on its own (without modifiers).
+
+    Standalone arrows are separated to avoid "up" being misrecognized.
+
+    """
     return m.standalone_arrow
 
 
-@ctx.capture(rule="(numb | num) <digits>")
-def number_key(m):
+@mod.capture(rule="(numb | num) <digits>")
+def number_key(m) -> str:
+    """One number key"""
     return str(m.digits)
 
 
-@ctx.capture(rule="(numb | num) <number>")
-def number_keys(m):
+@mod.capture(rule="(numb | num) <number>")
+def number_keys(m) -> str:
+    """Multiple number keys"""
     return str(m.number)
 
 
-@ctx.capture(rule="{self.letter}")
-def letter(m):
+@mod.capture(rule="{self.letter}")
+def letter(m) -> str:
+    """One letter key"""
     return m.letter
 
 
-@ctx.capture(rule="{self.special}")
-def special(m):
-    return m.special
+@mod.capture(rule="{self.letter}+")
+def letters(m) -> list:
+    """Multiple letter keys"""
+    return m.letter
 
 
-@ctx.capture(rule="{self.symbol}")
-def symbol(m):
+@mod.capture(rule="{self.symbol}")
+def symbol(m) -> str:
+    """One symbol key"""
     return m.symbol
 
 
-@ctx.capture(
+@mod.capture(rule="{self.special}")
+def special(m) -> str:
+    """One special key"""
+    return m.special
+
+
+@mod.capture(
     rule="(<self.arrow> | <self.digit> | <self.letter> | <self.special> | <self.symbol>)"
 )
 def any_key(m) -> str:
+    """Any single key"""
     return str(m[0])
 
 
-@ctx.capture(rule="{self.modifier}+ <self.any_key>")
+@mod.capture(rule="{self.modifier}+ <self.any_key>")
 def keychord(m) -> str:
+    """A single key with modifiers"""
     return "-".join(m.modifier_list + [m.any_key])
 
 
-@ctx.capture(rule="{self.letter}+")
-def letters(m):
-    return m.letter
-
-
-@ctx.capture(rule="(<self.letter> | <self.symbol> | <self.number_key>)")
+@mod.capture(rule="(<self.letter> | <self.symbol> | <self.number_key>)")
 def character(m) -> str:
+    """Any key that can be typed as a character."""
+    return m[0]
+
+
+@mod.capture(rule="<user.character> | {self.complex_symbol}")
+def insertable(m) -> str:
+    """A char, or a complex insert."""
     return m[0]
 
 
