@@ -99,13 +99,9 @@ mod.list("ordinal_words", desc="list of ordinals")
 ctx = Context()
 
 
-@mod.capture
+@mod.capture(rule="{self.ordinal_words}")
 def ordinal(m) -> int:
     "Returns a single ordinial as a digit"
-
-
-@ctx.capture(rule="{self.ordinal_words}")
-def ordinal(m):
     o = m[0]
     return int(ordinal_words[o])
 
