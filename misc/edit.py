@@ -42,6 +42,11 @@ class Actions:
     def toggle_comment() -> None:
         """Toggle whether the current line/region is commented."""
 
+    def toggle_comment_lines(num_lines: int) -> None:
+        """Toggle multiple lines after point to be commented/uncommented."""
+        # TODO: Maybe default implementation using something a `select-line`
+        #   action?
+
     def insert_comment(complex_phrase: List[chunked_phrase.BasePhraseChunk]) -> None:
         """Add a comment and insert `complex_phrase` into it."""
         user.toggle_comment()
