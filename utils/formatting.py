@@ -521,7 +521,7 @@ def _split_word(word: str) -> str:
     return result.strip()
 
 
-def _separate_words(text) -> str:
+def separate_words(text) -> str:
     """Separate ``text`` into a string of its constituent words.
 
     E.g:
@@ -563,4 +563,4 @@ def reformat_text(
     formatters: List[FORMATTING_FUNC_TYPE],
     surrounding_text: SurroundingText = None,
 ) -> ComplexInsert:
-    return format_text(_separate_words(text), formatters, surrounding_text)
+    return format_text(separate_words(text), formatters, surrounding_text)
