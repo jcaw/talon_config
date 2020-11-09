@@ -156,3 +156,9 @@ class UserActions:
         )
         if text:
             insert(text.lower())
+
+    def toggle_comment_lines(num_lines: int) -> None:
+        emacs_prefix_command("it-mark-forward-line", num_lines)
+        user.toggle_comment()
+        # TODO: This nicer or worse?
+        user.emacs_pop_mark()
