@@ -509,10 +509,13 @@ def _split_word(word: str) -> str:
     # TODO: Cope with non-alphanumeric
     result = ""
     last_char = ""
+    has_lowercase = _RE_LOWERCASE_LETTER.search(word)
     for char in word:
         start_of_number = is_alpha(last_char) and is_numeric(char)
         end_of_number = is_numeric(last_char) and is_alpha(char)
-        if char.isupper() or start_of_number or end_of_number:
+        # A capital letter means a new word, unless the entire symbol is
+        # uppercase. Numbers are also their own "word".
+        if (has_lowercase and char.isupper()) or start_of_number or end_of_number:
             # This will miss the first letter of the first word. That's good -
             # we don't want to pad the front.
             result += " "

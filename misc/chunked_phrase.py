@@ -41,7 +41,6 @@ from user.utils import multi_map
 PREVIOUS_FORMATTERS_SIGNIFIER = "previous"
 
 
-# TODO: Quote wrapped stuff. Double/single quotes
 # TODO: Formatter after punctuation, like brackets.
 formatter_functions = {
     "camel": apply_camel_case,
