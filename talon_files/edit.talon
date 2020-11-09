@@ -38,5 +38,6 @@ search <user.complex_phrase>$:
 
 
 comment: user.toggle_comment()
+comment <number>: user.toggle_comment_lines(number)
 comment <user.complex_phrase>$:     user.insert_comment(complex_phrase)
 comment <user.complex_phrase> over: user.insert_comment(complex_phrase)
