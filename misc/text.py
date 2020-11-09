@@ -115,7 +115,7 @@ def split_phrase(m) -> List[str]:
 @module.capture(rule="{user.custom_words}")
 def custom_word(m) -> str:
     "One custom word."
-    return context.lists["user.custom_words"][m[0]]
+    return m.custom_words
 
 
 @module.capture(rule="(<user.split_phrase> | <user.custom_word>)+")
