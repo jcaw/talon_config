@@ -332,6 +332,7 @@ _RE_SENTENCE_TERMINATOR = re.compile(r"[\.\…\!\?]+[^a-zA-Z0-9]*$")
 _RE_START_OF_DOCUMENT = re.compile(r"^[ \n\t\r]*$")
 _RE_START_OF_TODO = re.compile(r"((TODO)|(FIXME)|(HACK))[-: \t]*$")
 _RE_DOUBLE_NEWLINE = re.compile(r"\n[ \r\t]*\n[ \r\t]*$")
+_RE_LOWERCASE_LETTER = re.compile(r"[a-z]")
 
 
 def _is_new_sentence(text_before: str) -> bool:
