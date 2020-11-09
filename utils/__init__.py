@@ -310,15 +310,16 @@ def invalid_platform(*_, **__):
     raise NotImplementedError("Not implemented on this platform.")
 
 
-def ctrl_cmd(key):
-    """Press a key with ctrl on Windows/Linux, cmd on Mac."""
-    if ON_WINDOWS or ON_LINUX:
-        return Key(f"ctrl-{key}")
-    elif ON_MAC:
-        return Key(f"cmd-{key}")
-    else:
-        # TODO: Add this to utils
-        invalid_platform()
+# def ctrl_cmd(key):
+#     """Press a key with ctrl on Windows/Linux, cmd on Mac."""
+#     # TODO 1: Move to newapi
+#     if ON_WINDOWS or ON_LINUX:
+#         return Key(f"ctrl-{key}")
+#     elif ON_MAC:
+#         return Key(f"cmd-{key}")
+#     else:
+#         # TODO: Add this to utils
+#         invalid_platform()
 
 
 def prepend_to_map(arg, dict_):
