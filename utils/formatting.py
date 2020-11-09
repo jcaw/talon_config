@@ -87,6 +87,8 @@ def _should_space(before, after):
     """
     # We classify some characters as "solid" - these can have a space after.
     solid_before = _RE_SOLID_BEFORE.search(before) or _RE_CLOSING_SPEECH.search(before)
+    # TODO: I don't think `match` should work here, but it does seem to. Figure
+    #   out if `search` is needed.
     solid_after = _RE_SOLID_AFTER.match(after) or _RE_OPENING_SPEECH.match(after)
     return solid_before and solid_after
 
