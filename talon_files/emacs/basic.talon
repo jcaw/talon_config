@@ -137,8 +137,8 @@ action(edit.save_all): key(ctrl-x s)
 [show] kill ring: user.emacs_command("helm-show-kill-ring")
 
 # Wav2letter has trouble with "dired". Add alternate pronunciation.
-(dired | dyad): user.emacs_command("dired-jump")
-(dired | dyad) other: user.emacs_command("dired-jump-other-window")
+(dired | dyad | folder): user.emacs_command("dired-jump")
+(dired | dyad | folder) other: user.emacs_command("dired-jump-other-window")
 
 # TODO: Perform the next "switch-to-buffer" command in the other window.
 # with other: user.emacs_command("")
