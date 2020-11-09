@@ -197,7 +197,7 @@ def apply_programming_keywords(
     """
     text = text.lower()
     space_before = surrounding_text and re.search(
-        r"[^ \t\n]\Z", surrounding_text.text_before
+        r"[^ \t\n([{<]\Z", surrounding_text.text_before
     )
     if space_before:
         text = " " + text
