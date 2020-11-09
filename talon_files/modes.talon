@@ -2,8 +2,8 @@
 mode: all
 -
 (snore | snow):
-    speech.disable()
+    user.sleep()
     user.play_thunk()
 ^wake$:
-    speech.enable()
+    user.wake()
     user.play_glass_tap()
