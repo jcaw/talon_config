@@ -89,7 +89,14 @@ chainable_formatters = multi_map(
         # Common combination, so contract it.
         ("upsnake", "upsnik"): "uppercase_snake",
         # TODO: Maybe don't allow this to be chained?
-        ("lower", "bot"): "lowercase",
+        (
+            "lower",
+            # "bot",
+            # "low",
+            # "small",
+            # "case",
+            "word",
+        ): "lowercase",
         # Function calls are euler-style by default. Lisps can override this.
         "funk": "euler_function_call",
         # FIXME: This adds https:// in front of every dictation chunk
