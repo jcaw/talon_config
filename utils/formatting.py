@@ -67,11 +67,14 @@ def uncapitalize(string):
 
 # Lots of punctuation could come before speech close. If the speech mark is
 # joined to something, assume it's the end.
-_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r][\"']$")
+_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r\"'][\"']+\Z")
 # Different approach to starts because speech marks can have punctuation
 # immediately after close. However, openings will probably not have punctuation
 # at the start - it'll be an alphanumeric char (normally a letter).
-_RE_OPENING_SPEECH = re.compile(r"^\"[a-zA-Z0-9]")
+#
+# Note single apostrophes are ignored, because they could be part of a
+# contraction.
+_RE_OPENING_SPEECH = re.compile(r"^\"[\"']*[a-zA-Z0-9]")
 # See `_should_space` for how these are used.
 # TODO: why does the \Z anchor work here but $ doesn't? Switch all to \Z?
 _RE_SOLID_BEFORE = re.compile(r"[^ \t\n\r\(\{\[\<\£\$\€\@\-\_\\\/\`\'\"]\Z")
