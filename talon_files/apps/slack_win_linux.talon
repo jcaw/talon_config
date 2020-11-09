@@ -1,7 +1,6 @@
 os: windows
 os: linux
-app: /.*slack\.exe/
-app: slack
+app: /slack/
 -
 
 action(user.slack_messages): key(ctrl-shift-k)
