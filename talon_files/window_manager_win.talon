@@ -3,6 +3,8 @@ os: windows
 (next | neck) (window | win) <number>:  user.window_next_hold(number)
 (last | larse) (window | win) <number>: user.window_previous_hold(number)
 
+# Override the automatic snap commands
+# TODO: Maybe merge the modules?
 snap full:         user.maximize()
 snap right:        user.snap_window_win("right right")
 snap left:         user.snap_window_win("left left")
