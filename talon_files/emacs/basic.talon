@@ -178,3 +178,5 @@ bazapley <user.character> [<number>]:
 trail [<user.complex_phrase>]$:
     user.emacs_command("comment-indent")
     user.insert_complex(complex_phrase or "", "capitalized_sentence")
+
+shell command: user.emacs_command("async-shell-command")
