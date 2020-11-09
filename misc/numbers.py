@@ -155,27 +155,31 @@ assert(test_num([1, 'million', 10, 10]) == 100001010)
 module = Module()
 
 
-@module.capture
+@module.capture(rule=f"{alt_digits}")
 def digit(m) -> int:
     """A single digit."""
+    return int(digits_map[m[0]])
 
 
-@module.capture
+# TODO: Also allow repeating digits
+@module.capture(
+    rule=f"<number_small> [{alt_scales} ([and] (<number_small> | {alt_scales} | <number_small> {alt_scales}))*]"
+)
 def natural_number(m) -> int:
     """Naturally-spoken number. E.g. "five hundred", "twenty four"."""
+    return fuse_num(fuse_scale(fuse_num(fuse_scale(list(m), 3))))[0]
 
 
-@module.capture
+@module.capture(rule="[<number>]")
 def optional_number(m) -> int or None:
     """Optional number. If not spoken, defaults to `None`."""
+    try:
+        return m.number
+    except AttributeError:
+        return None
 
 
 ctx = Context()
-
-
-@ctx.capture(rule=f"{alt_digits}")
-def digit(m) -> int:
-    return int(digits_map[m[0]])
 
 
 @ctx.capture("digits", rule=f"<self.digit>++")
@@ -198,25 +202,9 @@ def number_small(m):
     return result
 
 
-# TODO: Also allow repeating digits
-@ctx.capture(
-    rule=f"<number_small> [{alt_scales} ([and] (<number_small> | {alt_scales} | <number_small> {alt_scales}))*]"
-)
-def natural_number(m) -> int:
-    return fuse_num(fuse_scale(fuse_num(fuse_scale(list(m), 3))))[0]
-
-
 @ctx.capture("number", rule=f"(<self.natural_number> | <digits>)")
 def number(m):
     return m[0]
-
-
-@ctx.capture(rule="[<number>]")
-def optional_number(m) -> int or None:
-    try:
-        return m.number
-    except AttributeError:
-        return None
 
 
 @ctx.capture("number_signed", rule=f"[negative] <number>")
