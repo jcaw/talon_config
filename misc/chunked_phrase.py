@@ -325,7 +325,7 @@ def _insert_complex_insert(complex_insert: ComplexInsert) -> None:
 
 @module.action_class
 class ModuleActions:
-    def surrounding_text() -> SurroundingText:
+    def surrounding_text() -> Optional[SurroundingText]:
         """Get the text on either side of the next insert."""
         # TODO: Heuristic method for surrounding text in generic case. Try
         #   using clipboard until we have accessibility interfaces?
@@ -407,8 +407,8 @@ class ModuleActions:
 
 
 @context.action
-def surrounding_text() -> SurroundingText:
 # Because the default implementation of `surrounding_text` returns `None`, we
 # need to overwrite to explicitly or Talon will think there is no
 # implementation.
+def surrounding_text() -> Optional[SurroundingText]:
     return None
