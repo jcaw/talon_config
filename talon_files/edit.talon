@@ -17,9 +17,9 @@ redo: edit.redo()
 
 # TODO: Doc, file - common language here?
 print doc: edit.print()
-save doc: edit.save()
-save [doc] as: edit.save_as()
-save all: edit.save_all()
+save doc | disk: edit.save()
+(save [doc] | disk) as: edit.save_as()
+(save | disk) all: edit.save_all()
 
 # Declared separately to allow for a default implementation with only find() defined.
 #
