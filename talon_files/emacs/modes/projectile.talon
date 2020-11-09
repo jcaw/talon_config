@@ -13,12 +13,23 @@ save (proj project): user.emacs_command("projectile-save-project-buffers")
 # TODO: Maybe remove this?
 (proj | project) (tasks | to dooz): user.emacs_command("magit-todos-list")
 
-# (proj | project) run: user.emacs_command("projectile-run-project")
-run (proj | project): user.emacs_command("projectile-run-project")
-# (proj | project) test: user.emacs_command("projectile-test-project")
-test (proj | project): user.emacs_command("projectile-test-project")
-# (proj | project) compile: user.emacs_command("projectile-compile-project")
-compile [proj | project]: user.emacs_command("projectile-compile-project")
+# "new" allows you to enter a new run/test/compile command, otherwise it will
+# invoke the previous one.
+run (proj | project) new:
+    user.emacs_command("projectile-run-project")
+run (proj | project):
+    user.emacs_command("projectile-run-project")
+    key(enter)
+test (proj | project) new:
+    user.emacs_command("projectile-test-project")
+test (proj | project):
+    user.emacs_command("projectile-test-project")
+    key(enter)
+compile [proj | project] new:
+    user.emacs_command("projectile-compile-project")
+compile [proj | project]:
+    user.emacs_command("projectile-compile-project")
+    key(enter)
 (proj | project) repeat: user.emacs_command("projectile-repeat-last-command")
 
 [proj | project] durr locals: user.emacs_command("projectile-edit-dir-locals")
