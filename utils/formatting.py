@@ -388,6 +388,17 @@ def apply_capitalized_sentence(text, surrounding_text=None):
     return _language_spaced(words, surrounding_text)
 
 
+def apply_speech(text, surrounding_text=None):
+    """Format `text` as a capitalized quotation wrapped in speech marks."""
+    # Fixme: doesn't capitalize.
+    words = text.split(" ")
+    if words:
+        words[0] = '"' + capitalize(words[0])
+    insert = _language_spaced(words, surrounding_text)
+    insert.text_after = '"' + insert.text_after
+    return insert
+
+
 def apply_squash(text, surrounding_text=None):
     return ComplexInsert("".join(text.split(" ")))
 

@@ -21,6 +21,7 @@ from user.utils.formatting import (
     apply_programming_keywords,
     apply_sentence,
     apply_snake,
+    apply_speech,
     apply_spine,
     apply_squash,
     apply_studley_case,
@@ -58,6 +59,7 @@ formatter_functions = {
     "keywords": apply_programming_keywords,
     # Special case
     PREVIOUS_FORMATTERS_SIGNIFIER: PREVIOUS_FORMATTERS_SIGNIFIER,
+    "speech": apply_speech,
     # Language-specific
     "c_path": make_apply_delimiter("::"),
     "python_private": add_prefix("_", apply_snake),
@@ -94,18 +96,12 @@ chainable_formatters = multi_map(
 standalone_formatters = {
     "say": "sentence",
     "top": "capitalized_sentence",
+    "quote": "speech",
     "title": "title",
     # TODO: Settle on one of these
     "prog": "keywords",
     "pog": "keywords",
 }
-# TODO: Wrapped, e.g. parens and string?
-# wrapped_commands = multi_map(
-#     {
-#         ["sing string", "single string"]: apply_speechmarks,
-#         ["dub string", "double string"]: apply_quotemarks,
-#     }
-# )
 
 # Sanity check
 for spoken_form, formatter_name in itertools.chain(
