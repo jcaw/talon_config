@@ -113,6 +113,10 @@ for spoken_form, formatter_name in itertools.chain(
     assert formatter_name in formatter_functions, f"{spoken_form}: {formatter_name}"
 
 
+# TODO: Maybe swap these from inheritance to a single type & distinguish with
+#   metadata.
+
+
 class BasePhraseChunk(object):
     """Base class for all phrase chunks.
 
