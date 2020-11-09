@@ -70,6 +70,8 @@ formatter_functions = {
     "euler_function_call": apply_euler_function_call,
     "dot_prefix_snake": add_prefix(".", apply_snake),
     "rparen_prefix_snake": add_prefix("(", apply_snake),
+    # Other
+    "forward_slash_path": make_apply_delimiter("/"),
 }
 
 # Many of these formatters may be chained and applied to a single chunk.
@@ -93,6 +95,8 @@ chainable_formatters = multi_map(
         # Language-specific
         # TODO: Where is this delimiter used again?
         "see path": "c_path",  # c path
+        # TODO: Clashes with C path?
+        "path": "forward_slash_path",
     }
 )
 # Only one of these formatters can be applied to each chunk.
