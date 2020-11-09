@@ -180,3 +180,6 @@ trail [<user.complex_phrase>]$:
     user.insert_complex(complex_phrase or "", "capitalized_sentence")
 
 shell command: user.emacs_command("async-shell-command")
+
+# Break out & insert a block, in languages like Java & C++
+bleak: key(home end space { enter)
