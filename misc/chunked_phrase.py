@@ -71,6 +71,7 @@ formatter_functions = {
     "dot_prefix_snake": add_prefix(".", apply_snake),
     "rparen_prefix_snake": add_prefix("(", apply_snake),
     # Other
+    "https_url": add_prefix("https://", apply_squash),
     "forward_slash_path": make_apply_delimiter("/"),
 }
 
@@ -92,8 +93,8 @@ chainable_formatters = multi_map(
         ("lower", "bot"): "lowercase",
         # Function calls are euler-style by default. Lisps can override this.
         "funk": "euler_function_call",
-        # Language-specific
-        # TODO: Where is this delimiter used again?
+        # FIXME: This adds https:// in front of every dictation chunk
+        ("H T T P S", "H T T P S /", "url"): "https_url",
         "see path": "c_path",  # c path
         # TODO: Clashes with C path?
         "path": "forward_slash_path",
