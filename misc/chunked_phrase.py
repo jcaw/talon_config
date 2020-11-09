@@ -256,16 +256,20 @@ def complex_phrase(m) -> List[BasePhraseChunk]:
     return list(m)
 
 
-@module.capture(rule="<user.dictation_chunk> [<user.complex_phrase>]")
-def dictation_phrase(m) -> List[BasePhraseChunk]:
-    """A phrase that must start with a dictation chunk."""
-    if hasattr(m, "complex_phrase"):
-        return [m[0], *m[1]]
-    else:
-        return list(m)
+# TODO: Allow formatters to take whole symbols? (Perhaps only if they're more
+#   than one word).
+# @module.capture(rule="<user.dictation_chunk> ")
+# def dictation_phrase(m) -> List[BasePhraseChunk]:
+#     """A phrase that must start with a dictation chunk."""
+#     if hasattr(m, "complex_phrase"):
+#         return [m[0], *m[1]]
+#     else:
+#         return list(m)
 
 
-@module.capture(rule="<user.formatter_chunk> <user.dictation_phrase>")
+@module.capture(
+    rule=("<user.formatter_chunk> <user.dictation_chunk> [<user.complex_phrase>]")
+)
 def formatter_phrase(m) -> List[BasePhraseChunk]:
     """A formatter, dictation, then a regular complex phrase.
 
@@ -273,7 +277,10 @@ def formatter_phrase(m) -> List[BasePhraseChunk]:
     by a formatter.
 
     """
-    return [m[0], *m[1]]
+    if hasattr(m, "complex_phrase"):
+        return [m[0], m[1], *m[2]]
+    else:
+        return [m[0], m[1]]
 
 
 def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
