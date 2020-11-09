@@ -189,6 +189,6 @@ context = Context()
 context.lists["user.file_suffixes"] = file_suffix_dict
 
 
-@module.capture(rule="dot {user.file_suffixes}")
+@module.capture(rule="(dot | point) {user.file_suffixes}")
 def file_suffix(m) -> str:
     return "." + m.file_suffixes
