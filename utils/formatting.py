@@ -467,6 +467,16 @@ def _chain_formatters(
     return formatters[-1](text, surrounding_text)
 
 
+def formatter_chain(*formatters: List[FORMATTING_FUNC_TYPE]) -> FORMATTING_FUNC_TYPE:
+    """Create a formatter than chains a list of multiple other formatters."""
+
+    def apply_chain(text: str, surrounding_text: Optional[ComplexInsert] = None):
+        nonlocal formatters
+        return _chain_formatters(text, formatters, surrounding_text)
+
+    return apply_chain
+
+
 def single_spaces(text: str):
     """Convert multiple spaces to single spaces in ``text``."""
     return _RE_MANY_SPACES.sub(" ", text)

@@ -29,6 +29,7 @@ from user.utils.formatting import (
     apply_uppercase,
     ComplexInsert,
     format_text,
+    formatter_chain,
     make_apply_delimiter,
     preserve_punctuation,
     reformat_text,
@@ -59,6 +60,7 @@ formatter_functions = {
     # Special case
     PREVIOUS_FORMATTERS_SIGNIFIER: PREVIOUS_FORMATTERS_SIGNIFIER,
     "speech": apply_speech,
+    "uppercase_snake": formatter_chain(apply_snake, apply_uppercase),
     # Language-specific
     "c_path": make_apply_delimiter("::"),
     "python_private": add_prefix("_", apply_snake),
@@ -82,6 +84,8 @@ chainable_formatters = multi_map(
         "squash": "squash",
         "dunder": "dunder",
         "upper": "uppercase",
+        # Common combination, so contract it.
+        ("upsnake", "upsnik"): "uppercase_snake",
         # TODO: Maybe don't allow this to be chained?
         ("lower", "bot"): "lowercase",
         # Function calls are euler-style by default. Lisps can override this.
