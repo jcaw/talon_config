@@ -383,7 +383,7 @@ def apply_sentence(text, surrounding_text=None):
 
 def apply_capitalized_sentence(text, surrounding_text=None):
     words = text.split(" ")
-    if len(words) >= 1:
+    if words:
         words[0] = capitalize(words[0])
     return _language_spaced(words, surrounding_text)
 
