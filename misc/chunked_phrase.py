@@ -83,7 +83,7 @@ chainable_formatters = multi_map(
         ("spine", "spin"): "spine",
         # TODO: Settle on one/two of these
         ("dotword", "knob", "pebble"): "dotword",
-        "squash": "squash",
+        ("squash", "smash", "mash"): "squash",
         "dunder": "dunder",
         "upper": "uppercase",
         # Common combination, so contract it.
