@@ -42,7 +42,6 @@ from user.utils import multi_map
 PREVIOUS_FORMATTERS_SIGNIFIER = "previous"
 
 
-# TODO: Formatter after punctuation, like brackets.
 formatter_functions = {
     "camel": apply_camel_case,
     "studley": apply_studley_case,
