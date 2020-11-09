@@ -1,6 +1,4 @@
-from talon.voice import Str, press, Key
-import talon.clip as clip
-from talon import resource, actions
+from talon import resource, actions, clip
 import json
 import platform
 import time
