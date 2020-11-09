@@ -103,6 +103,7 @@ def _language_spaced(words, surrounding_text=None):
     return ComplexInsert(insert=prefix + text, text_after=suffix)
 
 
+# TODO: Rename this to "separated" or something
 def _delimiter_spaced(delimiter, text, surrounding_text=None):
     """Create a complex insert using `delimiter` as the separator."""
     # TODO: Test this, particularly empty string
