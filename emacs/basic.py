@@ -9,6 +9,7 @@ key = actions.key
 insert = actions.insert
 user = actions.user
 emacs_command = actions.user.emacs_command
+emacs_prefix_command = actions.user.emacs_prefix_command
 emacs_fallbacks = actions.user.emacs_fallbacks
 
 
@@ -92,6 +93,11 @@ class Actions:
     def emacs_quit() -> None:
         """Exit Emacs."""
         emacs_command("save-buffers-kill-emacs")
+
+    def emacs_pop_mark(times: int = 1) -> None:
+        """Pop the mark. Provide `times` to pop multiple."""
+        for i in range(times):
+            emacs_prefix_command("set-mark-command")
 
 
 context = Context()
