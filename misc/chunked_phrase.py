@@ -406,9 +406,9 @@ class ModuleActions:
         actions.self.insert_complex(phrase, "previous")
 
 
-@context.action
 # Because the default implementation of `surrounding_text` returns `None`, we
 # need to overwrite to explicitly or Talon will think there is no
 # implementation.
+@context.action("self.surrounding_text")
 def surrounding_text() -> Optional[SurroundingText]:
     return None

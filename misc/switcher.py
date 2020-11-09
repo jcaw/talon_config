@@ -68,7 +68,7 @@ def running_applications(m):
         return m.dictation
 
 
-@ctx.capture(rule="{self.launch}")
+@ctx.capture("self", rule="{self.launch}")
 def launch_applications(m):
     return m.launch
 

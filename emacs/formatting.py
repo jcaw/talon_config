@@ -13,7 +13,7 @@ tag: user.emacs
 """
 
 
-@context.action_class
+@context.action_class("self")
 class UserActions:
     def surrounding_text() -> Optional[SurroundingText]:
         # TODO: If the voicemacs server is inactive, return nothing.

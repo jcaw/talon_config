@@ -44,7 +44,7 @@ user.emacs-minor-mode: yas-minor-mode
 context.lists[SNIPPET_LIST_PATH] = {}
 
 
-@context.capture(rule="{" + SNIPPET_LIST_PATH + "}")
+@context.capture("self.emacs_snippet", rule="{" + SNIPPET_LIST_PATH + "}")
 def emacs_snippet(m) -> str:
     return getattr(m, SNIPPET_LIST_NAME)
 
