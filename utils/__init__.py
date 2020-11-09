@@ -434,7 +434,7 @@ def _digits_to_words(text: str) -> str:
     return single_spaces(text)
 
 
-_RE_NONALPHABETIC_CHAR = re.compile(r"[^a-zA-Z]")
+_RE_NONALPHABETIC_CHARS = re.compile(r"[^a-zA-Z]+")
 
 
 def spoken_form(text: str) -> str:
@@ -442,7 +442,7 @@ def spoken_form(text: str) -> str:
     # TODO: Replace numeric digits with spoken digits
     text = text.replace("'", " ")
     text = _digits_to_words(text)
-    text = _RE_NONALPHABETIC_CHAR.sub(text, " ")
+    text = _RE_NONALPHABETIC_CHARS.sub(" ", text)
     return text.strip()
 
 
