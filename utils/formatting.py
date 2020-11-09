@@ -189,10 +189,10 @@ def apply_dunder(text, surrounding_text=None):
 def apply_programming_keywords(
     text: str, surrounding_text: Optional[SurroundingText] = None
 ) -> ComplexInsert:
-    """Insert lowercase words, leaving a trailing space at the end.
+    """Insert language keywords, like "if", "return", "public static void".
 
-    This is meant to be a fluid way to insert keywords like "return", "if",
-    "public static void", etc.
+    Text is inserted lowercase, with padding spaces in most contexts. The
+    purpose is to reduce the amount of spacing that needs to be done manually.
 
     """
     text = text.lower()
