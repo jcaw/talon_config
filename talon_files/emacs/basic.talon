@@ -67,7 +67,10 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
     user.emacs_switch_buffer()
     user.insert_complex(complex_phrase, "lowercase")
 (close | kill) (buffer | buff): user.emacs_command("kill-this-buffer")
-(close | kill) other (buffer | buff): user.emacs_command("kill-this-buffer")
+(close | kill) other (buffer | buff):
+    user.emacs_command("other-window")
+    user.emacs_command("kill-this-buffer")
+    user.emacs_command("other-window")
 (next | neck) (buffer | buff): user.emacs_command("next-buffer")
 (last | larse) (buffer | buff): user.emacs_command("previous-buffer")
 
