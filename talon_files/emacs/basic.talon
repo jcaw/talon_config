@@ -71,6 +71,10 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
     user.emacs_command("other-window")
     user.emacs_command("kill-this-buffer")
     user.emacs_command("other-window")
+# Save & kill the buffer
+(close | kill) disk:
+    edit.save()
+    user.emacs_command("kill-this-buffer")
 (next | neck) (buffer | buff): user.emacs_command("next-buffer")
 (last | larse) (buffer | buff): user.emacs_command("previous-buffer")
 
