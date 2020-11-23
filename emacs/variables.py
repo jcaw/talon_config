@@ -72,4 +72,6 @@ def _update_symbols(state):
     # context.lists["user.active_symbol_sections"] = symbol_sections
 
 
-emacs_state.hook_key(ACTIVE_SYMBOLS_KEY, _update_symbols)
+# TODO: Re-enable this at some point. The recompile is just too slow right
+#   now.
+# emacs_state.hook_key(ACTIVE_SYMBOLS_KEY, _update_symbols)
