@@ -32,4 +32,6 @@ def _update_words(state):
     context.lists["user.selectable_words"] = words
 
 
-emacs_state.hook_key("visible-text", _update_words)
+# Temporarily disabled because it JIT-recompiles the grammar each time which
+# is noticeably laggy.
+# emacs_state.hook_key("visible-text", _update_words)
