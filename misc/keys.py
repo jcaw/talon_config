@@ -47,6 +47,7 @@ ctx.lists["self.modifier"] = {
     "troll": "ctrl",
     "shift": "shift",
     "schiff": "shift",
+    # TODO: Sky should affect multiple characters.
     "sky": "shift",
     "alt": "alt",
     "option": "alt",
