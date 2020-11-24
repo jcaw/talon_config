@@ -11,6 +11,6 @@ action(edit.select_line): user.emacs_command("it-mark-line")
     user.emacs_wrap_object(emacs_object_wrapping_commands, character)
 
 
-(copy | cop) that: user.emacs_command("it-copy-dwim")
-kill that: user.emacs_command("it-kill-dwim")
-(sell | select | mark) that: user.emacs_command("it-mark-dwim")
+(copy | cop) (that | thing): user.emacs_command("it-copy-dwim")
+kill (that | thing): user.emacs_command("it-kill-dwim")
+(sell | select | mark) (that | thing): user.emacs_command("it-mark-dwim")

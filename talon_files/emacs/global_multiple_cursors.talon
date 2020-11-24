@@ -17,7 +17,7 @@ multi <number>:
     repeat(number - 1)
 multi park: user.emacs_command("mc/mark-pop")
 multi all: user.emacs_command("mc/mark-all-dwim")
-multi that: user.emacs_command("TODO")
+multi (that | thing): user.emacs_command("TODO")
 multi (tag | pair): user.emacs_command("mc/mark-sgml-tag-pair")
 
 # Navigation

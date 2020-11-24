@@ -11,4 +11,4 @@ describe macro: user.emacs_command("helpful-macro")
 describe bindings: user.emacs_command("describe-bindings")
 # TODO: Inline phrase
 (apropos | describe symbol): user.emacs_apropos()
-describe that: user.emacs_describe_thing_at_point()
+describe (that | thing): user.emacs_describe_thing_at_point()

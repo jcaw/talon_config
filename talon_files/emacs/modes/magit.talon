@@ -11,9 +11,9 @@ unstage <number>:
 
 
 # Staging
-stage [that]: user.emacs_command("magit-stage")
+stage [that|thing]: user.emacs_command("magit-stage")
 stage all: user.emacs_command("magit-stage-modified")
-unstage [that]: user.emacs_command("magit-unstage")
+unstage [that|thing]: user.emacs_command("magit-unstage")
 unstage all: user.emacs_command("magit-unstage-all")
 
 # Committing
@@ -50,7 +50,7 @@ create branch: user.emacs_command("magit-branch-and-checkout")
 merge branch: user.emacs_command("magit-merge-plain")
 
 # Stashing
-stash (all | changes | that): user.emacs_command("magit-stash-both")
+stash (all | changes | that | thing): user.emacs_command("magit-stash-both")
 
 # Resetting
 reset hard: user.emacs_command("magit-reset-hard")
@@ -78,11 +78,11 @@ cherries: user.emacs_command("magit-cherry")
 branching: user.emacs_command("magit-branch")
 bisecting: user.emacs_command("magit-bisect")
 committing: user.emacs_command("magit-commit")
-[show] diff [that]: user.emacs_command("magit-diff-dwim")
+[show] diff [that|thing]: user.emacs_command("magit-diff-dwim")
 diffing: user.emacs_command("magit-diff")
 # TODO: Audit
 diff settings: user.emacs_command("magit-diff-refresh")
-ediff [that]: user.emacs_command("magit-ediff-dwim")
+ediff [that|thing]: user.emacs_command("magit-ediff-dwim")
 ediffing: user.emacs_command("magit-ediff")
 fetching: user.emacs_command("magit-fetch")
 pulling: user.emacs_command("magit-pull")

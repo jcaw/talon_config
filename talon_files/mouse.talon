@@ -5,4 +5,4 @@ debug overlay: user.debug_overlay()
 camera overlay: user.camera_overlay()
 
 <user.click>: user.default_click(click)
-<user.click> that: user.click_current(click)
+<user.click> (that | thing): user.click_current(click)
