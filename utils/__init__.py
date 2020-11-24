@@ -276,6 +276,7 @@ def dictify(list_):
     return {element: element for element in list_}
 
 
+# TODO: Rename to `expand_map`
 def multi_map(mapping):
     """Meta-function to allow multiple strings to be mapped to one value.
 
