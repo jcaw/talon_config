@@ -79,7 +79,7 @@ chainable_formatters = multi_map(
     {
         "camel": "camel",
         "studley": "studley",
-        ("snake", "snik"): "snake",
+        ("snake", "snik", "nick"): "snake",
         ("spine", "spin"): "spine",
         # TODO: Settle on one/two of these
         ("dotword", "knob", "pebble"): "dotword",
