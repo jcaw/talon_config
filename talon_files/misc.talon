@@ -9,3 +9,6 @@
 (refresh | reload) words: user.update_custom_words()
 
 <user.file_suffix>: insert(file_suffix)
+
+# We'll want to use this in all sorts of places
+(interrupt | cease): key(ctrl-c)
