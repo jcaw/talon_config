@@ -22,9 +22,15 @@ extend [commit]: user.emacs_command("magit-commit-extend")
 reword [commit]: user.emacs_command("magit-commit-amend")
 
 # Pushing
-push remote: user.emacs_command("magit-push-current-to-pushremote")
-push upstream: user.emacs_command("magit-push-current-to-upstream")
-push elsewhere: user.emacs_command("magit-push-current")
+push remote:
+    user.emacs_command("magit-push-current-to-pushremote")
+    user.play_bell_high()
+push upstream:
+    user.emacs_command("magit-push-current-to-upstream")
+    user.play_bell_high()
+push elsewhere:
+    user.emacs_command("magit-push-current")
+    user.play_bell_high()
 
 # Pulling
 pull remote: user.emacs_command("magit-pull-from-pushremote")
