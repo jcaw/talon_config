@@ -190,3 +190,6 @@ shell command: user.emacs_command("async-shell-command")
 
 # Break out & insert a {} block, in languages like Java & C++
 bleak: key(home end space { enter)
+
+action(edit.undo): user.emacs_command("undo-fu-only-undo")
+action(edit.redo): user.emacs_command("undo-fu-only-redo")
