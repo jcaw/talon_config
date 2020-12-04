@@ -61,13 +61,28 @@ def play_cancel(**kwargs):
 module = Module()
 
 
-@module.action
-def play_thunk():
-    """Play a thunk sound."""
-    play(THUNK)
+@module.action_class
+class Actions:
+    def play_thunk():
+        """Play a thunk sound."""
+        play(THUNK)
 
+    def play_glass_tap():
+        """Play a glass tap sound."""
+        play(GLASS_TAP)
 
-@module.action
-def play_glass_tap():
-    """Play a glass tap sound."""
-    play(GLASS_TAP)
+    def play_ding():
+        """Play a confirmation ding."""
+        play(BELL)
+
+    def play_cancel():
+        """Play a cancellation sound."""
+        play(FAILURE)
+
+    def play_tap():
+        """Play a tap sound."""
+        play(TAP)
+
+    def play_bell_high():
+        """Play a high bell sound (higher than ding)."""
+        play(BELL_HIGH)
