@@ -25,6 +25,12 @@ reword [commit]: user.emacs_command("magit-commit-amend")
 push remote:
     user.emacs_command("magit-push-current-to-pushremote")
     user.play_bell_high()
+force push remote:
+    user.emacs_command("magit-push")
+    # Ideally this should be RPC but within the command these are unlikely to be
+    # rebound
+    key(- F p)
+    user.play_bell_high()
 push upstream:
     user.emacs_command("magit-push-current-to-upstream")
     user.play_bell_high()
