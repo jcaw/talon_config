@@ -188,5 +188,5 @@ trail [<user.complex_phrase>]$:
 
 shell command: user.emacs_command("async-shell-command")
 
-# Break out & insert a block, in languages like Java & C++
+# Break out & insert a {} block, in languages like Java & C++
 bleak: key(home end space { enter)
