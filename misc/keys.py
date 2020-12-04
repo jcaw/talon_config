@@ -18,7 +18,7 @@ default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look ma
 modified_alphabet = (
     default_alphabet.replace("air", "arch")
     .replace("bat", "batch")
-    .replace("harp", "hip")
+    # .replace("harp", "hip")
     .replace("zip", "zen")
 )
 # chosen_alphabet = default_alphabet.split(" ")
