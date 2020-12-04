@@ -1,4 +1,6 @@
 app: termite
 -
-copy:  key(ctrl-shift-c)
-paste: key(ctrl-shift-v)
+tag(): terminal
+
+action(edit.copy):  key(ctrl-shift-c)
+action(edit.paste): key(ctrl-shift-v)
