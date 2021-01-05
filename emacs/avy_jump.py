@@ -12,7 +12,7 @@ module = Module()
 class Actions:
     def emacs_jump(char: str) -> None:
         """Jump to a specific character."""
-        user.emacs_command("avy-goto-char-timer")
+        user.emacs_command("avy-goto-word-or-subword-1")
         key(char)
 
     def emacs_jump_chars(chars: List[str]) -> None:
