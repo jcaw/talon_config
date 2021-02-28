@@ -9,6 +9,8 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
+# Kill talon if it's running
+pkill talon
 
 # Install all requirements - useful in Talon beta
 "$DIR/../.venv/bin/pip" install -r "$DIR/requirements.txt" --no-warn-script-location
