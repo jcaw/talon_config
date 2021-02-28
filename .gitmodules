@@ -1,3 +1,6 @@
 [submodule "settings"]
 	path = settings
 	url = https://github.com/jcaw/private_talon_user
+[submodule "talon_draft_window"]
+	path = talon_draft_window
+	url = https://github.com/splondike/talon_draft_window
