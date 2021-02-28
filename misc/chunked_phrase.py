@@ -104,10 +104,10 @@ chainable_formatters = multi_map(
         ): "lowercase",
         # Function calls are euler-style by default. Lisps can override this.
         "funk": "euler_function_call",
-        # FIXME: This adds https:// in front of every dictation chunk
+        # FIXME: This adds https:// in front of every dictation chunk, not just the first one.
         ("H T T P S", "H T T P S /", "url"): "https_url",
         "see path": "c_path",  # c path
-        # TODO: Clashes with C path?
+        # FIXME: Clashes with C path?
         "path": "forward_slash_path",
     }
 )
