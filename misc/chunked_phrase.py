@@ -78,16 +78,21 @@ formatter_functions = {
 chainable_formatters = multi_map(
     {
         "camel": "camel",
-        "studley": "studley",
-        ("snake", "snik", "nick"): "snake",
+        # "studley": "studley",
+        "stud": "studley",
+        # ("snake", "snik", "nick"): "snake",
+        "nick": "snake",
         ("spine", "spin"): "spine",
         # TODO: Settle on one/two of these
         ("dotword", "knob", "pebble"): "dotword",
-        ("squash", "smash", "mash"): "squash",
+        # ("squash", "smash", "mash"): "squash",
+        "mash": "squash",
         "dunder": "dunder",
         "upper": "uppercase",
+        # TODO: padded formatting
+        # "pad": "padded",
         # Common combination, so contract it.
-        ("upsnake", "upsnik"): "uppercase_snake",
+        ("upsnake", "upsnik", "up nick"): "uppercase_snake",
         # TODO: Maybe don't allow this to be chained?
         (
             "lower",
