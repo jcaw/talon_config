@@ -5,8 +5,7 @@ from user.games.utils.map_scroll import EyeScroller, KeyMover
 
 hiss_move_context = Context()
 hiss_move_context.matches = r"""
-app: /firefox/
-app: /chrome/
+tag: user.browser
 title: /Google Maps/
 user.zoom_mouse_zooming: False
 """

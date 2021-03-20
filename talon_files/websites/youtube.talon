@@ -1,5 +1,4 @@
-app: /firefox/
-app: /chrome/
+tag: user.browser
 title: /- YouTube/
 -
 play [(video | vid)]: key("k")
