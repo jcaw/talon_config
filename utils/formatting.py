@@ -51,16 +51,23 @@ def is_whitespace(string):
         return False
 
 
+_RE_FIRST_LETTER = re.compile("[a-zA-Z]")
+
+
 def capitalize(string):
-    if len(string) >= 1:
-        return string[0].upper() + string[1:]
+    match = _RE_FIRST_LETTER.search(string)
+    if match:
+        m = match.start()
+        return string[:m] + string[m].upper() + string[m+1:]
     else:
         return string
 
 
 def uncapitalize(string):
-    if len(string) >= 1:
-        return string[0].lower() + string[1:]
+    match = _RE_FIRST_LETTER.search(string)
+    if match:
+        m = match.start()
+        return string[:m] + string[m].lower() + string[m+1:]
     else:
         return string
 
