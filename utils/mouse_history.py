@@ -15,8 +15,8 @@ import sys
 from copy import deepcopy
 from typing import Tuple, Optional
 
-from talon import cron, ctrl
-from talon.track.geom import Point2d
+from talon import cron, ctrl, actions, speech_system
+from talon.types import Point2d
 
 # Amount of mouse history to record, in secs.
 HISTORY_LENGTH = 30
@@ -53,6 +53,20 @@ class SnapshotQueue(object):
                 return list(self._queue)
 
 
+class TimestampedPosition:
+    def __init__(self, pos, time):
+        self.pos = pos
+        self.time = time
+
+    @property
+    def x(self) -> int:
+        return self.pos[0]
+
+    @property
+    def y(self) -> int:
+        return self.pos[1]
+
+
 class MouseHistory(object):
     def __init__(self, length_in_secs, tick_in_ms):
         """Create an object to store the mouse history.
@@ -81,7 +95,7 @@ class MouseHistory(object):
     def _record_mouse_position(self):
         timestamp = time.time()
         position = ctrl.mouse_pos()
-        self.history.append((position[0], position[1], timestamp))
+        self.history.append(TimestampedPosition(position, timestamp))
 
     def position_at_time(self, timestamp):
         """Get the mouse position at a particular timestamp.
@@ -92,18 +106,10 @@ class MouseHistory(object):
 
         """
         self._log_size()
-        # TODO: Remove these diagnostics
-        # from pprint import pprint
-
-        # pprint(self.history.snapshot()[:2])
-        # pprint(self.history.snapshot()[-2:])
         diff, pos = min(
-            [(abs(timestamp - pos[2]), pos) for pos in self.history.snapshot()]
+            [(abs(timestamp - pos.time), pos) for pos in self.history.snapshot()]
         )
-        # print(pos)
-        # print("pos time: ", pos[2])
-        # print("timestamp:", timestamp)
-        return pos[2], pos[:2]
+        return pos
 
     def _log_size(self):
         """Log the size of the mouse history, iff debugging.
@@ -154,13 +160,32 @@ def backdated_position(word_meta) -> Optional[Tuple[int, int]]:
     """
 
     def backdated_warn(message):
-        LOGGER.warn(f"[backdated_position] {message}")
+        LOGGER.warning(
+            f"[backdated_position] {message}. Defaulting to position at `pre:phrase`."
+        )
 
     try:
-        _, position = position_at_time(actual_word_start(word_meta))
-        if not position:
+        position = position_at_time(actual_word_start(word_meta))
+        if position:
+            return position.pos
+        else:
             backdated_warn(f"No backdated position returned. Was: `{position}`")
-        return position
     except Exception as e:
         backdated_warn(f'Error getting backdated position: "{e}"')
-        return None
+    with PHRASE_START_POS_LOCK:
+        return PHRASE_START_POSITION
+
+
+# Position of the mouse at phrase start
+PHRASE_START_POSITION = None
+PHRASE_START_POS_LOCK = threading.Lock()
+
+
+def _store_pre_position(*args):
+    """Store the mouse position at phrase start."""
+    global PHRASE_START_POSITION, PHRASE_START_POS_LOCK
+    with PHRASE_START_POS_LOCK:
+        PHRASE_START_POSITION = ctrl.mouse_pos()
+
+
+speech_system.register("pre:phrase", _store_pre_position)
