@@ -1,4 +1,4 @@
-from talon import resource, actions, clip
+from talon import resource, actions, clip, app, Module
 import json
 import platform
 import time
@@ -15,6 +15,9 @@ ON_MAC = platform.system() == "Darwin"
 
 # TODO: Switch this to `actions.path.talon_user` when possible
 user_dir = Path(__file__).parents[1]
+
+
+module = Module()
 
 
 # overrides are used as a last resort to override the output. Some uses:
@@ -458,3 +461,35 @@ def spoken_form(text: str) -> str:
 def expand_acronym(acronym: str) -> str:
     """Create a spoken form for an acronym, e.g. "mp3" -> "M P three"."""
     return spoken_form(" ".join(acronym).upper())
+
+
+_recent_notifications = {}
+_notifications_lock = threading.Lock()
+
+
+@module.action
+def notify(
+    title: str = "",
+    subtitle: str = "",
+    body: str = "",
+    sound: bool = False,
+    deadzone: str = "",
+) -> None:
+    """Wraps `app.notify`, with optional deadzone to avoid notification spam."""
+    global _notifications_lock, _private_notifications
+    with _notifications_lock:
+        if args not in _recent_notifications:
+            if deadzone:
+                # We suppress future notifications in the deadzone
+                notification_id = (title, subtitle, body)
+                _private_notifications += notification_id
+
+                def purge_notification():
+                    """Remove the notification from the set of recent ones."""
+                    nonlocal notification_id
+                    global _notifications_lock, _private_notifications
+                    with _notifications_lock:
+                        _private_notifications.remove(notification_id)
+
+                cron.after(deadzone, purge_notification)
+            return app.notify(title, subtitle, body, sound)
