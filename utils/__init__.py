@@ -6,11 +6,15 @@ import logging
 import threading
 from functools import wraps
 import re
+from pathlib import Path
 
 
 ON_WINDOWS = platform.system() == "Windows"
 ON_LINUX = platform.system() == "Linux"
 ON_MAC = platform.system() == "Darwin"
+
+# TODO: Switch this to `actions.path.talon_user` when possible
+user_dir = Path(__file__).parents[1]
 
 
 # overrides are used as a last resort to override the output. Some uses:
@@ -18,7 +22,12 @@ ON_MAC = platform.system() == "Darwin"
 # - force homophone preference (alternate homophones can be accessed with homophones command)
 
 # To add an override, add the word to override as the key and desired replacement as value in overrides.json
-mapping = json.load(resource.open("../overrides.json"))
+try:
+    with resource.open(user_dir / "overrides.json") as f:
+        mapping = json.load(f)
+except Exception as e:
+    app.notify(str(e))
+    mapping = {}
 
 # used for auto-spacing
 punctuation = set(".,-!?")
