@@ -211,7 +211,7 @@ def clip_set_safe(new_value, timeout=2):
     if clip.get() == new_value:
         return
     with WaitForClipChange(timeout):
-        clip.set(new_value)
+        clip.set_text(new_value)
 
 
 class PreserveClipboard:
@@ -223,7 +223,7 @@ class PreserveClipboard:
 
     def __exit__(self, *_):
         time.sleep(0.1)
-        clip.set(self.old_clipboard)
+        clip.set_text(self.old_clipboard)
 
 
 def preserve_clipboard(fn):
