@@ -402,6 +402,8 @@ def apply_capitalized_sentence(text, surrounding_text=None):
     return _language_spaced(words, surrounding_text)
 
 
+# TODO: Maybe switch to `make_apply_brackets`? Perhaps not if we want to always
+#   capitalize
 def apply_speech(text, surrounding_text=None):
     """Format `text` as a capitalized quotation wrapped in speech marks."""
     # Fixme: doesn't capitalize.
@@ -411,6 +413,29 @@ def apply_speech(text, surrounding_text=None):
     insert = _language_spaced(words, surrounding_text)
     insert.text_after = '"' + insert.text_after
     return insert
+
+
+# Simple heuristic to detect if point is right before the start of a new
+# sentence. Ignores whitespace.
+_RE_CAPITAL_FOLLOWS = re.compile(r"^[ \t([{<]*[A-Z]")
+
+
+def make_apply_brackets(open_, close_):
+    """Create a function that inserts bracketed text."""
+
+    def apply_brackets(text, surrounding_text=None):
+        nonlocal open_, close_
+        out = apply_sentence(text.strip(), surrounding_text)
+        if out.insert and out.insert.startswith(" "):
+            # Insert after the space
+            out.insert = out.insert[0] + open_ + out.insert[1:]
+        else:
+            out.insert = open_ + out.insert
+
+        out.text_after = close_ + out.text_after
+        return out
+
+    return apply_brackets
 
 
 def apply_squash(text, surrounding_text=None):
