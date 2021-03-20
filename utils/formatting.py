@@ -74,7 +74,7 @@ def uncapitalize(string):
 
 # Lots of punctuation could come before speech close. If the speech mark is
 # joined to something, assume it's the end.
-_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r\"'][\"']+\Z")
+_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r\"'][\"'`]+\Z")
 # Different approach to starts because speech marks can have punctuation
 # immediately after close. However, openings will probably not have punctuation
 # at the start - it'll be an alphanumeric char (normally a letter).
