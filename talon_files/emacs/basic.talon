@@ -5,6 +5,11 @@ os: windows
 os: linux
 os: mac
 -
+# TODO: Avoid races with keyboard input and remote input via Voicemacs.
+# settings:
+#    key_wait = 100
+
+
 # Fundamental Commands
 
 # "c-g" is the interrupt command. It's hardcoded in C - can't remap it.
@@ -107,10 +112,10 @@ dedent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-left", nu
 # Unsorted
 
 # TODO: Stuff to sort elsewhere
-pop (message | messages): user.emacs_command("popwin:messages")
+[pop] (message | messages): user.emacs_command("popwin:messages")
 (close | kill) pop (win | window): user.emacs_command("popwin:close-popup-window")
 
-set theme [<user.dictation>]:
+(set | load) theme [<user.dictation>]:
     user.emacs_switch_theme()
     user.insert_lowercase(dictation or "")
 
@@ -122,7 +127,6 @@ open [file] <user.dictation>:
 action(edit.select_all):
     user.emacs_command("mark-whole-buffer")
 
-
 # TODO: Generic Unsorted
 #
 # TODO: Fallbacks
@@ -130,9 +134,9 @@ action(user.toggle_comment): user.emacs_command("spacemacs/comment-or-uncomment-
 reflow:
     user.emacs_command("end-of-line")
     user.emacs_command("fill-paragraph")
-tight reflow: user.emacs_command("jcaw-fill-this-line")
+tight [reflow | flow]: user.emacs_command("jcaw-fill-this-line")
 action(edit.zoom_in): user.emacs_command("voicemacs-increase-text")
-action(edit.zoom_out): user.emacs_command("voicemacs-dencrease-text")
+action(edit.zoom_out): user.emacs_command("voicemacs-decrease-text")
 action(edit.save): user.emacs_command("save-buffer")
 save and kill:
     edit.save()
@@ -198,3 +202,5 @@ bleak: key(home end space { enter)
 
 action(edit.undo): user.emacs_command("undo-fu-only-undo")
 action(edit.redo): user.emacs_command("undo-fu-only-redo")
+
+^restart emacs$: user.emacs_restart()
