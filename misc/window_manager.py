@@ -16,3 +16,6 @@ class Actions:
 
     def toggle_fullscreen() -> None:
         """Toggle fullscreen mode for the current window."""
+
+    def lock_screen() -> None:
+        """Lock the screen."""

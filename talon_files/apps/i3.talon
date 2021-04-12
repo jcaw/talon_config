@@ -1,10 +1,17 @@
 tag: user.i3
 -
-(work | wok) <number>:       key("super-{number}")
-move (work | work) <number>: key("super-shift-{number}")
-flip [wok | work]:           key("super-tab")
+(work | wok) <user.digit>:       key("super-{digit}")
+# Move window to workspace and switch to it
+move (work | wok) <user.digit>:  key("super-shift-{digit}")
+# Move window to workspace without switching to it
+throw (work | wok) <user.digit>: key("super-ctrl-{digit}")
+flip [work | wok]:           key("super-tab")
 (win | window) <user.arrow>: key("super-{arrow}")
-move (win | window) <user.arrow>: key("super-shift-{arrow}")
+# Compensate for common mishearing
+^one left <user.arrow>:      key("super-{arrow}")
+# Provide "snap" to match regular WM commands
+(move (win | window) | snap) <user.arrow>: key("super-shift-{arrow}")
+
 
 run <user.dictation>:
     key("super-d")
@@ -27,14 +34,22 @@ new term:           key("super-enter")
 [split] horizontal: key("super-v")
 layout stacking:    key("super-s")
 layout tabbed:      key("super-w")
-layout split:       key("super-e")
-lock screen:        key("super-x")
+layout (split | tiled): key("super-e")
 [toggle] borders:   key("ctrl-shift-x")
 [toggle] (floating | tiling): key("super-shift-space")
 (focus | kiss) (floating | tiling): key("super-space")
 
-# TODO: Probably extract this
-update packages:    key("super-shift-u")
 
 action(user.toggle_fullscreen): key(f11)
 action(app.window_close):       key(super-shift-q)
+action(user.lock_screen):       key(super-x)
+# Special command, switch between this and the other window. Only going to work
+# if there's two windows.
+switch:
+     key(super-right)
+     # Do this in case they're vertically stacked.
+     key(super-down)
+
+# Don't tell Aegis (use this when Voicemacs deadlocks)
+restart talon:       key("super-shift-t")
+(exit | kill) talon: key("super-ctrl-t")
