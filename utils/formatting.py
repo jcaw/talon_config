@@ -1,5 +1,6 @@
 import re
 from typing import Optional, Callable, List
+from talon import actions
 
 
 class SurroundingText:
@@ -20,6 +21,13 @@ class ComplexInsert:
     def __init__(self, insert, text_after=""):
         self.insert = insert
         self.text_after = text_after
+
+    def do_insert(self):
+        """Perform insert into the current program."""
+        actions.insert(self.insert)
+        actions.insert(self.text_after)
+        for _ in self.text_after:
+            actions.key("left")
 
 
 # All formatting functions must conform to this type signature.
@@ -74,7 +82,7 @@ def uncapitalize(string):
 
 # Lots of punctuation could come before speech close. If the speech mark is
 # joined to something, assume it's the end.
-_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r\"'][\"'`]+\Z")
+_RE_CLOSING_SPEECH = re.compile(r"[^ \t\n\r\"'[({<][\"'`]+\Z")
 # Different approach to starts because speech marks can have punctuation
 # immediately after close. However, openings will probably not have punctuation
 # at the start - it'll be an alphanumeric char (normally a letter).
@@ -172,6 +180,7 @@ def apply_dotword(text, surrounding_text=None):
 def make_apply_delimiter(delimiter):
     """Make a function that applies arbitrary delimiter spacing to the text."""
 
+    # TODO: Remove do
     def do_apply_delimiter(text, surrounding_text=None):
         nonlocal delimiter
         return _delimiter_spaced(delimiter, text, surrounding_text)
@@ -303,6 +312,15 @@ def apply_lisp_keyword(
     # We can space the leader on keyword args automatically
     if _lisp_pad_before(surrounding_text):
         complex.insert = " " + complex.insert
+    return complex
+
+
+def apply_elisp_doc_symbol(
+    text: str, surrounding_text: Optional[SurroundingText] = None
+) -> ComplexInsert:
+    var = apply_spine(text, None).insert
+    complex = _language_spaced(["`" + var], surrounding_text)
+    complex.text_after = "'" + complex.text_after
     return complex
 
 

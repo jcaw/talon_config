@@ -1,7 +1,7 @@
 from typing import Callable, List, Optional
 import itertools
 
-from talon import Module, Context, actions
+from talon import Module, Context, actions, clip
 
 user = actions.user
 key = actions.key
@@ -14,6 +14,7 @@ from user.utils.formatting import (
     apply_dotword,
     apply_dunder,
     apply_elisp_private,
+    apply_elisp_doc_symbol,
     apply_euler_function_call,
     apply_lisp_function_call,
     apply_lisp_keyword,
@@ -31,6 +32,7 @@ from user.utils.formatting import (
     format_text,
     formatter_chain,
     make_apply_delimiter,
+    make_apply_brackets,
     preserve_punctuation,
     reformat_text,
     SurroundingText,
@@ -54,14 +56,21 @@ formatter_functions = {
     "lowercase": apply_lowercase,
     "sentence": apply_sentence,
     "capitalized_sentence": apply_capitalized_sentence,
+    "parens_sentence": make_apply_brackets("(", ")"),
+    "crotchet_sentence": make_apply_brackets("[", "]"),
     "title": apply_title,
     "keywords": apply_programming_keywords,
+    # "padded": apply_padded,
     # Special case
     PREVIOUS_FORMATTERS_SIGNIFIER: PREVIOUS_FORMATTERS_SIGNIFIER,
     "speech": apply_speech,
     "uppercase_snake": formatter_chain(apply_snake, apply_uppercase),
     # Language-specific
+    # TODO: Find some way to extract this stuff
     "c_path": make_apply_delimiter("::"),
+    # TODO: Will this go lowercase?
+    "c_directive": add_prefix("#", apply_squash),
+    "hlsl_define": add_prefix("_", apply_studley_case),
     "python_private": add_prefix("_", apply_snake),
     "elisp_private": apply_elisp_private,
     "lisp_keyword_arg": apply_lisp_keyword,
@@ -69,6 +78,7 @@ formatter_functions = {
     "euler_function_call": apply_euler_function_call,
     "dot_prefix_snake": add_prefix(".", apply_snake),
     "rparen_prefix_snake": add_prefix("(", apply_snake),
+    "elisp_doc_symbol": apply_elisp_doc_symbol,
     # Other
     "https_url": add_prefix("https://", apply_squash),
     "forward_slash_path": make_apply_delimiter("/"),
@@ -116,10 +126,13 @@ standalone_formatters = {
     "say": "sentence",
     "top": "capitalized_sentence",
     "quote": "speech",
+    "paren": "parens_sentence",
+    "crotchet": "crotchet_sentence",
     "title": "title",
     # TODO: Settle on one of these
     "prog": "keywords",
     "pog": "keywords",
+    "direct": "c_directive",
 }
 
 # Sanity check
@@ -155,6 +168,10 @@ class DictationChunk(BasePhraseChunk):
 class CharacterChunk(BasePhraseChunk):
     """Holds a single insertable character, spoken as a command."""
 
+    def __init__(self, character, pad):
+        super().__init__(character)
+        self.pad = pad
+
 
 class KeypressChunk(BasePhraseChunk):
     """Holds a keypress (or series) that must be pressed, not inserted."""
@@ -179,6 +196,10 @@ class FormatterChunk(BasePhraseChunk):
     """Holds a space-separated string of formatter(s)."""
 
 
+class ActiveSymbolChunk(BasePhraseChunk):
+    """Corresponds to the `symbol_section` capture."""
+
+
 module = Module()
 context = Context()
 
@@ -189,10 +210,10 @@ def dictation_chunk(m) -> DictationChunk:
     return DictationChunk(m.dictation)
 
 
-@module.capture(rule="<user.character>")
+@module.capture(rule="[pad] <user.character>")
 def character_chunk(m) -> CharacterChunk:
     """Chunk corresponding to a spoken character."""
-    return CharacterChunk(m.character)
+    return CharacterChunk(m.character, m[0] == "pad")
 
 
 # TODO: Audit complex phrase keypresses
@@ -249,20 +270,31 @@ def formatter_chunk(m) -> None:
     return FormatterChunk(m.formatters)
 
 
+# TODO: See if this is too trigger-happy to work properly.
+# TODO: Maybe centralise the active symbol prefix, it's duplicated here and in
+#   the talon file.
+@module.capture(rule="<user.active_symbol>")
+def active_symbol_chunk(m) -> None:
+    return ActiveSymbolChunk(m.active_symbol)
+
+
 @module.capture(
     rule=(
         "("
+        # FIXME: Don't allow dictation next to whole symbol?
         "   <user.dictation_chunk>"
+        # For now, disallow characters. They fire a lot, impeding dictation.
         " | <user.character_chunk>"
         # For now, disallow keypresses because they are too intrusive
         # " | <user.keypress_chunk>"
-        " | <user.action_chunk>"
+        # " | <user.action_chunk>"
         " | <user.file_suffix_chunk>"
+        # " | <user.active_symbol_chunk>"
         " | (<user.formatter_chunk> <user.dictation_chunk>)"
         ")+"
     )
 )
-def complex_phrase(m) -> List[BasePhraseChunk]:
+def complex_phrase(m) -> List:
     """Phrase consisting of one or more phrase chunks.
 
     Each chunk may be some dictation, a symbol, a keypress, etc, spoken in
@@ -288,9 +320,16 @@ def complex_phrase(m) -> List[BasePhraseChunk]:
 
 
 @module.capture(
-    rule=("<user.formatter_chunk> <user.dictation_chunk> [<user.complex_phrase>]")
+    rule=(
+        "<user.formatter_chunk> "
+        "("
+        "<user.dictation_chunk> "
+        # "| <user.active_symbol_chunk>"
+        ")"
+        "[<user.complex_phrase>]"
+    )
 )
-def formatter_phrase(m) -> List[BasePhraseChunk]:
+def formatter_phrase(m) -> List:
     """A formatter, dictation, then a regular complex phrase.
 
     This capture can be used to have phrase insertion be triggered exclusively
@@ -320,14 +359,6 @@ def format_contextually(text: str, formatters: List[Callable]) -> ComplexInsert:
 _last_used_formatters = None
 
 
-def _insert_complex_insert(complex_insert: ComplexInsert) -> None:
-    """Input a `ComplexInsert` into the current program."""
-    actions.insert(complex_insert.insert)
-    actions.insert(complex_insert.text_after)
-    for i in range(len(complex_insert.text_after)):
-        actions.key("left")
-
-
 @module.action_class
 class ModuleActions:
     def surrounding_text() -> Optional[SurroundingText]:
@@ -341,7 +372,15 @@ class ModuleActions:
         formatter_funcs = to_formatter_funcs(formatters)
         text = actions.self.cut_words_left(number)
         surrounding_text = actions.self.surrounding_text()
-        _insert_complex_insert(reformat_text(text, formatter_funcs, surrounding_text))
+        reformat_text(text, formatter_funcs, surrounding_text).do_insert()
+
+    def reformat_dwim(formatters: str) -> None:
+        """Reformat the current 'thing' - see `actions.user.cut_that_dwim`."""
+        formatter_funcs = to_formatter_funcs(formatters)
+        with clip.capture() as c:
+            actions.self.cut_that_dwim()
+        surrounding_text = actions.self.surrounding_text()
+        reformat_text(c.get(), formatter_funcs, surrounding_text).do_insert()
 
     def insert_formatted(text: str, formatters: Optional[str] = "sentence") -> None:
         """Insert ``text``, formatted with ``formatters``.
@@ -350,11 +389,11 @@ class ModuleActions:
 
         """
         formatter_funcs = to_formatter_funcs(formatters)
-        _insert_complex_insert(format_contextually(str(text), formatter_funcs))
+        format_contextually(str(text), formatter_funcs).do_insert()
 
     # FIXME: Talon complains (spuriously) about the types being passed here.
     def insert_complex(
-        phrase_chunks: List[BasePhraseChunk], formatters: Optional[str] = "sentence"
+        phrase_chunks: List, formatters: Optional[str] = "sentence"
     ) -> None:
         """Insert a complex phrase.
 
@@ -383,8 +422,11 @@ class ModuleActions:
                 actions.self.insert_formatted(chunk, formatters)
             elif isinstance(chunk, CharacterChunk):
                 formatter_funcs = to_formatter_funcs(formatters)
-                # FIXME: Letters will be inserted with padding in natural language.
-                if preserve_punctuation(formatter_funcs):
+                if chunk.pad:
+                    actions.self.insert_key_padded(chunk)
+                elif preserve_punctuation(formatter_funcs):
+                    # FIXME: Letters will be inserted with padding in natural language.
+                    #
                     # Format contextually if the formatter preserves
                     # punctuation.
                     actions.self.insert_formatted(chunk, formatters)
@@ -398,6 +440,12 @@ class ModuleActions:
             elif isinstance(chunk, FormatterChunk):
                 assert isinstance(chunk.payload, str), type(chunk.payload)
                 _last_used_formatters = formatters = chunk.payload
+            elif isinstance(chunk, ActiveSymbolChunk):
+                # TODO: Maybe insert these with contextually-appropriate
+                #   *preceeding* padding? Also maybe pad after, if something
+                #   currently exists (might not work - e.g. inserting a
+                #   function then wrapping with it)?
+                insert(chunk.payload)
             elif isinstance(chunk, FileSuffixChunk):
                 # File suffixes should be inserted without formatting or
                 # padding.
