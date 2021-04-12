@@ -230,6 +230,22 @@ class Actions:
         )
 
 
+context = Context()
+context.matches = """
+tag: user.emacs
+"""
+
+
+@context.action_class("self")
+class EmacsActions:
+    def get_that_dwim() -> str:
+        return rpc_call("it-text-of-thing-at-dwim")
+
+    def copy_that_dwim() -> None:
+        actions.self.emacs_command("it-copy-dwim")
+
+    def cut_that_dwim() -> None:
+        actions.self.emacs_command("it-kill-dwim")
 
 
 def short_commands(object_name, action):
