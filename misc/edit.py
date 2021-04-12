@@ -5,7 +5,7 @@ from typing import Optional, List
 
 from talon import Module, Context, actions, clip, ctrl
 
-from user.utils import PreserveClipboard
+from user.utils import PreserveClipboard, ON_WINDOWS, ON_LINUX, ON_MAC
 from user.misc import chunked_phrase
 
 key = actions.key
@@ -52,6 +52,32 @@ class Actions:
         user.toggle_comment()
         actions.sleep("500ms")
         user.insert_complex(complex_phrase, "capitalized_sentence")
+
+    def editor(path: Optional[str] = None) -> None:
+        """Open a file in the default editor."""
+        # HACK: This is all very hacky, maybe remove this command at some point.
+
+        if ON_WINDOWS:
+            # TODO: UNTESTED
+
+            # Change the Powershell "edit" verb to set the default editor.
+            powershell_command = "start -verb edit" + (f" '{path}'" if path else "")
+            subprocess.Popen(["powershell", "-command", powershell_command])
+        elif ON_LINUX:
+            # TODO: Try `xdg-open` before falling back to `nano`
+            open_command = "${VISUAL-${EDITOR-nano}}"
+            if path:
+                subprocess.Popen([open_command, f'"{path}"'])
+            else:
+                subprocess.Popen([open_command])
+        elif ON_MAC:
+            # TODO: UNTESTED
+            if path:
+                subprocess.Popen(["open", "-e", f'"{path}"'])
+            else:
+                subprocess.Popen(["open", "-e"])
+        else:
+            raise RuntimeError("Unrecognised system.")
 
 
 # We use this abstraction to allow for mark-based selection, e.g. Emacs.
