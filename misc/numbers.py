@@ -182,7 +182,7 @@ def optional_number(m) -> int or None:
 ctx = Context()
 
 
-@ctx.capture("digits", rule=f"<self.digit>++")
+@ctx.capture("digits", rule=f"<self.digit>+")
 def digits(m) -> int:
     return int("".join(map(str, m)))
 
