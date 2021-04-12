@@ -15,4 +15,5 @@ context.lists["user.chainable_formatters"] = {
     # NOTE: Private functions must be called with "private func" to get the
     #   right behavior - not "func private"
     "key": "lisp_keyword_arg",
+    "sim": "elisp_doc_symbol",
 }

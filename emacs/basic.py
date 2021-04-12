@@ -36,9 +36,14 @@ class Actions:
             rpc_call("voicemacs-find-file", [path])
 
     def emacs_search_directory(text: Optional[str] = None) -> None:
-        """Search for some `text` in the current project."""
+        """Search for some `text` in the current directory."""
         emacs_fallbacks(
-            ["spacemacs/helm-dir-smart-do-search", "helm-do-grep-ag", "grep",]
+            [
+                "spacemacs/helm-dir-smart-do-search",
+                "+default/search-cwd",
+                "helm-do-grep-ag",
+                "grep",
+            ]
         )
         if text:
             insert(text)
@@ -83,7 +88,10 @@ class Actions:
     def emacs_switch_theme() -> None:
         """Open the themes menu."""
         emacs_fallbacks(
-            ["spacemacs/helm-themes", "load-theme",]
+            [
+                "spacemacs/helm-themes",
+                "load-theme",
+            ]
         )
 
     def emacs_restart() -> None:
