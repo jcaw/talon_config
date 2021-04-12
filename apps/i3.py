@@ -14,3 +14,19 @@ if platform.system() == "Linux" and shutil.which("xprop"):
     if '"i3"' in result.stdout.decode("utf-8"):
         i3_context = Context()
         i3_context.tags = ["user.i3"]
+
+
+i3_context = Context()
+i3_context.matches = """
+tag: user.i3
+"""
+
+# @i3_context.action_class("user")
+# class i3Actions():
+#     def snap_window(snap_keys: str) -> None:
+#         key("win-shift:down")
+#         try:
+#             for keyname in snap_keys.split():
+#                 key(keyname)
+#         finally:
+#             key("win-shift:up")
