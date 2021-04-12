@@ -360,7 +360,6 @@ def rpc_call(method: str, params: List = [], async_: bool = False, timeout=5):
             if "result" in data:
                 return data["result"]
             else:
-                # If it doesn't have this key there's not much we can do anyway.
                 raise JsonRpcError(
                     'Error executing function: "{}"'.format(data["error"])
                 )
@@ -452,4 +451,7 @@ def run_command(command, prefix_arg=None):
 cron.interval(f"{_CONNECT_ATTEMPT_INTERVAL}ms", _try_connect)
 # HACK: Disconnect doesn't always trigger in the receive thread until a message
 #   is sent. Manually ping to trigger these D/Cs.
+#
+# FIXME: Something is causing Talon to silently deadlock. I think it's Voicemacs
+#   and I think it's probably the message system deadlocking.
 cron.interval(f"{_PING_INTERVAL}ms", _ping)
