@@ -4,3 +4,6 @@
 [submodule "talon_draft_window"]
 	path = talon_draft_window
 	url = https://github.com/splondike/talon_draft_window
+[submodule "noise_recorder"]
+	path = noise_recorder
+	url = https://github.com/jcaw/noise_recorder_talon
