@@ -1,3 +1,5 @@
+from typing import List
+
 from talon import Module, Context, registry, clip, ui, actions
 
 from user.utils import sound
@@ -7,22 +9,10 @@ module = Module()
 context = Context()
 
 
-def _action_declarations():
-    """Generate all defined actions, as strings."""
-    for decl in registry.decls.actions.values():
-        yield str(decl)
-
-
-def _capture_declarations():
-    # TODO: Switch this back to values once the upstream issue is fixed in Talon
-    # for decl in registry.decls.captures.values():
-    for decl in registry.decls.captures.keys():
-        yield str(decl)
-
-
-def _print_and_copy(string):
+def _print_and_copy_lines(lines: List):
+    string = "\n".join(map(str, lines))
     print(string)
-    clip.set(string)
+    clip.set_text(string)
     print("String copied to clipboard.")
 
 
@@ -30,11 +20,16 @@ def _print_and_copy(string):
 class Actions:
     def print_copy_actions() -> None:
         """Print & copy all declared actions."""
-        _print_and_copy("\n".join(_action_declarations()))
+        _print_and_copy_lines(registry.decls.actions.values())
 
     def print_copy_captures() -> None:
         """Print & copy all declared captures."""
-        _print_and_copy("\n".join(_capture_declarations()))
+        # TODO: Switch this back to values once the upstream issue is fixed in Talon
+        _print_and_copy_lines(registry.decls.captures.keys())
+
+    def print_copy_settings() -> None:
+        """Print & copy all declared settings."""
+        _print_and_copy_lines(registry.decls.settings.values())
 
     def mic_test() -> None:
         """Test recognition. Prints and plays a sound when successful."""
