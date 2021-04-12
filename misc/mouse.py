@@ -1,8 +1,9 @@
 from typing import Callable, List
 import time
+from random import randint
 
 from talon import Module, Context, actions, ctrl, ui
-from talon.track.geom import Point2d
+from talon.types import Point2d
 from talon_plugins import eye_mouse, eye_zoom_mouse
 
 from user.utils import Modifiers
@@ -106,13 +107,11 @@ class Actions:
     def drag(modifiers: List[str] = []):
         """Hold a mouse button at current position (default left)."""
         Modifiers(modifiers).__enter__()
-        # TODO: Switch to newapi action once I know the interface
-        ctrl.mouse_click(button=0, down=True)
+        actions.mouse_drag()
 
     def drop(modifiers: List[str] = []):
         """Release a mouse button at current position (default left)."""
-        # TODO: Switch to newapi action once I know the interface
-        ctrl.mouse_click(button=0, up=True)
+        actions.mouse_release()
         Modifiers(modifiers).__exit__(None, None, None)
 
     def default_click(click_info: Click):
@@ -129,12 +128,51 @@ class Actions:
         """Click where the mouse is currently."""
         click_info.function()
 
+    def shake_mouse(seconds: float = 0.1, allowed_deviation: int = 5):
+        """Briefly shake the cursor around its current position.
+
+        Can be used to compensate for instantaneous mouse movement not being
+        detected as a drag, e.g. when clicking + dragging Firefox tabs.
+
+        """
+        FRAME_PAUSE = 0.016  # In secs
+        # Use a defined number of moves (not time) so behaviour is predictable.
+        n_moves = min(int(seconds // FRAME_PAUSE), 1)
+
+        start_x = actions.mouse_x()
+        # Technically a race condition, but never going to come up
+        start_y = actions.mouse_y()
+        for i in range(n_moves):
+            # NOTE: This will move in a square pattern, not a circle. That's
+            #   probably fine.
+            actions.mouse_move(
+                start_x + randint(-pixel_range, pixel_range),
+                start_y + randint(-pixel_range, pixel_range),
+            )
+            time.sleep(FRAME_PAUSE)
+        actions.mouse_move(start_x, start_y)
+
+    def spline_mouse(x: int, y: int, seconds: float = 1.0) -> None:
+        """Move mouse gradually to point `(x, y)`."""
+        FRAME_PAUSE = 0.016
+        # Use a defined number of moves (not time) so movement is smooth.
+        n_steps = min(int(seconds // FRAME_PAUSE), 1)
+
+        start_x = actions.mouse_x()
+        start_y = actions.mouse_y()
+        delta_x = (x - start_x) / n_steps
+        delta_y = (y - start_y) / n_steps
+        for i in range(n_steps):
+            actions.mouse_move(start_x + (i * delta_x), start_y + (i * delta_y))
+            time.sleep(FRAME_PAUSE)
+        actions.mouse_move()
+
 
 context = Context()
 context.lists["self.clicks"] = CLICKS_MAP.keys()
 
 
-@module.capture(rule="<user.modifiers> {self.clicks}")
+@module.capture(rule="[<user.modifiers>] {self.clicks}")
 def click(m) -> Click:
     """Get click info from a phrase."""
     click_command = m["clicks"]
@@ -143,8 +181,11 @@ def click(m) -> Click:
     #
     # NOTE: This has quirks. If you say "shift click", it will backdate to the
     #   start of "click", not "shift".
+    #
+    # TODO: Maybe defer to the backdated position of the voice activity if
+    #   timestamps aren't available?
     position = backdated_position(m[-1])
-    modifiers = m["modifiers"]
+    modifiers = m["modifiers"] if hasattr(m, "modifiers") else []
     return Click(click_function, position, modifiers)
 
 
@@ -154,10 +195,8 @@ class NoiseActions:
         actions.mouse_click()
 
     def on_hiss(start: bool):
-        # TODO: Replace with newapi actions once I know the interface
-        #
         # TODO: Maybe use audio cues to notify user of premature release?
         if start:
-            ctrl.mouse_click(button=0, down=True)
+            actions.mouse_drag()
         else:
-            ctrl.mouse_click(button=0, up=True)
+            actions.mouse_release()

@@ -1,9 +1,10 @@
 from typing import Callable, List, Optional
 import logging
 import time
+from random import randint
 
 from talon import Module, Context, actions, settings, ctrl, cron, speech_system, noise
-from talon.track.geom import Point2d
+from talon.types import Point2d
 from talon_plugins import eye_zoom_mouse
 
 from user.utils import sound, Modifiers
@@ -107,13 +108,22 @@ user.zoom_mouse_active: True
 
 @context.action_class("user")
 class MouseActions:
+    def drag(modifiers: List[str] = []):
+        Modifiers(modifiers).__enter__()
+        actions.mouse_drag()
+        actions.user.shake_mouse()
+
     def drop(modifiers: List[str] = []):
         # Some drag actions require that the mouse wait in the drop position
         # for a little while before dropping. Movement is instant with the zoom
         # mouse, so insert an artificial wait.
-        time.sleep(0.3)
-        # TODO: Port to newapi actions once I know the interface
-        ctrl.mouse_click(button=0, up=True)
+        #
+        # Also shake the mouse around a bit for cases like tab dragging in
+        # firefox, where instant warping won't register as movement.
+        actions.user.shake_mouse()
+        actions.mouse_release()
+        # TODO: Change this. Context manager is yuck. Introduce lower
+        #   abstraction for hold/release modifiers.
         Modifiers(modifiers).__exit__(None, None, None)
 
     def default_click(click_info: Click):
