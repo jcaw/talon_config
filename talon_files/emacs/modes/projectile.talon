@@ -1,5 +1,5 @@
 tag: user.emacs
-user.emacs-minor-mode: projectile-mode
+# user.emacs-minor-mode: projectile-mode
 -
 (switch | open) (proj | project): user.emacs_command("projectile-switch-project")
 (proj | project) (files | dired): user.emacs_command("projectile-dired")
