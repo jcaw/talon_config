@@ -423,14 +423,20 @@ def _send(s: socket.socket, message: dict):
 
 
 def _ping():
-    """Ping the socket to ensure it's alive & trigger latent disconnects."""
+    """Ping the socket to ensure it's alive & trigger latent disconnects.
+
+    (This is done manually because Emacs seems to have dodgy support for TCP
+    keepalive.)
+
+    """
     with _socket_lock:
         s = _socket
     if s:
         try:
-            # TODO 1: Race condition? Could this clash with another message?
-            #   Find out if `sendall` monopolises the socket.
-            s.sendall("\0".encode())
+            with _pending_lock:
+                # TODO: What if the second half of a message gets dropped, will
+                #   this still work?
+                s.sendall("\0\1\0".encode())
         except:
             # Seems like even with this, sometimes the receive thread D/C isn't
             # triggered. Just force it.
