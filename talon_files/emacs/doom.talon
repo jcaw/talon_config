@@ -42,3 +42,6 @@ open out [<user.complex_phrase>]$:
     user.emacs_command("doom/find-file-in-other-project")
     user.insert_complex(complex_praise or "", "lowercase")
 find projects: user.emacs_command("+default/discover-projects")
+
+(buff | buffer) scratch:  user.emacs_command("doom/open-scratch-buffer")
+(buff | buffer) messages: user.emacs_command("doom/open-messages-buffer")
