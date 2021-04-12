@@ -210,23 +210,26 @@ context.lists["user.emacs_object_prefix_commands"] = {}
 context.lists["user.emacs_object_wrapping_commands"] = {}
 
 
-@module.action
-def emacs_wrap_object(object_type: str, pair_opening: str) -> None:
-    """Wrap the current object of `object_type`.
+@module.action_class
+class Actions:
+    def emacs_wrap_object(object_type: str, pair_opening: str) -> None:
+        """Wrap the current object of `object_type`.
 
-    `pair_opening` is the start of the pair to wrap it with.
+        `pair_opening` is the start of the pair to wrap it with.
 
-    """
-    rpc_call(
-        "it-wrap",
-        [
-            # Convert to Elisp symbol
-            #
-            # FIXME: Probably fix `it` to allow reference by symbol or string
-            f"'{object_type}",
-            pair_opening,
-        ],
-    )
+        """
+        rpc_call(
+            "it-wrap",
+            [
+                # Convert to Elisp symbol
+                #
+                # FIXME: Probably fix `it` to allow reference by symbol or string
+                f"'{object_type}",
+                pair_opening,
+            ],
+        )
+
+
 
 
 def short_commands(object_name, action):
