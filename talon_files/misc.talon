@@ -15,3 +15,6 @@
 
 command history: user.command_history_toggle()
 set [command] history [size] <number>: user.command_history_set_size(number)
+
+# Record all voice clips
+settings(): speech.record_all = 1
