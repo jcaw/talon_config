@@ -26,7 +26,7 @@ tag: user.dragon
 """
 
 
-@dragon_context.action_class
+@dragon_context.action_class("self")
 class DragonActions:
     def sleep():
         speech_system.engine_mimic("go to sleep")
