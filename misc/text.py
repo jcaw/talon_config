@@ -44,7 +44,7 @@ if not path.isfile(CUSTOM_WORDS_PATH):
 
 def parse_dict_file(file_path: str) -> Dict[str, str]:
     def invalid_line(line_count, line, description="no description"):
-        LOGGER.warn(
+        LOGGER.warning(
             f'Invalid mapping "{line}" on line {line_count + 1} of'
             + f' "{file_path}" ({description})'
         )
@@ -145,31 +145,24 @@ class Actions:
             actions.key("ctrl-shift-left")
         # TODO: Something more reliable than a wait here?
         time.sleep(0.1)
-        actions.user.cut_safe()
-        return clip.get()
+        return actions.user.cut_safe()
 
+    # TODO: Timeouts
     def copy_safe() -> None:
         """Like `edit.copy` but waits for the clipboard to change."""
-        # Note this approach will pepper UUIDs through the clipboard history.
-        _clip_set_unique()
-        with WaitForClipChange(5):
+        # FIXME: This restores the clipboard
+        with clip.capture() as c:
             edit.copy()
+        return c.get()
 
     def cut_safe() -> None:
         """Like `edit.cut` but waits for the clipboard to change."""
-        # Note this approach will pepper UUIDs through the clipboard history.
-        _clip_set_unique()
-        with WaitForClipChange(5):
+        with clip.capture() as c:
             edit.cut()
+        return c.get()
 
     def get_highlighted() -> None:
         """Get the currently highlighted text, without altering clipboard."""
-        old_clip = clip.get()
-        try:
-            user.copy_safe()
-            return clip.get()
-        except Exception as e:
-            app.notify("Error getting highlighted text", str(e))
-            raise
-        finally:
-            clip_set_safe(old_clip)
+        with clip.capture() as c:
+            edit.copy()
+        return c.get()
