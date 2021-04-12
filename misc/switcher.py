@@ -53,7 +53,7 @@ def launch_applications(m) -> str:
     "Returns a single application name"
 
 
-@ctx.capture(
+@mod.capture(
     rule=(
         "("
         "{self.running}"
@@ -61,11 +61,8 @@ def launch_applications(m) -> str:
         ")"
     )
 )
-def running_applications(m):
-    try:
-        return m.running
-    except AttributeError:
-        return m.dictation
+def running_applications(m) -> str:
+    return m.running if hasattr(m, "running") else m.dictation
 
 
 @ctx.capture("self", rule="{self.launch}")
@@ -184,6 +181,9 @@ class Actions:
         for cur_app in ui.apps():
             if cur_app.name == wanted_app and not cur_app.background:
                 cur_app.focus()
+                # User may have been choosing from the list. So after a
+                # successful switch, hide it.
+                actions.self.switcher_hide_running()
                 break
 
     def switcher_launch(path: str):
@@ -191,15 +191,18 @@ class Actions:
         ui.launch(path=path)
 
     def switcher_list_running():
-        """Lists all running applications"""
-        gui.show()
+        """Toggles display of running applications"""
+        if gui.showing:
+            gui.hide()
+        else:
+            gui.show()
 
     def switcher_hide_running():
         """Hides list of running applications"""
         gui.hide()
 
 
-@imgui.open(software=False)
+@imgui.open()
 def gui(gui: imgui.GUI):
     gui.text("Names of running applications")
     gui.line()
