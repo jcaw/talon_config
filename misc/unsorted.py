@@ -1,6 +1,6 @@
-"""Captures & actions that aren't in a dedicated module yet."""
+"""Behaviours, captures & actions that aren't in a dedicated module yet."""
 
-from talon import Module, Context, actions
+from talon import Module, Context, actions, imgui, app
 
 
 module = Module()
@@ -19,9 +19,10 @@ class ModuleActions:
 
 
 global_context = Context()
+global_context.settings["imgui.dark_mode"] = 1
 
 
-@global_context.action_class
+@global_context.action_class("self")
 class GlobalActions:
     pass
 
@@ -33,7 +34,7 @@ os: windows
 """
 
 
-@win_linux_context.action_class
+@win_linux_context.action_class("self")
 class WinLinuxActions:
     def open_file() -> None:
         actions.key("ctrl-o")
@@ -45,7 +46,7 @@ os: mac
 """
 
 
-@mac_context.action_class
+@mac_context.action_class("self")
 class MacActions:
     def open_file() -> None:
         actions.key("cmd-o")
