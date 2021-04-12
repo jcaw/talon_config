@@ -58,7 +58,7 @@ def capitalize(string):
     match = _RE_FIRST_LETTER.search(string)
     if match:
         m = match.start()
-        return string[:m] + string[m].upper() + string[m+1:]
+        return string[:m] + string[m].upper() + string[m + 1 :]
     else:
         return string
 
@@ -67,7 +67,7 @@ def uncapitalize(string):
     match = _RE_FIRST_LETTER.search(string)
     if match:
         m = match.start()
-        return string[:m] + string[m].lower() + string[m+1:]
+        return string[:m] + string[m].lower() + string[m + 1 :]
     else:
         return string
 
