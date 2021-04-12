@@ -43,7 +43,7 @@ class Actions:
         voicemacs.run_command(command)
 
     def emacs_prefix_command(
-        command: str, prefix_arg: Optional[Union[str, int, List[int]]] = [4]
+        command: str, prefix_arg: Optional[Union[int, List[int]]] = [4]
     ) -> None:
         """Run an Emacs command with a prefix argument.
 
@@ -56,11 +56,11 @@ class Actions:
         `[<number>]`.
 
         """
-        # Small helper since we might receive numbers as strings.
-        try:
-            prefix_arg = int(prefix_arg)
-        except TypeError:
-            pass
+        # HACK: Treat the "zero" prefix as None This precludes actually calling
+        #   with a zero prefix arg, but we need to get around the lack of NULL
+        #   (or optional captures) in Talonscript.
+        if not prefix_arg:
+            prefix_arg = None
         voicemacs.run_command(command, prefix_arg=prefix_arg)
 
     def emacs_fallbacks(
