@@ -1,12 +1,16 @@
-app: /eu4\./
+app: /eu4/
 -
+# Move the map by hissing. Move the mouse to the edge of the screen, don't use
+# keys, because keys don't register reliably.
+tag(): user.hiss_edge_map_move
+
 # Camera Zoom
 near: user.eu4_set_zoom(1)
 middle: user.eu4_set_zoom(3)
 further: user.eu4_set_zoom(6)
 (zoom | level) <number>: user.eu4_set_zoom(number)
-zoom in <user.optional_number>: user.eu4_zoom_in(optional_number or 1)
-zoom out <user.optional_number>: user.eu4_zoom_out(optional_number or 1)
+zoom in [<number>]: user.eu4_zoom_in(number or 1)
+zoom out [<number>]: user.eu4_zoom_out(number or 1)
 
 # Global Shortcuts
 #
