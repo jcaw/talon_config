@@ -6,8 +6,7 @@ import threading
 import time
 import logging
 from user.utils.key_value_store import KeyValueStore
-from talon import ui, cron
-from user.emacs.utils.emacs_context import emacs_context
+from talon import ui, cron, Module, app, Context
 import platform
 import os
 
@@ -32,6 +31,9 @@ _outgoing_nonce = 1
 _receive_thread = None
 _socket = None
 _socket_lock = threading.Lock()
+
+emacs_context = Context()
+emacs_context.matches = "tag: user.emacs"
 
 # Maps request nonces to their `_DeferredResult`
 _pending_requests = {}
