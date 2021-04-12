@@ -41,9 +41,9 @@ from talon import Module, Context, actions
 
 from user.utils import apply_function, prepend_to_map, multi_map
 from user.misc import zoom_mouse
-from user.games.utils import eu4_locations, map_scroll
-from user.games.utils.switch_input import switch_to_keyboard_module
-from user.games.utils.hard_coded_buttons import Corner
+from .utils import eu4_locations
+from .utils.switch_input import switch_to_keyboard_module
+from .utils.hard_coded_buttons import Corner
 
 
 key = actions.key
@@ -51,6 +51,8 @@ user = actions.user
 insert = actions.insert
 
 
+# TODO: Probably switch this to Talon's newer visual button-matching system?
+#   Feature was experimental at time of writing, may no longer be around.
 class Buttons:
     ZOOM_IN = Corner(Corner.BOTTOM_RIGHT, -14, -43)
     ZOOM_OUT = Corner(Corner.BOTTOM_RIGHT, -14, -11)
@@ -184,7 +186,7 @@ class ModuleActions:
         """Switch to a specific map, by number. Counts from 1."""
         assert number in range(0, 11)
         # Allow the user to refer to the tenth map with "0".
-        if number is 0:
+        if number == 0:
             number = 11
         # Map keys by default are mapped to the top row of qwerty.
         map_keys = "qwertyuiop"
@@ -258,24 +260,25 @@ class ModuleActions:
         time.sleep(0.2)
         key("enter")
 
+    # TODO: Just prefix these with "eu4" too?
     def assign_control_group(number: int) -> None:
-        """Assign the current units to a numbered control group."""
+        """Gaming: assign the current units to a numbered control group."""
         assert 0 <= number <= 9
         key(f"ctrl-{number}")
 
     def select_control_group(number: int) -> None:
-        """Select a control group by number."""
+        """Gaming: select a unit control group by number."""
         assert 0 <= number <= 9
         key(f"{number}")
 
     def go_to_control_group(number: int) -> None:
-        """Go to a control group by number."""
+        """Gaming: go to a unit control group by number."""
         assert 0 <= number <= 9
         actions.self.eu4_close_menus()
         key(f"{number}:2")
 
     def move_control_group(number: int) -> None:
-        """Go to a control group, and queue a move."""
+        """Gaming: go to a unit control group, and queue a move."""
         actions.self.go_to_control_group()
         # Yucky approach
         if zoom_mouse.zoom_mouse_active():
@@ -286,7 +289,7 @@ class ModuleActions:
 
 context = Context()
 context.matches = r"""
-app: /eu4\./
+app: /eu4/
 """
 
 context.lists["self.eu4_hoverables"] = hoverable_buttons.keys()
@@ -305,34 +308,14 @@ context.lists["self.eu4_clickables"] = clickable_buttons.keys()
 context.lists["self.eu4_locations"] = eu4_locations.load_locations()
 
 
-@context.action_class
+@context.action_class("self")
 class ContextActions:
     def corner_click(position: Corner) -> None:
         user.corner_hover(position)
         # Need to add a slight pause or we can get misclicks
         time.sleep(0.05)
-        # TODO: Is there a setting for mouse click hold?
-        actions.mouse_click(hold=16000)
-
-
-# Overriding hiss for the map scroll would also override hiss-to-move, so we
-# create a dedicated context which avoids it.
-map_move_context = Context()
-map_move_context.matches = r"""
-app: /eu4\./
-user.zoom_mouse_zooming: False
-"""
-
-_map_scroller = map_scroll.EyeScroller(map_scroll.edge_mouse_scroll)
-
-
-@map_move_context.action_class
-class MapMoveActions:
-    def on_hiss(start: bool):
-        if start:
-            _map_scroller.start()
-        else:
-            _map_scroller.stop()
+        # TODO: This used to specify: hold for 16ms. Reintroduce that.
+        actions.mouse_drag()
 
 
 # Talon's regular input method doesn't work properly with EU4. `keyboard` from
