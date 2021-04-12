@@ -15,6 +15,7 @@ emacs_fallbacks = actions.user.emacs_fallbacks
 
 module = Module()
 module.tag("emacs", "Active when Emacs focused.")
+module.tag("voicemacs", "Active when Emacs focused & Voicemacs is connected.")
 
 
 @module.action_class
@@ -110,13 +111,43 @@ class Actions:
 
 context = Context()
 context.matches = """
-tag: user.emacs
+# Match like this for most instances
+# TODO: This is depracated? Is it the case sensitivity?
+# app: /Emacs/
+app: /emacs/
+
+# Use this for Cygwin X on Windows, displaying WSL Emacs
+app: /XWin/
+and title: /^emacs@/
 
 # HACK: Circumvent tags losing priority
 os: windows
 os: linux
 os: mac
 """
+context.tags = ["user.emacs"]
+
+
+voicemacs_context = Context()
+voicemacs_context.matches = """
+tag: user.emacs
+user.emacs-voicemacs: True
+
+# HACK: Circumvent tags losing priority
+os: windows
+os: linux
+os: mac
+"""
+voicemacs_context.tags = ["user.voicemacs"]
+
+
+@voicemacs_context.action_class("main")
+class BaseActions:
+    pass
+
+    # def insert(text: str):
+    #     """Insert directly into Emacs via RPC.+"""
+    #     rpc_call("voicemacs-insert", [text])
 
 
 @context.action_class("edit")
