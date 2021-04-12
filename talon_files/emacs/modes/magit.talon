@@ -53,10 +53,17 @@ fetch all remotes: user.emacs_command("magit-fetch-all")
 add remote: user.emacs_command("magit-remote-add")
 
 # Branching
-checkout: user.emacs_command("magit-checkout")
+checkout [<user.complex_phrase>]:
+    user.emacs_command("magit-checkout")
+    user.insert_complex(complex_phrase or "", "lowercase")
+# TODO: Probably remove
 switch branch: user.emacs_command("magit-checkout")
-checkout (local | branch): user.emacs_command("magit-branch-checkout")
-create branch: user.emacs_command("magit-branch-and-checkout")
+checkout (local | branch) [<user.complex_phrase>]:
+    user.emacs_command("magit-branch-checkout")
+    user.insert_complex(complex_phrase or "", "lowercase")
+create branch [<user.complex_phrase>]:
+    user.emacs_command("magit-branch-and-checkout")
+    user.insert_complex(complex_phrase or "", "lowercase")
 
 # Merging
 merge branch: user.emacs_command("magit-merge-plain")
