@@ -170,13 +170,13 @@ def natural_number(m) -> int:
     return fuse_num(fuse_scale(fuse_num(fuse_scale(list(m), 3))))[0]
 
 
-@module.capture(rule="[<number>]")
-def optional_number(m) -> int or None:
-    """Optional number. If not spoken, defaults to `None`."""
-    try:
-        return m.number
-    except AttributeError:
-        return None
+# @module.capture(rule="[<number>]")
+# def optional_number(m) -> int or None:
+#     """Optional number. If not spoken, defaults to `None`."""
+#     try:
+#         return m.number
+#     except AttributeError:
+#         return None
 
 
 ctx = Context()
