@@ -117,7 +117,7 @@ short_action_prefixes = {
     "it-go-forward-down": "font",
     "it-go-backward-down": "bant",
     "it-go-forward-up": "fowt",  # Pronounced "f-out"
-    "it-go-backward-up": "boutt",  # Pronounced "b-out"
+    "it-go-backward-up": "bowt",  # Pronounced "b-out"
     # TODO: Will this be too similar to "foss"?
     "it-go-forward-start": "fost",
     # TODO: band or bend?
@@ -156,6 +156,8 @@ short_action_prefixes = {
     # TODO: Is this going to introduce ambiguity with characters?
     "it-jump-to": "jump",
     "it-duplicate": ("joop", "doop"),
+    # TODO: Comment commands?
+    "it-comment": "comment",
 }
 
 # TODO: Not used yet
@@ -164,22 +166,23 @@ long_name_remaps = {
 }
 
 short_suffixes = {
-    # "word": "urd",
-    "word": "erd",
+    "word": "urd",
+    # "word": "erd",
     "sexp": "ess",
     # "symbol": "oll",
     "symbol": "imble",
     "line": "ign",
     "block": "ock",
     # TODO: Should this be "function" in `it`?
-    "defun": " funk",
-    # "eff" misrecognizes a lot.
-    # "defun": "eff",
+    # "defun": " funk",
+    # "defun": " def",
+    # (Dragon) "eff" misrecognizes a lot.
+    "defun": "eff",
     "class": " class",
     # Clashes with line
-    # "statement": "ent",
-    "statement": " atement",
-    "comment": "omment",
+    "statement": "ent",
+    # "statement": " atement",
+    "comment": " comment",
 }
 
 
