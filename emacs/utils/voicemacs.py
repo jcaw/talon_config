@@ -37,12 +37,16 @@ emacs_context.matches = "tag: user.emacs"
 
 # Maps request nonces to their `_DeferredResult`
 _pending_requests = {}
+# TODO: Simplify locking scheme? Do we need two locks?
 _pending_lock = threading.Lock()
 
 
-class DeferredResult:
+module = Module()
+
+
+class DeferredResult(object):
     # Time to sleep between each result check.
-    _SLEEP_PERIOD = 1 / 1000  # ms
+    _SLEEP_PERIOD = 1.0 / 1000  # ms
 
     def __init__(self):
         self._result = None
@@ -159,8 +163,10 @@ def _connect() -> None:
             )
             _receive_thread.start()
             _authenticate(_socket, auth_key)
+            app.notify("Talon", "Voicemacs connected")
             LOGGER.info("Voicemacs authenticated. Ready to communicate with Emacs.")
     except:
+        actions.user.notify("Talon", "Voicemacs failed to connect.", deadzone=5.0)
         _force_disconnect()
 
 
@@ -203,7 +209,9 @@ def _receive_until_closed(s: socket.socket) -> None:
                         _handle_message(s, full_message)
                     except Exception as e:
                         # TODO: Error handling for broken handler?
-                        LOGGER.info('Unexpected error handling message: "{e}"',)
+                        LOGGER.info(
+                            f'Unexpected error handling message: "{e}"',
+                        )
                 remaining_chunk = remaining_chunk[next_terminator.end() :]
             # If there's an unfinished message, store it for subsequent chunks.
             message_so_far += remaining_chunk
@@ -229,6 +237,8 @@ def _force_disconnect(*_, **__):
                 _socket = None
     except:
         pass
+    finally:
+        app.notify("Talon", "Voicemacs disconnected")
 
 
 def _handle_message(s, message_string):
