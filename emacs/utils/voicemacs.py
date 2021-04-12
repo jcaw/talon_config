@@ -335,18 +335,22 @@ def _authenticate(s, auth_key) -> None:
 
 
 def rpc_call(method: str, params: List = [], async_: bool = False, timeout=5):
-    call = {
-        "jsonrpc": "2.0",
-        # Just use the request nonce for the ID. It will be unique.
-        "id": str(_outgoing_nonce),
-        "method": method,
-        "params": params,
-    }
     deferred = send_request(
         "json-rpc-call",
         {
             # RPC call has to be sent as an *encoded* string.
-            "call": json.dumps(call),
+            #
+            # TODO: This is because of the separation in `json-rpc-server.el`.
+            #   Remove that abstraction in the Emacs package?
+            "call": json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    # Just use the request nonce for the ID. It will be unique.
+                    "id": str(_outgoing_nonce),
+                    "method": method,
+                    "params": params,
+                }
+            ),
         },
     )
     if async_:
