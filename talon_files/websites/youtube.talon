@@ -1,5 +1,10 @@
 tag: user.browser
 title: /- YouTube/
+# Homepage
+title: YouTube/
+# Not every command will work on other players, but it's an easy way to enable
+# them.
+title: /- Vimeo/
 -
 play [(video | vid)]: key("k")
 pause [(video | vid)]: key("k")
