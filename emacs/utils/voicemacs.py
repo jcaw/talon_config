@@ -47,22 +47,24 @@ class DeferredResult:
     def __init__(self):
         self._result = None
         self._result_set = False
+        self._result_lock = threading.Lock()
 
     def get(self, timeout):
         t1 = time.monotonic()
         while time.monotonic() - t1 < timeout:
-            if self._result_set:
-                return self._result
-            else:
-                time.sleep(self._SLEEP_PERIOD)
+            with self._result_lock:
+                if self._result_set:
+                    return self._result
+            time.sleep(self._SLEEP_PERIOD)
         raise TimeoutError("Request timed out.")
 
     def set(self, value):
-        if self._result_set:
-            raise RuntimeError("Result already set.")
+        with self._result_lock:
+            if self._result_set:
+                raise RuntimeError("Result already set.")
 
-        self._result = value
-        self._result_set = True
+            self._result = value
+            self._result_set = True
 
 
 class VoicemacsError(RuntimeError):
