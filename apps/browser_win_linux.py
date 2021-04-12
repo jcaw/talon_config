@@ -62,6 +62,7 @@ class AppActions:
 class EditActions:
     def find(text: str = None):
         key("ctrl-f")
+        actions.sleep("300ms")
         if text:
             actions.insert(text.lower())
 
@@ -70,8 +71,8 @@ class EditActions:
 class UserActions:
     def search(text: str = None) -> None:
         browser.focus_search()
+        actions.sleep("200ms")
         if text:
-            time.sleep(0.2)
             actions.insert(text.lower())
             key("enter")
 
