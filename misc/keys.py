@@ -12,6 +12,8 @@ from talon import Module, Context, actions
 
 from user.utils import dictify, multi_map, spoken_form
 
+insert = actions.insert
+
 
 default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip"
 # My setup has trouble with some words. Probably my accent.
@@ -50,18 +52,24 @@ ctx.lists["self.modifier"] = {
     "sky": "shift",
     "alt": "alt",
     "option": "alt",
+    "windows": "super",
     "super": "super",
 }
 
 ctx.lists["self.letter"] = dict(zip(chosen_alphabet, letters_string))
-ctx.lists["self.symbol"] = multi_map(
+symbols = multi_map(
     {
         ("back tick", "grave"): "`",
-        ("comma", "cam"): ",",
-        ("dot", "period", "full stop"): ".",
+        ("comma", "cam", "camma"): ",",
+        ("dot", "period", "full stop", "stop"): ".",
         ("semicolon", "semi"): ";",
         ("apostrophe", "post", "poess"): "'",
-        ("speech mark", "speech", "quote"): '"',
+        (
+            "speech mark",
+            "speech",
+            # Quote now starts a dictated quote
+            # "quote",
+        ): '"',
         # FIXME: slash and blash recognition conflicts
         ("forward slash", "slash"): "/",
         ("backslash", "blash"): "\\",
@@ -70,6 +78,7 @@ ctx.lists["self.symbol"] = multi_map(
             "equals",
             # "eek",
             "quals",
+            "quills",  # w2l
             "qual",
         ): "=",
         "plus": "+",
@@ -101,14 +110,23 @@ ctx.lists["self.symbol"] = multi_map(
         ("left angle", "langle"): "<",
         ("right angle", "rangle"): ">",
         ("space", "gap"): " ",
+        # Special
+        "new line": "\n",
+        # Multi-char Symbols
         # TODO: Extract these into a separate list
+        "quiver": "= =",  # E[quiva]lent
         ("walrus", "wally"): ": =",
         "rittoe": "- >",
         "leffoe": "< -",
         "riteek": "= >",
         "leffeek": "< =",
+        # TODO: Probably a better name for this
+        "box": ": :",
     }
 )
+# Spaced versions, e.g. "coalgap", "camgap"
+symbols.update({f"{key}gap": f"{val} space" for key, val in symbols.items()})
+ctx.lists["self.symbol"] = symbols
 
 ctx.lists["self.number"] = dict(zip(default_digits, ints))
 basic_arrows = {
@@ -136,7 +154,7 @@ simple_keys = dictify(
         #
         "tab",
         "escape",
-        "enter",
+        # "enter",
         "pageup",
         "pagedown",
         "backspace",
@@ -146,24 +164,29 @@ simple_keys = dictify(
         # "end",
     ]
 )
-alternate_keys = {
-    # b[ackward k]ill
-    "bill": "backspace",
-    # f[orward k]ill
-    "fill": "delete",
-    "scape": "escape",
-    "knock": "end",
-    # "home" is unreliable and requires a lot of "h" sound - tiring
-    "con": "home",
-    # Explicitly don't allow "return" because it's a common programming keyword.
-    "slap": "enter",
-    # TODO: Extract compound keys, shouldn't really be here
-    "squares": "[ ] left",
-    "parens": "( ) left",
-    "braces": "{ } left",
-    "angles": "< > left",
-    "loon": "end enter",
-}
+alternate_keys = multi_map(
+    {
+        # b[ackward k]ill
+        ("bill", "bin"): "backspace",
+        # f[orward k]ill
+        ("fill", "fin"): "delete",
+        "scape": "escape",
+        "knock": "end",
+        # "home" is unreliable and requires a lot of "h" sound - tiring
+        "con": "home",
+        # Don't use "return" because it's a common programming keyword.
+        ("slap", "lip"): "enter",
+        # TODO: Extract compound keys, shouldn't really be here
+        "squares": "[ ] left",
+        "parens": "( ) left",
+        "braces": "{ } left",
+        "angles": "< > left",
+        # TODO: Audit this with w2l once off Dragon. "loon" may be better
+        # "loon": "end enter",
+        "break": "end enter",
+        "backtab": "shift-tab",
+    }
+)
 f_keys = {
     # Auto-generate 1-9
     **{spoken_form(f"F {i}"): f"{i}" for i in range(1, 9)},
@@ -171,17 +194,26 @@ f_keys = {
     "F eleven": "f11",
     "F twelve": "f12",
 }
-keys = {**simple_keys, **alternate_keys}
+keys = {**simple_keys, **alternate_keys, **f_keys}
 ctx.lists["self.special"] = keys
 
 
-@mod.capture(rule="[{self.modifier}+]")
+complex_symbols = multi_map(
+    {
+        ("walrus", "wally"): ":=",
+        "rittoe": "->",
+        "leffoe": "<-",
+        "riteek": "=>",
+        "leffeek": "<=",
+    }
+)
+ctx.lists["self.complex_symbol"] = complex_symbols
+
+
+@mod.capture(rule="{self.modifier}+")
 def modifiers(m) -> Set[str]:
-    """Zero or more modifier keys"""
-    try:
-        return set(m.modifier)
-    except AttributeError:
-        return set()
+    """One or more modifier keys"""
+    return set(m["modifier_list"])
 
 
 @mod.capture(rule="{self.arrow}")
@@ -292,3 +324,33 @@ class Actions:
         # TODO: Allow leading zeros
         for char in str(number):
             actions.key(char)
+
+    # TODO: Remove (edit: no longer used?)
+    def insert_padded(string: str) -> None:
+        """Insert a string with padding on each side."""
+        around = actions.user.surrounding_text()
+        if around:
+            if around.char_before != " ":
+                insert(" ")
+            insert(string)
+            if around.char_after != " ":
+                insert(" ")
+        else:
+            insert(f" {string} ")
+
+    def insert_key_padded(key: str) -> None:
+        """Press a key to insert a char, but add spaces before and after.
+
+        e.g. "pad equals" -> insert(" = ")
+
+        """
+        around = actions.user.surrounding_text()
+        if not around or around.char_before != " ":
+            insert(" ")
+        try:
+            actions.key(key)
+        except ValueError:
+            # HACK: To insert "keys" like `->`
+            actions.insert(key)
+        if not around or around.char_after != " ":
+            insert(" ")
