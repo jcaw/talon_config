@@ -1,4 +1,4 @@
-app: /Discord/
+app: /discord/
 -
 # Commands
 

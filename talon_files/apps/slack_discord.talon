@@ -1,5 +1,5 @@
 app: /slack/
-app: /Discord/
+app: /discord/
 -
 # Actions
 action(user.next_channel): key(alt-down)
