@@ -13,8 +13,8 @@ action(user.emacs_find_definition): user.emacs_command("spacemacs/jump-to-defini
 # TODO: Why use Spacemacs' indirection?
 [toggle] debug on error: user.emacs_command("spacemacs/toggle-debug-on-error")
 
-[(buff | buffer)] scratch:  user.emacs_command("spacemacs/switch-to-scratch-buffer")
-[(buff | buffer)] messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
+(buff | buffer) scratch:  user.emacs_command("spacemacs/switch-to-scratch-buffer")
+(buff | buffer) messages: user.emacs_command("spacemacs/switch-to-messages-buffer")
 # TODO: Pop mesages
 
 action(user.emacs_restart): user.emacs_command("spacemacs/restart-emacs-resume-layouts")

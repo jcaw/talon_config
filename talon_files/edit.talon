@@ -21,6 +21,9 @@ save doc | disk: edit.save()
 (save [doc] | disk) as: edit.save_as()
 (save | disk) all: edit.save_all()
 
+zoom in: edit.zoom_in()
+zoom out: edit.zoom_out()
+
 # Declared separately to allow for a default implementation with only find() defined.
 #
 # TODO: Probably pull the <dictation> ones out into just emacs? Just have a

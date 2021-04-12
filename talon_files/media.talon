@@ -6,3 +6,8 @@ play track: key(play)
 pause track: key(pause)
 (next | neck) track: key(next)
 (last | larse) track: key(prev)
+
+# TODO: Brightness commands
+# brightness up | increase brightness: key(brightup)
+# brightness down | decrease brightness: key(brightdown)
+# brightness <number>: user.set_brightness(number)

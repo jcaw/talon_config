@@ -12,3 +12,6 @@
 
 # We'll want to use this in all sorts of places
 (interrupt | cease): key(ctrl-c)
+
+command history: user.command_history_toggle()
+set [command] history [size] <number>: user.command_history_set_size(number)

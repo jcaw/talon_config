@@ -3,6 +3,7 @@ title: /- YouTube/
 -
 play [(video | vid)]: key("k")
 pause [(video | vid)]: key("k")
+# TODO: Extract for twitch? (. and ,)
 speed up: key(">")
 (speed | slow) down: key("<")
 (max | full) speed:
@@ -19,7 +20,7 @@ reset speed | speed reset:
 (video | vid) volume down: key("down")
 (next | neck) (video | vid): key("shift-n")
 (last | larse) (video | vid): key("shift-p")
-search box: key("/")
+search (box | bar): key("/")
 fullscreen: key("f")
 mute (video | vid): key("m")
 theater [mode]: key("t")

@@ -4,15 +4,17 @@
 <user.symbol>: key(symbol)
 <user.special>: key(special)
 
+pad <user.insertable>: user.insert_key_padded(insertable)
+
 # Standalone arrows are different, to cope with "up" misrecognitions
 <user.standalone_arrow>: key(standalone_arrow)
 
 # Use the generic number rule so we can type any spoken number.
 #
 # Prefix numbers with "num" to avoid ambiguity with repeat rule.
-(numb | num) <number>: user.type_number(number)
+(numb | num | number) <number>: user.type_number(number)
 # Also allow decimals
-(numb | num) <number> (point | dot) <digits>:
+(numb | num | number) <number> (point | dot) <digits>:
     user.type_number(number)
     insert(".")
     user.type_number(digits)

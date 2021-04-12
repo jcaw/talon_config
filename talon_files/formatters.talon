@@ -4,4 +4,5 @@
 <user.formatter_phrase> over: user.insert_complex(formatter_phrase)
 
 re <user.formatters> <user.digit>: user.reformat_left(formatters, digit)
+re <user.formatters> (that | thing): user.reformat_dwim(formatters)
 rih <user.formatters> <user.digit>: user.reformat_left(formatters, digit)

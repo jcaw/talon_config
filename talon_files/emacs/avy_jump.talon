@@ -25,6 +25,10 @@ place <user.any_key>$:
 (pluck | bring | kate) <user.any_key>$:
     user.emacs_command("voicemacs-avy-duplicate")
     key(any_key)
-pad <user.any_key>$:
+parting <user.any_key>$:
     user.emacs_command("voicemacs-avy-pad")
     key(any_key)
+light <user.any_key>$:
+    user.emacs_command("voicemacs-set-enable-mark")
+    user.emacs_command("set-mark-command")
+    user.emacs_jump(any_key)

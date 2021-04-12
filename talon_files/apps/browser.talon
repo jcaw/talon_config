@@ -37,3 +37,6 @@ bookmarks bar: browser.bookmarks_bar()
 [open] private [(window | browsing)]: browser.open_private_window()
 (dev | developer) tools: browser.toggle_dev_tools()
 submit [form]: browser.submit_form()
+
+action(edit.zoom_in): key(ctrl-plus)
+action(edit.zoom_out): key(ctrl-minus)
