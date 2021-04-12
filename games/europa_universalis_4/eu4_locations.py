@@ -4,8 +4,9 @@ Scraping requires a few dependencies. Don't worry about these unless you're
 re-scraping the data. You shouldn't need to scrape the locations once the list
 exists on disk.
 
-This file isn't really meant to be run in Talon. Spin up a python instance with
-the dependencies and scrape with that. You only need to do it once.
+The scraper itself isn't really meant to be run in Talon. Spin up a python
+instance with the dependencies and scrape with that. You only need to do it
+once.
 
 """
 

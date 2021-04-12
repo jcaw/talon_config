@@ -41,7 +41,7 @@ from talon import Module, Context, actions
 
 from user.utils import apply_function, prepend_to_map, multi_map
 from user.misc import zoom_mouse
-from .utils import eu4_locations
+from . import eu4_locations
 from .utils.switch_input import switch_to_keyboard_module
 from .utils.hard_coded_buttons import Corner
 
