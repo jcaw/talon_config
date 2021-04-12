@@ -1,8 +1,8 @@
 tag: user.emacs
 -
 {user.emacs_object_commands}: user.emacs_command(emacs_object_commands)
-{user.emacs_object_prefix_commands} <user.optional_number>:
-    user.emacs_prefix_command(emacs_object_prefix_commands, optional_number)
+{user.emacs_object_prefix_commands} [<number>]:
+    user.emacs_prefix_command(emacs_object_prefix_commands, number or 0)
 
 action(edit.select_line): user.emacs_command("it-mark-line")
 

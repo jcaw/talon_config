@@ -32,12 +32,17 @@ glock ring: user.emacs_command("helm-global-mark-ring")
 
 
 # Scrolling
-cursor top <user.optional_number>:
-    user.emacs_prefix_command("evil-scroll-line-to-top", optional_number)
-cursor bottom <user.optional_number>:
-    user.emacs_prefix_command("evil-scroll-line-to-bottom", optional_number)
-cursor (middle | center) <user.optional_number>:
-    user.emacs_prefix_command("evil-scroll-line-to-center", optional_number)
+# cursor top [<number>]:
+#     user.emacs_prefix_command("evil-scroll-line-to-top", number or 0)
+cursor top [<number>]: user.emacs_prefix_command("recenter", number or 1)
+# cursor bottom [<number>]:
+#     user.emacs_prefix_command("evil-scroll-line-to-bottom", number or 0)
+cursor bottom [<number>]:
+    pos = number or 1
+    pos = -1 * pos
+    user.emacs_prefix_command("recenter", pos)
+cursor (middle | center) [<number>]:
+    user.emacs_prefix_command("evil-scroll-line-to-center", number or 0)
 scroll top: user.emacs_command("beginning-of-buffer")
 scroll bottom: user.emacs_command("end-of-buffer")
 # TODO: Scroll up/down by single lines
@@ -84,8 +89,8 @@ record [macro]: user.emacs_command("kmacro-start-macro")
 finish [macro]: user.emacs_command("kmacro-finish-macro")
 # Macros are slow. Might cause RPC to become unresponsive. Use prefix to repeat
 # rather than repeating the call, otherwise later calls could time out.
-[call] macro <user.optional_number>:
-    user.emacs_command("kmacro-call-macro", optional_number)
+[call] macro <number>:
+    user.emacs_command("kmacro-call-macro", number or 0)
 (last | larse) macro: user.emacs_command("kmacro-cycle-ring-previous")
 (next | neck) macro: user.emacs_command("kmacro-cycle-ring-next")
 store macro: user.emacs_command("kmacro-to-register")
