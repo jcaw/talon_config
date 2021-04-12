@@ -4,6 +4,9 @@ Scraping requires a few dependencies. Don't worry about these unless you're
 re-scraping the data. You shouldn't need to scrape the locations once the list
 exists on disk.
 
+This file isn't really meant to be run in Talon. Spin up a python instance with
+the dependencies and scrape with that. You only need to do it once.
+
 """
 
 
@@ -154,7 +157,14 @@ def extract_lists(countries_df, provinces_df):
 def load_locations():
     """Load locations that can be searched with the find tool."""
     if not os.path.isfile(LOCATIONS_PATH):
-        print("Could not find locations file - re-scraping them.")
-        scrape_to_file()
+        raise RuntimeError(
+            f"EU4 locations not scraped. Please run `python {__file__}` to scrape valid locations "
+            "from the net. It has dependencies so run it with a dedicated interpreter, not Talon."
+        )
     with open(LOCATIONS_PATH, "r") as f:
         return json.load(f)
+
+
+if __name__ == "__main__":
+    print("Re-scraping dependencies...")
+    scrape_to_file()
