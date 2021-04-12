@@ -239,7 +239,7 @@ class Actions:
             edit.paragraph_start()
 
     def paste_match_style():
-        clip.set(clip.get())
+        clip.set_text(clip.get())
         time.sleep(0.1)
         actions.paste()
 
