@@ -1,14 +1,15 @@
 # Generic actions powered by LSP
-app: emacs
+tag: user.emacs
 user.emacs-minor-mode: lsp-mode
 # Doom overrides with its own behaviour
 not user.emacs-is-doom: True
-# TODO: Spacemacs may override with its own behaviour, check at some point
+# TODO: Spacemacs may override with its own behaviour, maybe check at some point
 # not user.emacs-is-spacemacs: True
 -
-(follow | definition | nishion): user.emacs_command("lsp-find-definition")
-(refs | references): user.emacs_command("lsp-find-references")
-(impal | implementation): user.emacs_command("lsp-find-implementation")
+action(user.find_definition): user.emacs_command("lsp-find-definition")
+action(user.find_references): user.emacs_command("lsp-find-references")
+action(user.find_implementations): user.emacs_command("lsp-find-implementation")
 type (def | definition): user.emacs_command("lsp-find-type-definition")
-docs: user.emacs_command("lsp-describe-thing-at-point")
+action(user.show_documentation): user.emacs_command("lsp-describe-thing-at-point")
+# TODO: Extract this probably
 pop doc: user.emacs_command("lsp-ui-doc-glance")
