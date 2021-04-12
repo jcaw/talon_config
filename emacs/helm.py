@@ -12,8 +12,13 @@ module.tag("emacs-helm-enabled", desc="Active when Helm is currently enabled.")
 @module.action_class
 class GlobalActions:
     def emacs_helm_goto_line(line_number: int):
-        """Move to a specific line in the helm buffer."""
-        rpc_call("voicemacs-helm-goto-line", [line_number])
+        """Move to a specific line in the helm buffer.
+
+        Pass `0` in order to avoid moving.
+
+        """
+        if line_number:
+            rpc_call("voicemacs-helm-goto-line", [line_number])
 
     def emacs_helm_command(command_name: str, line_number: int = None) -> None:
         """Perform a Helm command, optionally on item ``number``.
@@ -35,27 +40,30 @@ os: mac
 tag: user.emacs
 user.emacs-minor-mode: helm-mode
 """
+# TODO: Remove, uneeded
 context.tags = ["user.emacs-helm-enabled"]
 
 
 @context.action_class("edit")
 class EditActions:
     def find(text: str = None):
-        text = text.lower()
-        # Other fallbacks to add
-        #
-        # Doom
-        if settings.get("user.is-spacemacs"):
-            if text:
-                # `swoop` can be slow to open on large documents because it initially
-                # matches every line. It's much faster if text is provided up-front.
-                rpc_call("voicemacs-helm-swoop", [text])
-            else:
-                emacs_command("helm-swoop")
+        if text:
+            text = text.lower()
+            # `swoop` can be slow to open on large documents because it initially
+            # matches every line. It's much faster if text is provided up-front.
+            rpc_call("voicemacs-helm-swoop", [text])
         else:
-            # TODO: Clean this up, the abstraction is wrong
-            actions.user.emacs_fallbacks(
-                ["+default/search-buffer", "swiper", "isearch",]
-            )
-            if text:
-                actions.insert(text)
+            emacs_command("helm-swoop")
+
+        # Fallbacks
+        #
+        # # TODO: Clean this up, the abstraction is wrong
+        # actions.user.emacs_fallbacks(
+        #     [
+        #         "+default/search-buffer",
+        #         "swiper",
+        #         "isearch",
+        #     ]
+        # )
+        # if text:
+        #     actions.insert(text)
