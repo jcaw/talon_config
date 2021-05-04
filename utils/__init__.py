@@ -1,4 +1,4 @@
-from talon import resource, actions, clip, app, Module
+from talon import resource, actions, clip, app, Module, registry
 import json
 import platform
 import time
@@ -493,3 +493,8 @@ def notify(
 
                 cron.after(deadzone, purge_notification)
             return app.notify(title, subtitle, body, sound)
+
+
+def context_active(context):
+    """Is `context` currently active?"""
+    return context in registry.active_contexts()

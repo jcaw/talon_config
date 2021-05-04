@@ -5,10 +5,18 @@ from typing import Optional, List
 import threading
 import time
 import logging
+from user.utils import context_active
 from user.utils.key_value_store import KeyValueStore
 from talon import ui, cron, Module, app, Context
 import platform
 import os
+
+
+# TODO: Move everything associated with one connection into an object and deal
+#   with it that way. Probably cleaner than a global socket which might become
+#   null at any point (although it doesn't really matter if it does, the
+#   architecture can cope fine with that).
+
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
@@ -21,7 +29,7 @@ emacs_state = KeyValueStore()
 _CONNECT_ATTEMPT_INTERVAL = 1000
 # Frequency with which to ping Emacs, in ms
 _PING_INTERVAL = 1000
-_AUTH_TIMEOUT = 5
+_AUTH_TIMEOUT = 5  # In secs
 _RE_TERMINATION_CHAR = re.compile("\0")
 
 
@@ -30,7 +38,7 @@ _outgoing_nonce = 1
 
 _receive_thread = None
 _socket = None
-_socket_lock = threading.Lock()
+_socket_lock = threading.RLock()
 
 emacs_context = Context()
 emacs_context.matches = "tag: user.emacs"
@@ -162,7 +170,7 @@ def _connect() -> None:
                 target=_receive_until_closed, args=(_socket,)
             )
             _receive_thread.start()
-            _authenticate(_socket, auth_key)
+            _authenticate(auth_key)
             app.notify("Talon", "Voicemacs connected")
             LOGGER.info("Voicemacs authenticated. Ready to communicate with Emacs.")
     except:
@@ -175,19 +183,22 @@ def _connect() -> None:
 
 # def _is_voicemacs():
 #     title = ui.active_window().title
-#     parts = map(str.strip, title.split(";"))
+#     parts = [s.strip() for s in title.split(";")]
 #     return "voicemacs" in parts
 
 
 def _try_connect():
     global _socket
-    if emacs_context.enabled and not _socket:
-        LOGGER.debug(f"Emacs active & no socket. Trying to connect.")
-        try:
-            _connect()
-            LOGGER.debug(f"Voicemacs connection successful: {_socket}")
-        except Exception as e:
-            LOGGER.debug(f"Problem connecting to Voicemacs server: {e}")
+    # TODO: Is this a reasonable check? `_socket` being None is not great info.
+    with _socket_lock:
+        # TODO: Something closer to `emacs_context.matches`
+        if context_active(emacs_context) and not _socket:
+            LOGGER.debug(f"Emacs active & no socket. Trying to connect.")
+            try:
+                _connect()
+                LOGGER.debug(f"Voicemacs connection successful: {_socket}")
+            except Exception as e:
+                LOGGER.debug(f"Problem connecting to Voicemacs server: {e}")
 
 
 def _receive_until_closed(s: socket.socket) -> None:
@@ -209,9 +220,7 @@ def _receive_until_closed(s: socket.socket) -> None:
                         _handle_message(s, full_message)
                     except Exception as e:
                         # TODO: Error handling for broken handler?
-                        LOGGER.info(
-                            f'Unexpected error handling message: "{e}"',
-                        )
+                        LOGGER.info(f'Unexpected error handling message: "{e}"')
                 remaining_chunk = remaining_chunk[next_terminator.end() :]
             # If there's an unfinished message, store it for subsequent chunks.
             message_so_far += remaining_chunk
@@ -233,6 +242,11 @@ def _force_disconnect(*_, **__):
     try:
         with _socket_lock:
             if _socket:
+                # TODO: Could this sometimes fail?
+                try:
+                    _socket.shutdown(socket.SHUT_RDWR)
+                except:
+                    pass
                 _socket.close()
                 _socket = None
     except:
@@ -248,7 +262,6 @@ def _handle_message(s, message_string):
         message = json.loads(message_string)
     except:
         _send(
-            s,
             _make_error(
                 None,
                 "mangled-message",
@@ -262,23 +275,22 @@ def _handle_message(s, message_string):
     data = message.get("data", -1)
     direction = message.get("direction", -1)
     if nonce == -1:
-        _send(s, _make_error(None, "invalid-message", '"nonce" was not provided.'))
+        _send(_make_error(None, "invalid-message", '"nonce" was not provided.'))
     if type_ == -1:
-        _send(s, _make_error(nonce, "invalid-message", '"type" was not provided.'))
+        _send(_make_error(nonce, "invalid-message", '"type" was not provided.'))
     if data == -1:
-        _send(s, _make_error(nonce, "invalid-message", '"data" was not provided.'))
+        _send(_make_error(nonce, "invalid-message", '"data" was not provided.'))
     if direction == -1:
-        _send(s, _make_error(nonce, "invalid-message", '"direction" was not provided.'))
+        _send(_make_error(nonce, "invalid-message", '"direction" was not provided.'))
     if not isinstance(type_, str):
-        _send(s, _make_error(nonce, "invalid-message", '"type" must be a string.'))
+        _send(_make_error(nonce, "invalid-message", '"type" must be a string.'))
 
     if direction == "request":
-        _handle_request(s, nonce, type_, data)
+        _handle_request(nonce, type_, data)
     elif direction == "response":
-        _handle_response(s, nonce, type_, data)
+        _handle_response(nonce, type_, data)
     else:
         _send(
-            s,
             _make_error(
                 nonce,
                 "invalid-message",
@@ -287,7 +299,7 @@ def _handle_message(s, message_string):
         )
 
 
-def _handle_request(s: socket.socket, nonce: Optional[int], type_: str, data: dict):
+def _handle_request(nonce: Optional[int], type_: str, data: dict):
     if type_ == "update":
         try:
             key = data["key"]
@@ -295,16 +307,14 @@ def _handle_request(s: socket.socket, nonce: Optional[int], type_: str, data: di
             emacs_state.update({key: value})
         except Exception as e:
             _send(
-                s,
                 _make_error(
                     nonce, "internal-error", f'An internal error occurred: "{e}"'
                 ),
             )
             return
-        _send(s, _make_response(nonce, "confirm-update", {"key": key}))
+        _send(_make_response(nonce, "confirm-update", {"key": key}))
     else:
         _send(
-            s,
             _make_error(
                 nonce,
                 "invalid-request",
@@ -313,7 +323,7 @@ def _handle_request(s: socket.socket, nonce: Optional[int], type_: str, data: di
         )
 
 
-def _handle_response(s: socket.socket, nonce: Optional[int], type_: str, data: dict):
+def _handle_response(nonce: Optional[int], type_: str, data: dict):
     # TODO: Timeout on callback? So it won't be called if the response comes in
     #   after the timeout.
     with _pending_lock:
@@ -323,8 +333,8 @@ def _handle_response(s: socket.socket, nonce: Optional[int], type_: str, data: d
             del _pending_requests[nonce]
 
 
-def _authenticate(s, auth_key) -> None:
-    deferred = _send_request("authenticate", {"key": auth_key}, s)
+def _authenticate(auth_key) -> None:
+    deferred = _send_request("authenticate", {"key": auth_key})
     type_, data = deferred.get(timeout=_AUTH_TIMEOUT)
     if type_ == "authentication-successful":
         return
@@ -397,14 +407,11 @@ def _make_message(direction: str, nonce: Optional[int], type_: str, data: dict):
 
 def send_request(type_: str, data: dict) -> DeferredResult:
     global _pending_requests, _socket
-    with _socket_lock:
-        if not _socket:
-            raise RuntimeError("Voicemacs not connected.")
-        s = _socket
-    return _send_request(type_, data, s)
+    response = _send_request(type_, data)
+    return response
 
 
-def _send_request(type_: str, data: dict, s: socket.socket) -> DeferredResult:
+def _send_request(type_: str, data: dict) -> DeferredResult:
     global _outgoing_nonce
     deferred = DeferredResult()
     # TODO: Maybe a better name for this lock now it also guards the outgoing
@@ -412,17 +419,24 @@ def _send_request(type_: str, data: dict, s: socket.socket) -> DeferredResult:
     with _pending_lock:
         # This will be used by the receiver to set the deferred result & invoke
         # the callback.
-        _pending_requests[_outgoing_nonce] = deferred
-        _send(s, _make_request(_outgoing_nonce, type_, data))
+        nonce = _outgoing_nonce
         _outgoing_nonce += 1
+        _pending_requests[_outgoing_nonce] = deferred
+    _send(_make_request(_outgoing_nonce, type_, data))
     return deferred
 
 
-def _send(s: socket.socket, message: dict):
-    LOGGER.debug(f"Sending: {message}")
-    message_str = "\0" + json.dumps(message) + "\0"
-    # TODO: Force D/C on error here?
-    s.sendall(message_str.encode())
+def _send(message: dict):
+    with _socket_lock:
+        if not _socket:
+            raise RuntimeError("Voicemacs not connected.")
+        message_str = "\0" + json.dumps(message) + "\0"
+        # TODO: Force D/C on error here?
+        encoded_message = message_str.encode()
+        try:
+            _socket.sendall(encoded_message)
+        except Exception as e:
+            _force_disconnect()
 
 
 def _ping():
@@ -433,17 +447,17 @@ def _ping():
 
     """
     with _socket_lock:
-        s = _socket
-    if s:
-        try:
-            with _pending_lock:
-                # TODO: What if the second half of a message gets dropped, will
-                #   this still work?
-                s.sendall("\0\1\0".encode())
-        except:
-            # Seems like even with this, sometimes the receive thread D/C isn't
-            # triggered. Just force it.
-            _force_disconnect()
+        if context_active(emacs_context) and _socket:
+            try:
+                # TODO: Why pending lock here
+                with _pending_lock:
+                    # TODO: What if the second half of a message gets dropped, will
+                    #   this still work?
+                    _socket.sendall("\0\1\0".encode())
+            except:
+                # Seems like even with this, sometimes the receive thread D/C isn't
+                # triggered. Just force it.
+                _force_disconnect()
 
 
 def run_command(command, prefix_arg=None):
