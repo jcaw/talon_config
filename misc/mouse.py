@@ -136,8 +136,9 @@ class Actions:
 
         """
         FRAME_PAUSE = 0.016  # In secs
+        PIXEL_RANGE = 5
         # Use a defined number of moves (not time) so behaviour is predictable.
-        n_moves = min(int(seconds // FRAME_PAUSE), 1)
+        n_moves = max(int(seconds // FRAME_PAUSE), 1)
 
         start_x = actions.mouse_x()
         # Technically a race condition, but never going to come up
@@ -146,8 +147,8 @@ class Actions:
             # NOTE: This will move in a square pattern, not a circle. That's
             #   probably fine.
             actions.mouse_move(
-                start_x + randint(-pixel_range, pixel_range),
-                start_y + randint(-pixel_range, pixel_range),
+                start_x + randint(-PIXEL_RANGE, PIXEL_RANGE),
+                start_y + randint(-PIXEL_RANGE, PIXEL_RANGE),
             )
             time.sleep(FRAME_PAUSE)
         actions.mouse_move(start_x, start_y)
