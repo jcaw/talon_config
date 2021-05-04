@@ -67,7 +67,7 @@ ctx.lists["self.letter"] = dict(zip(chosen_alphabet, letters_string))
 symbols = multi_map(
     {
         ("back tick", "grave"): "`",
-        ("comma", "cam", "camma"): ",",
+        ("comma", "camma"): ",",
         ("dot", "period", "full stop", "stop"): ".",
         ("semicolon", "semi"): ";",
         ("apostrophe", "post", "poess"): "'",
