@@ -24,3 +24,18 @@ pad <user.insertable>: user.insert_key_padded(insertable)
 # TODO: Audit this
 (ship | uppercase) <user.letters> [(lowercase | sunk)]:
     user.uppercase_letters(letters)
+
+
+# TODO: Remove these once I've broken the old habits
+harp:
+    user.play_thunk()
+    app.notify("It's \"hip\" now.", "Don't say \"harp\"")
+    # key(space)
+batch:
+    user.play_thunk()
+    app.notify("It's \"bat\" again now.", "Don't say \"batch\"")
+    # key(space)
+batch:
+    user.play_thunk()
+    app.notify("It's \"zip\" again now.", "Don't say \"zen\"")
+    # key(space)
