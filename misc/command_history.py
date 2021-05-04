@@ -2,11 +2,14 @@
 #
 # https://github.com/knausj85/knausj_talon/blob/5e599b2f7633d6aeba18603b3911e4def760bfed/code/history.py
 
+import threading
+
 from talon import imgui, Module, Context, speech_system, actions, app, cron
 
 DEFAULT_MESSAGE = "< Listening... >"
 HISTORY_SIZE = 400
 history = []
+history_lock = threading.Lock()
 
 module = Module()
 context = Context()
@@ -52,7 +55,7 @@ def reset_gui_timer():
 
 
 def on_phrase(j):
-    global history
+    global history, history_lock
 
     try:
         word_list = getattr(j["parsed"], "_unmapped", j["phrase"])
@@ -63,17 +66,19 @@ def on_phrase(j):
         # Strip Dragon formatting
         # TODO: Is stripping Dragon formatting still necessary?
         phrase = " ".join(word.split("\\")[0] for word in word_list)
-        history.append(phrase)
-        history = history[-HISTORY_SIZE:]
+        with history_lock:
+            history.append(phrase)
+            history = history[-HISTORY_SIZE:]
         reset_gui_timer()
 
 
 # todo: dynamic rect?
 @imgui.open(y=0)
 def gui(gui: imgui.GUI):
-    global history
-    text = history[-n_items.get() :] or [DEFAULT_MESSAGE]
-    for line in text:
+    global history, history_lock
+    with history_lock:
+        text = history[-n_items.get() :]
+    for line in text or [DEFAULT_MESSAGE]:
         gui.text(line)
 
 
@@ -103,8 +108,9 @@ class Actions:
 
     def command_history_clear():
         """Clear the command_history"""
-        global history
-        history = []
+        global history, history_lock
+        with history_lock:
+            history = []
 
     def command_history_set_size(n: int):
         """Set number of items displayed in the command history."""
