@@ -116,12 +116,6 @@ class BrowserActions:
     # def go():
     #     raise NotImplementedError()
 
-    def go_back():
-        key("alt-left")
-
-    def go_forward():
-        key("alt-right")
-
     # def go_blank():
     #     raise NotImplementedError()
 

@@ -17,6 +17,17 @@ class ModuleActions:
     def previous_error() -> None:
         """Go to the previous error."""
 
+    def go_back() -> None:
+        """Go back (usually to the previous page - depends on context)."""
+        # TODO: Switch to XF86Back. This is just a reliable default
+        actions.key("alt-left")
+
+    def go_forward() -> None:
+        """Go forward (usually to the next page - depends on context)."""
+        # TODO: Switch to XF86Forward or equivalent. This is just a reliable
+        #   default
+        actions.key("alt-right")
+
 
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1

@@ -11,8 +11,6 @@ search bar: browser.focus_search()
 
 
 # Navigation
-go back: browser.go_back()
-go forward: browser.go_forward()
 go home | homepage: browser.go_home()
 go blank [page]: browser.go_blank()
 (refresh | reload) [light]: browser.reload()
@@ -40,3 +38,6 @@ submit [form]: browser.submit_form()
 
 action(edit.zoom_in): key(ctrl-plus)
 action(edit.zoom_out): key(ctrl-minus)
+
+action(user.go_back):    key(alt-left)
+action(user.go_forward): key(alt-right)
