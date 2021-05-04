@@ -18,9 +18,16 @@ insert = actions.insert
 default_alphabet = "air bat cap drum each fine gust harp sit jury crunch look made near odd pit quench red sun trap urge vest whale plex yank zip"
 # My setup has trouble with some words. Probably my accent.
 modified_alphabet = (
-    default_alphabet.replace("air", "arch").replace("bat", "batch")
-    # .replace("harp", "hip")
-    .replace("zip", "zen")
+    default_alphabet
+    #
+    # .replace("air", "arch")
+    .replace("air", "aim")
+    #
+    # .replace("bat", "batch")
+    #
+    .replace("harp", "hip")
+    #
+    # .replace("zip", "zen")
 )
 # chosen_alphabet = default_alphabet.split(" ")
 chosen_alphabet = modified_alphabet.split(" ")
