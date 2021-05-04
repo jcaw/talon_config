@@ -67,8 +67,8 @@ scales_map = {scales[0]: 100}
 scales_map.update({n: 10 ** ((i + 1) * 3) for i, n in enumerate(scales[1:])})
 
 alt_digits = "(" + ("|".join(digits_map.keys())) + ")"
-alt_teens  = "(" + ("|".join(teens_map.keys()))  + ")"
-alt_tens   = "(" + ("|".join(tens_map.keys()))   + ")"
+alt_teens = "(" + ("|".join(teens_map.keys())) + ")"
+alt_tens = "(" + ("|".join(tens_map.keys())) + ")"
 alt_scales = "(" + ("|".join(scales_map.keys())) + ")"
 
 # fuse scales (hundred, thousand) leftward onto numbers (one, twelve, twenty, etc)
