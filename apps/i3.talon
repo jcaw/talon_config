@@ -1,14 +1,22 @@
 tag: user.i3
 -
-(work | wok) <user.digit>:       key("super-{digit}")
+(work | wok) <user.digit>:
+    key("super-{digit}")
+    sleep(100ms)
 # Move window to workspace and switch to it
-move (work | wok) <user.digit>:  key("super-shift-{digit}")
+move (work | wok) <user.digit>:
+    key("super-shift-{digit}")
+    sleep(100ms)
 # Move window to workspace without switching to it
-throw (work | wok) <user.digit>: key("super-ctrl-{digit}")
-flip [work | wok]:           key("super-tab")
-(win | window) <user.arrow>: key("super-{arrow}")
+throw (work | wok) <user.digit>:
+    key("super-ctrl-{digit}")
+flip [work | wok]:
+    key("super-tab")
+    sleep(100ms)
+(win | window) <user.arrow>:
+    key("super-{arrow}")
 # Compensate for common mishearing
-^one left <user.arrow>:      key("super-{arrow}")
+^one <user.arrow>:   key("super-{arrow}")
 # Provide "snap" to match regular WM commands
 (move (win | window) | snap) <user.arrow>: key("super-shift-{arrow}")
 
@@ -21,22 +29,22 @@ run program:
     key("super-d")
     sleep(200ms)
 
-resize [win | window]: key("super-r")
+resize [win | window]:  key("super-r")
 
 (I three help | [I three] cheatsheet): key("super-f1")
 
-restart I three:    key("super-R")
-reload I three:     key("super-C")
-exit I three:       key("super-E")
-confirm logout:     key("super-E")
-new term:           key("super-enter")
-[split] vertical:   key("super-h")
-[split] horizontal: key("super-v")
-layout stacking:    key("super-s")
-layout tabbed:      key("super-w")
+restart I three:        key("super-R")
+reload I three:         key("super-C")
+exit I three:           key("super-E")
+confirm logout:         key("super-E")
+new term:               key("super-enter")
+[split] vertical:       key("super-h")
+[split] horizontal:     key("super-v")
+layout stacking:        key("super-s")
+layout tabbed:          key("super-w")
 layout (split | tiled): key("super-e")
-[toggle] borders:   key("ctrl-shift-x")
-[toggle] (floating | tiling): key("super-shift-space")
+([toggle] borders | toggle title):  key("ctrl-shift-x")
+[toggle] (floating | tiling):       key("super-shift-space")
 (focus | kiss) (floating | tiling): key("super-space")
 
 
