@@ -138,7 +138,8 @@ short_action_prefixes = {
     ),
     "it-mark-inside": ("sellin", "slinn"),
     "it-strip": "strip",
-    "it-wrap": "wrap",
+    # "it-wrap": "wrap",
+    "it-wrap": "rapp",  # Better than "wrap" with conformer
     # Slurp & Barf
     "it-slurp-forward": "furp",
     "it-slurp-backward": "bapp",
@@ -177,7 +178,8 @@ short_suffixes = {
     # "defun": " funk",
     # "defun": " def",
     # (Dragon) "eff" misrecognizes a lot.
-    "defun": "eff",
+    # "defun": "ef",
+    "defun": "unk",
     "class": " class",
     # Clashes with line
     "statement": "ent",

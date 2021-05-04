@@ -204,3 +204,6 @@ action(edit.undo): user.emacs_command("undo-fu-only-undo")
 action(edit.redo): user.emacs_command("undo-fu-only-redo")
 
 ^restart emacs$: user.emacs_restart()
+
+move up:   user.emacs_command("drag-stuff-up")
+move down: user.emacs_command("drag-stuff-down")
