@@ -112,9 +112,7 @@ class MouseHistory(object):
         return pos
 
     def _log_size(self):
-        """Log the size of the mouse history, iff debugging.
-
-        """
+        """Log the size of the mouse history, iff debugging."""
         # On my Windows machine, 30 secs of history logs at around 4.7 Mb.
         if LOGGER.level >= logging.DEBUG:
             LOGGER.debug(
