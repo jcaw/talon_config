@@ -94,7 +94,15 @@ class MouseHistory(object):
 
     def _record_mouse_position(self):
         timestamp = time.time()
-        position = ctrl.mouse_pos()
+        try:
+            position = ctrl.mouse_pos()
+        except Exception as e:
+            # Sometimes can get a pywintypes error from a weird permissions
+            # state. Ignore it.
+            #
+            # TODO: Maybe don't spam the log here
+            print(f"Error getting mouse pos: {e}", file=sys.stderr)
+            position = (0, 0)
         self.history.append(TimestampedPosition(position, timestamp))
 
     def position_at_time(self, timestamp):
