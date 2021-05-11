@@ -126,6 +126,7 @@ module = Module()
 
 module.list("eu4_hoverables", desc="named buttons that may be hovered over")
 module.list("eu4_clickables", desc="named buttons that may be clicked")
+module.list("eu4_locations", desc="locations that can be jumped to in EU4")
 
 
 @module.capture(rule="{user.eu4_hoverables}")
