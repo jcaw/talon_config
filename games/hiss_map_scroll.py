@@ -1,4 +1,5 @@
 import math
+import threading
 from typing import Callable
 
 from talon import cron, actions, Module, Context
@@ -20,7 +21,10 @@ def angle_from_north(center, point):
     # # Amount to rotate (clockwise, in degrees) to normalize to north.
     # offset = -45
     # return (center_phase - point_phase) * 180 / cmath.pi + offset
-    vector = (point[0] - center[0], point[1] - center[1])
+    vector = (
+        point[0] - center[0],
+        point[1] - center[1],
+    )
     vector_theta = math.atan2(vector[0], vector[1])
     angle = (_NORTH_THETA - vector_theta) * (180.0 / math.pi)
     return angle
@@ -57,6 +61,7 @@ class KeyMover:
         self.east_key = east_key
         self.west_key = west_key
         self._pressed_keys = set()
+        self._lock = threading.Lock()
 
     def do_move(self, north, south, east, west):
         """Update scroll with the given directions.
@@ -64,19 +69,20 @@ class KeyMover:
         This method can be passed to `EyeScroller`.
 
         """
-        for direction, key in [
-            (north, self.north_key),
-            (south, self.south_key),
-            (east, self.east_key),
-            (west, self.west_key),
-        ]:
-            # FIXME: Hammers. Need something persistent.
-            if direction and key not in self._pressed_keys:
-                actions.key(f"{key}:down")
-                self._pressed_keys.add(key)
-            elif not direction and key in self._pressed_keys:
-                actions.key(f"{key}:up")
-                self._pressed_keys.remove(key)
+        with self._lock:
+            for direction, key in [
+                (north, self.north_key),
+                (south, self.south_key),
+                (east, self.east_key),
+                (west, self.west_key),
+            ]:
+                if direction:
+                    if key not in self._pressed_keys:
+                        actions.key(f"{key}:down")
+                        self._pressed_keys.add(key)
+                elif key in self._pressed_keys:
+                    actions.key(f"{key}:up")
+                    self._pressed_keys.remove(key)
 
 
 class EyeScroller(object):
@@ -138,7 +144,11 @@ class EyeScroller(object):
         zone_limits[5] = (width * 0.25, height)
         zone_limits[6] = (0, height * 0.75)
         zone_limits[7] = (0, height * 0.25)
-        return [angle_from_north(rect.center, point) for point in zone_limits]
+        center = (
+            rect.center.x,
+            rect.center.y,
+        )
+        return [angle_from_north(center, point) for point in zone_limits]
 
     def _update_scroll(self):
         if len(eye_mouse.mouse.eye_hist) < 2:
@@ -184,7 +194,7 @@ user.zoom_mouse_zooming: False
 """
 arrows_context = Context()
 arrows_context.matches = r"""
-tag: user.hiss_arrow_map_move
+tag: user.hiss_arrows_map_move
 user.zoom_mouse_zooming: False
 """
 
