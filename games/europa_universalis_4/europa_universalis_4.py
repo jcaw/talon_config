@@ -57,8 +57,8 @@ insert = actions.insert
 class Buttons:
     ZOOM_IN = Corner(Corner.BOTTOM_RIGHT, -14, -43)
     ZOOM_OUT = Corner(Corner.BOTTOM_RIGHT, -14, -11)
-    SPEED_UP = Corner(Corner.TOP_RIGHT, -77, 26)
-    SPEED_DOWN = Corner(Corner.TOP_RIGHT, -65, 51)
+    # SPEED_UP = Corner(Corner.TOP_RIGHT, -77, 26)
+    # SPEED_DOWN = Corner(Corner.TOP_RIGHT, -65, 51)
     # Use the bottom right position so the mouse doesn't obscure the
     # notification.
     FIRST_NOTIFICATION = Corner(Corner.TOP_LEFT, 184, 117)
@@ -216,40 +216,6 @@ class ModuleActions:
             key("minus")
         for i in range(speed - 1):
             key("plus")
-
-    # def eu4_set_game_speed(speed: int) -> None:
-    #     """Set the game to a specific speed."""
-    #     assert speed in range(1, 6)
-    #     # There's no keyboard shortcut for adjusting the speed in eu4, so we
-    #     # have to use the buttons, but the buttons have very weird quirks. This
-    #     # is a complex heuristic to get around them.
-    #     SPEED_PAUSE = 0.02
-    #     # We have to go from a known base, make sure we go from the _slowest_
-    #     # speed to avoid time speeding up while we transition.
-    #     for i in range(4):
-    #         # The speed adjuster has a huge consecutive click deadzone
-    #         # (probably to stop users accidentally speeding up too quickly).
-    #         # Double clicking seems to get around it, lets us input way faster.
-    #         user.corner_click(Buttons.SPEED_DOWN)
-    #         user.corner_click(Buttons.SPEED_DOWN)
-    #         time.sleep(SPEED_PAUSE)
-    #     # If we pause between it reduces missed clicks.
-    #     time.sleep(0.2)
-    #     up_notches = speed - 1
-    #     if up_notches >= 2:
-    #         for i in range(up_notches - 1):
-    #             user.corner_click(Buttons.SPEED_UP)
-    #             user.corner_click(Buttons.SPEED_UP)
-    #             time.sleep(SPEED_PAUSE)
-    #         # Single click on the last to prevent occasional overextension.
-    #         time.sleep(0.5)
-    #         user.corner_click(Buttons.SPEED_UP)
-    #     elif up_notches == 1:
-    #         # Once notch is a special case. We have to double click or it won't
-    #         # register.
-    #         user.corner_click(Buttons.SPEED_UP)
-    #         user.corner_click(Buttons.SPEED_UP)
-    #     user.center_mouse()
 
     def eu4_open_menu(keys: str) -> None:
         """Open a specific menu, closing others."""
