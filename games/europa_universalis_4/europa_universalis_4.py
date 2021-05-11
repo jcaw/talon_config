@@ -42,7 +42,6 @@ from talon import Module, Context, actions
 from user.utils import apply_function, prepend_to_map, multi_map
 from user.misc import zoom_mouse
 from . import eu4_locations
-from ..utils.switch_input import switch_to_keyboard_module
 from ..utils.hard_coded_buttons import Corner
 
 
@@ -292,6 +291,11 @@ context.matches = r"""
 app: /eu4/
 """
 
+# EU4 isn't responsive with default settings
+# TODO: Tweak these
+context.settings["key_hold"] = 50
+context.settings["key_wait"] = 20
+
 context.lists["self.eu4_hoverables"] = hoverable_buttons.keys()
 context.lists["self.eu4_clickables"] = clickable_buttons.keys()
 
@@ -316,8 +320,3 @@ class ContextActions:
         time.sleep(0.05)
         # TODO: This used to specify: hold for 16ms. Reintroduce that.
         actions.mouse_drag()
-
-
-# Talon's regular input method doesn't work properly with EU4. `keyboard` from
-# PyPI is more reliable.
-switch_to_keyboard_module(context)
