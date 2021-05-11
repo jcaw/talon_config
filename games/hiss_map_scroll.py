@@ -10,6 +10,7 @@ _NORTH_THETA = math.atan2(0, -1)
 _GAZE_MIDPOINT = (0.5, 0.5)
 
 
+# TODO: Isn't it easier to use radians?
 def angle_from_north(center, point):
     """Get the angle of `point` from center, relative to north.
 
