@@ -35,6 +35,8 @@
 
 """
 
+# TODO: Migrate from time.sleep to actions.sleep
+
 import time
 
 from talon import Module, Context, actions
@@ -310,6 +312,8 @@ context.lists["self.eu4_clickables"] = clickable_buttons.keys()
 # Note that under Dragon this huge list DOES NOT have a significant impact on
 # recognition speed, even if it takes a while to inject. I don't know the
 # performance characteristics with other backends.
+#
+# TODO: Only do this once EU4 has been opened.
 context.lists["self.eu4_locations"] = eu4_locations.load_locations()
 
 
