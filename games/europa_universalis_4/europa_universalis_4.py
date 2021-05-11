@@ -318,6 +318,5 @@ class ContextActions:
     def corner_click(position: Corner) -> None:
         user.corner_hover(position)
         # Need to add a slight pause or we can get misclicks
-        time.sleep(0.05)
-        # TODO: This used to specify: hold for 16ms. Reintroduce that.
-        actions.mouse_drag()
+        actions.sleep("50ms")
+        actions.mouse_click()
