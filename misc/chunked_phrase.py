@@ -165,11 +165,12 @@ class DictationChunk(BasePhraseChunk):
     """Holds a chunk of spoken dictation."""
 
 
-class CharacterChunk(BasePhraseChunk):
-    """Holds a single insertable character, spoken as a command."""
+# TODO: Update docs so they show this works with strings of multiple chars?
+class InsertableChunk(BasePhraseChunk):
+    """Holds a single insertable, spoken as a command."""
 
-    def __init__(self, character, pad):
-        super().__init__(character)
+    def __init__(self, insertable, pad):
+        super().__init__(insertable)
         self.pad = pad
 
 
@@ -210,10 +211,12 @@ def dictation_chunk(m) -> DictationChunk:
     return DictationChunk(m.dictation)
 
 
-@module.capture(rule="[pad] <user.character>")
-def character_chunk(m) -> CharacterChunk:
-    """Chunk corresponding to a spoken character."""
-    return CharacterChunk(m.character, m[0] == "pad")
+@module.capture(rule="[pad] <user.insertable>")
+def insertable_chunk(m) -> InsertableChunk:
+    """Chunk corresponding to a spoken insertable."""
+    # TODO: Maybe treat "sky <letters>" differently? E.g. always format it as a
+    #   standalone word?
+    return InsertableChunk(m.insertable, m[0] == "pad")
 
 
 # TODO: Audit complex phrase keypresses
@@ -283,8 +286,7 @@ def active_symbol_chunk(m) -> None:
         "("
         # FIXME: Don't allow dictation next to whole symbol?
         "   <user.dictation_chunk>"
-        # For now, disallow characters. They fire a lot, impeding dictation.
-        " | <user.character_chunk>"
+        " | <user.insertable_chunk>"
         # For now, disallow keypresses because they are too intrusive
         # " | <user.keypress_chunk>"
         # " | <user.action_chunk>"
@@ -420,7 +422,7 @@ class ModuleActions:
         for chunk in phrase_chunks:
             if isinstance(chunk, DictationChunk):
                 actions.self.insert_formatted(chunk, formatters)
-            elif isinstance(chunk, CharacterChunk):
+            elif isinstance(chunk, InsertableChunk):
                 formatter_funcs = to_formatter_funcs(formatters)
                 if chunk.pad:
                     actions.self.insert_key_padded(chunk)

@@ -55,8 +55,7 @@ ctx.lists["self.modifier"] = {
     "troll": "ctrl",
     "shift": "shift",
     "schiff": "shift",
-    # TODO: Sky should affect multiple characters.
-    "sky": "shift",
+    "ship": "shift",
     "alt": "alt",
     "option": "alt",
     "windows": "super",
@@ -263,10 +262,13 @@ def letter(m) -> str:
     return m.letter
 
 
-@mod.capture(rule="{self.letter}+")
-def letters(m) -> list:
-    """Multiple letter keys"""
-    return m.letter
+@mod.capture(rule="{self.letter}+ | sky {self.letter}+ [ship]")
+def letters(m) -> str:
+    """Multiple letter keys, as one string (no spaces)."""
+    string = "".join(m.letter_list)
+    if m[0] == "sky":
+        string = string.upper()
+    return string
 
 
 @mod.capture(rule="{self.symbol}")
@@ -301,7 +303,7 @@ def character(m) -> str:
     return m[0]
 
 
-@mod.capture(rule="<user.character> | {self.complex_symbol}")
+@mod.capture(rule="<user.character> | {self.complex_symbol} | <self.letters>")
 def insertable(m) -> str:
     """A char, or a complex insert."""
     return m[0]
@@ -313,12 +315,6 @@ class Actions:
         """(TEMPORARY) Presses the modifier plus supplied number"""
         res = "-".join([modifier, str(key)])
         actions.key(res)
-
-    def uppercase_letters(chars: List[str]):
-        """Inserts uppercase letters from list"""
-        # TODO: Do we want insert here? What if someone wants to press an
-        #   uppercase char?
-        actions.insert("".join(chars).upper())
 
     # TODO: Switch to many_keys
     def many(keys: List[str]):

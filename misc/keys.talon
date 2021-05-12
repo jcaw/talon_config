@@ -1,5 +1,6 @@
 <user.keychord>: key(keychord)
 
+# TODO: Maybe convert all these over to `insertable`?
 <user.letter>: key(letter)
 <user.symbol>: key(symbol)
 <user.special>: key(special)
@@ -19,11 +20,9 @@ pad <user.insertable>: user.insert_key_padded(insertable)
     insert(".")
     user.type_number(digits)
 
-# Should be able to specify a series of uppercase letters.
-#
-# TODO: Audit this
-(ship | uppercase) <user.letters> [(lowercase | sunk)]:
-    user.uppercase_letters(letters)
+# "sky" for a series of uppercase letters. Terminate and go back to lowercase
+# with "sunk".
+sky <user.letters> [sunk]: user.insert_uppercase(letters)
 
 
 # TODO: Remove these once I've broken the old habits
