@@ -14,6 +14,9 @@ module.tag("debian", "Active when the OS is Debian.")
 module.tag("fedora", "Active when the OS is Fedora.")
 
 
+context = Context()
+
+
 if platform.system() == "Linux" and shutil.which("lsb_release"):
     release_id_output = subprocess.run(
         ["lsb_release", "-i"], capture_output=True
@@ -22,21 +25,16 @@ if platform.system() == "Linux" and shutil.which("lsb_release"):
 
     if "arch" in release_id.lower():
         # TODO: Arch matching untested
-        arch_context = Context()
-        arch_context.tags = ["user.arch"]
+        context.tags = ["user.arch"]
     elif "manjaro" in release_id.lower():
         # Manjaro matching is tested & works
-        manjaro_context = Context()
-        manjaro_context.tags = ["user.manjaro"]
+        context.tags = ["user.manjaro"]
     elif "ubuntu" in release_id.lower():
         # TODO: Ubuntu matching untested
-        ubuntu_context = Context()
-        ubuntu_context.tags = ["user.ubuntu"]
+        context.tags = ["user.ubuntu"]
     elif "debian" in release_id.lower():
         # TODO: Debian matching untested
-        debian_context = Context()
-        debian_context.tags = ["user.debian"]
+        context.tags = ["user.debian"]
     elif "fedora" in release_id.lower():
         # TODO: Fedora matching untested
-        fedora_context = Context()
-        fedora_context.tags = ["user.fedora"]
+        context.tags = ["user.fedora"]
