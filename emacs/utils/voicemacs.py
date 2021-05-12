@@ -463,6 +463,9 @@ def _ping():
 def run_command(command, prefix_arg=None):
     # TODO: Still need to pause if e.g. a key was just pressed? Can it still
     #   inject too early?
+    #
+    # FIXME: With e.g. the it commands, this is too fast. Need to ensure the
+    #   stuff gets into the command loop, I think.
     return rpc_call("voicemacs-inject-command", params=[command, prefix_arg])
 
 
