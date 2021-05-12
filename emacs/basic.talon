@@ -207,3 +207,5 @@ action(edit.redo): user.emacs_command("undo-fu-only-redo")
 
 move up:   user.emacs_command("drag-stuff-up")
 move down: user.emacs_command("drag-stuff-down")
+
+(switch | toggle) (quotes | string): user.emacs_command("jcaw-toggle-string-quotes")
