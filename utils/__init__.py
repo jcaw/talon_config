@@ -496,5 +496,14 @@ def notify(
 
 
 def context_active(context):
-    """Is `context` currently active?"""
+    """Is `context` currently active?
+
+    WARNING: Only call this on the main thread.
+
+    """
+    raise RuntimeError(
+        "Don't check for active contexts like this. It can race. Use a tag instead."
+    )
+    # FIXME: This can race, `active_contexts` changing under us. No idea how to
+    #   fix it.
     return context in registry.active_contexts()

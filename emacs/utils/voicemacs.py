@@ -7,7 +7,7 @@ import time
 import logging
 from user.utils import context_active
 from user.utils.key_value_store import KeyValueStore
-from talon import ui, cron, Module, app, Context
+from talon import ui, cron, Module, app, Context, scope
 import platform
 import os
 
@@ -139,6 +139,11 @@ def _get_temp_folder():
 _TEMP_FOLDER = _get_temp_folder()
 
 
+def emacs_focussed():
+    """Is Emacs focussed?"""
+    return "user.emacs" in scope.get("tag", [])
+
+
 # TODO: Not happy with the threading model here. It's super messy.
 
 
@@ -192,7 +197,7 @@ def _try_connect():
     # TODO: Is this a reasonable check? `_socket` being None is not great info.
     with _socket_lock:
         # TODO: Something closer to `emacs_context.matches`
-        if context_active(emacs_context) and not _socket:
+        if emacs_focussed() and not _socket:
             LOGGER.debug(f"Emacs active & no socket. Trying to connect.")
             try:
                 _connect()
@@ -447,7 +452,7 @@ def _ping():
 
     """
     with _socket_lock:
-        if context_active(emacs_context) and _socket:
+        if emacs_focussed() and _socket:
             try:
                 # TODO: Why pending lock here
                 with _pending_lock:

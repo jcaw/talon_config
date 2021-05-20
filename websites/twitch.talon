@@ -1,5 +1,6 @@
 tag: user.browser
-title: /- Twitch/
+# Clip pages are just titled "Twitch" so exempt the dash
+title: /Twitch/
 -
 play [(video | vid)]: key("k")
 pause [(video | vid)]: key("k")
@@ -23,5 +24,9 @@ reset speed | speed reset:
 search (box | bar): key("/")
 fullscreen: key("f")
 mute (video | vid): key("m")
-theater [mode]: key("t")
+theater [mode]:
+    key("alt-t")
+    # Alt opens menu on Firefox, so close it
+    sleep(400ms)
+    key("alt")
 # mini player [mode] | pop out: key("i")
