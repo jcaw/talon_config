@@ -7,23 +7,6 @@ user.emacs-is-doom: True
 # align (math|operator): user.emacs_command("spacemacs/align-repeat-math-oper")
 # align regex: user.emacs_command("spacemacs/align-repeat")
 
-action(user.emacs_restart): user.emacs_command("doom/restart-and-restore")
-action(user.emacs_quit): user.emacs_command("save-buffers-kill-terminal")
-
-
-# Code Lookup
-action(user.find_definition): user.emacs_command("+lookup/definition")
-action(user.find_definition_other_window):
-    user.emacs_command("+lookup/definition-other-window")
-action(user.find_references): user.emacs_command("+lookup/references")
-action(user.find_references_other_window):
-    user.emacs_command("+lookup/references-other-window")
-action(user.find_implementations): user.emacs_command("+lookup/implementations")
-action(user.find_implementations_other_window):
-    user.emacs_command("+lookup/implementations-other-window")
-action(user.show_documentation): user.emacs_command("+lookup/documentation")
-
-
 # Generic Lookup
 # TODO: Good command for this?
 lookup [<user.complex_phrase>]:
@@ -45,3 +28,5 @@ find projects: user.emacs_command("+default/discover-projects")
 
 (buff | buffer) scratch:  user.emacs_command("doom/open-scratch-buffer")
 (buff | buffer) messages: user.emacs_command("doom/open-messages-buffer")
+
+fold: user.emacs_toggle_fold()
