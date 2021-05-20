@@ -172,7 +172,7 @@ def _connect() -> None:
             _socket.connect((host, port))
             LOGGER.info("Voicemacs connected")
             _receive_thread = threading.Thread(
-                target=_receive_until_closed, args=(_socket,)
+                target=_receive_until_closed, args=(_socket,), daemon=True
             )
             _receive_thread.start()
             _authenticate(auth_key)
