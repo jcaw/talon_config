@@ -69,26 +69,6 @@ move (window | win) top: user.emacs_command("evil-window-move-very-top")
 move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 
 
-# Buffers
-# TODO: Fallbacks
-(buffer | buff):
-    user.emacs_switch_buffer()
-(buffer | buff) <user.complex_phrase>$:
-    user.emacs_switch_buffer()
-    user.insert_complex(complex_phrase, "lowercase")
-(close | kill) (buffer | buff): user.emacs_command("kill-this-buffer")
-(close | kill) other (buffer | buff):
-    user.emacs_command("other-window")
-    user.emacs_command("kill-this-buffer")
-    user.emacs_command("other-window")
-# Save & kill the buffer
-(close | kill) disk:
-    edit.save()
-    user.emacs_command("kill-this-buffer")
-(next | neck) (buffer | buff): user.emacs_command("next-buffer")
-(last | larse) (buffer | buff): user.emacs_command("previous-buffer")
-
-
 # Macros
 record [macro]: user.emacs_command("kmacro-start-macro")
 finish [macro]: user.emacs_command("kmacro-finish-macro")
