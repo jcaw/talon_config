@@ -39,6 +39,7 @@ punctuation = set(".,-!?")
 # TODO: Remove all the old functions here I'm no longer using.
 
 
+# TODO: Probably remove
 def remove_dragon_junk(word):
     return str(word).lstrip("\\").split("\\", 1)[0]
 
@@ -58,6 +59,7 @@ def join_words(words, sep=" "):
     return out
 
 
+# TODO: Probably remove
 def parse_words(m):
     return list(map(parse_word, m.dgndictation.words))
 

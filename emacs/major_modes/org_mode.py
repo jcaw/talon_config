@@ -78,3 +78,9 @@ class Actions:
             # Still need to input the language.
             key("up:3")
             emacs_command("end-of-line")
+
+
+@context.action_class
+class OrgActions:
+    def emacs_toggle_fold():
+        user.emacs_command("+org/toggle-fold")

@@ -115,7 +115,7 @@ symbols = multi_map(
         ("right brace", "race"): "}",
         ("left angle", "langle"): "<",
         ("right angle", "rangle"): ">",
-        ("space", "gap"): " ",
+        ("space", "gap", "pat"): " ",
         # Special
         "new line": "\n",
         # Multi-char Symbols

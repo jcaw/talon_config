@@ -108,6 +108,27 @@ class Actions:
         for i in range(times):
             emacs_prefix_command("set-mark-command")
 
+    def emacs_toggle_fold():
+        """Toggle visibility folding for the current item."""
+
+    def emacs_fold():
+        """Fold (hide) the current item."""
+
+    def emacs_unfold():
+        """Unfold (show) the current item."""
+
+    def emacs_fold_all():
+        """Fold "all" items (meaning depends on context)."""
+
+    def emacs_unfold_all():
+        """Unfold all items in the document."""
+
+    def emacs_next_fold():
+        """Navigate to the next fold."""
+
+    def emacs_previous_fold():
+        """Navigate to the previous fold."""
+
 
 context = Context()
 context.matches = """

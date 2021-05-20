@@ -107,23 +107,31 @@ def extract_dictation(phrase) -> List[str]:
     return actions.dictate.parse_words(phrase)
 
 
-@module.capture(rule="<phrase>")
-def split_phrase(m) -> List[str]:
-    return extract_dictation(m.phrase)
-
-
 @module.capture(rule="{user.custom_words}")
 def custom_word(m) -> str:
     "One custom word."
     return m.custom_words
 
 
-@module.capture(rule="(<user.split_phrase> | <user.custom_word>)+")
+# TODO: Remove old dictation stuff
+# @module.capture(rule="<phrase>")
+# def split_phrase(m) -> List[str]:
+#     return extract_dictation(m.phrase)
+
+
+# @module.capture(rule="(<user.split_phrase> | <user.custom_word>)+")
+# def dictation(m) -> str:
+#     """Arbitrary dictation."""
+#     # Custom words are strings, phrases are lists
+#     normalized = [[chunk] if isinstance(chunk, str) else chunk for chunk in m]
+#     return join_punctuation(chain(*normalized))
+
+
+@module.capture(rule="(<phrase> | <user.custom_word> | <user.number>)+")
 def dictation(m) -> str:
     """Arbitrary dictation."""
     # Custom words are strings, phrases are lists
-    normalized = [[chunk] if isinstance(chunk, str) else chunk for chunk in m]
-    return join_punctuation(chain(*normalized))
+    return " ".join([str(part).strip() for part in m])
 
 
 def _clip_set_unique():

@@ -107,6 +107,16 @@ indent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-right", n
 dedent [<number>]: user.emacs_prefix_command("voicemacs-indent-rigidly-left", number or 1)
 
 
+# Folding
+fold: user.emacs_toggle_fold()
+hide: user.emacs_fold()
+show: user.emacs_unfold()
+hide all: user.emacs_fold_all()
+show all: user.emacs_unfold_all()
+(next | neck) fold: user.emacs_next_fold()
+(last | lass) fold: user.emacs_previous_fold()
+
+
 # ---------------------------------------------------------------------------
 
 # Unsorted
@@ -198,7 +208,10 @@ trail [<user.complex_phrase>]$:
 shell command: user.emacs_command("async-shell-command")
 
 # Break out & insert a {} block, in languages like Java & C++
-bleak: key(home end space { enter)
+bleak:
+    key(home end)
+    user.emacs_command("just-one-space")
+    key("{ enter")
 
 action(edit.undo): user.emacs_command("undo-fu-only-undo")
 action(edit.redo): user.emacs_command("undo-fu-only-redo")
@@ -209,3 +222,5 @@ move up:   user.emacs_command("drag-stuff-up")
 move down: user.emacs_command("drag-stuff-down")
 
 (switch | toggle) (quotes | string): user.emacs_command("jcaw-toggle-string-quotes")
+# TODO: What's the command to join across lines like this?
+flush: user.emacs_command("just-one-space")
