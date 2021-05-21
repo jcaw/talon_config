@@ -127,7 +127,7 @@ def custom_word(m) -> str:
 #     return join_punctuation(chain(*normalized))
 
 
-@module.capture(rule="(<phrase> | <user.custom_word> | <user.number>)+")
+@module.capture(rule="(<phrase> | <user.custom_word> | <number>)+")
 def dictation(m) -> str:
     """Arbitrary dictation."""
     # Custom words are strings, phrases are lists
