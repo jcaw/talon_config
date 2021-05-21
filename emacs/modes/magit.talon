@@ -124,3 +124,7 @@ resetting: user.emacs_command("magit-reset")
 stashing: user.emacs_command("magit-stash")
 run command: user.emacs_command("magit-run")
 worktree: user.emacs_command("magit-worktree")
+
+
+switch to SSH: user.emacs_command("jcaw-git-remote-http-to-ssh")
+switch to (HTTP | HTTPS): user.emacs_command("jcaw-git-remote-ssh-to-https")
