@@ -28,6 +28,15 @@ class ModuleActions:
         #   default
         actions.key("alt-right")
 
+    def cancel() -> None:
+        """Cancel the current "thing" - e.g. by press escape.
+
+        (Note this is not meant to be the most powerful context exiting command
+        available.)
+
+        """
+        actions.key("escape")
+
 
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1

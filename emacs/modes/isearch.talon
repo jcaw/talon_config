@@ -6,4 +6,4 @@ user.emacs-minor-modes: isearch-mode
 # TODO: Don't just go forwards, repeat prior
 action(user.on_pop):  user.emacs_isearch_forward()
 action(user.on_hiss): user.emacs_isearch_backward()
-cancel: user.emacs_command("isearch-cancel")
+action(user.cancel):  user.emacs_command("isearch-cancel")

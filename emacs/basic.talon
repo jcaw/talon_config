@@ -13,7 +13,7 @@ os: mac
 # Fundamental Commands
 
 # "c-g" is the interrupt command. It's hardcoded in C - can't remap it.
-(cancel | can): key(ctrl-g)
+action(user.cancel): key(ctrl-g)
 # Triple esc will get us out of any context
 # TODO: Settle on one of these
 (reset | rescue): key(esc esc esc)

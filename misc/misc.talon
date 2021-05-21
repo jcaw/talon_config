@@ -19,5 +19,7 @@ set [command] history [size] <number>: user.command_history_set_size(number)
 go back:    user.go_back()
 go forward: user.go_forward()
 
+cancel: user.cancel()
+
 # Record all voice clips
 settings(): speech.record_all = 1
