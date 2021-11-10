@@ -15,6 +15,7 @@ flip [work | wok]:
     sleep(100ms)
 (win | window) <user.arrow>:
     key("super-{arrow}")
+    sleep(100ms)
 # Compensate for common mishearing
 ^one <user.arrow>:   key("super-{arrow}")
 # Provide "snap" to match regular WM commands

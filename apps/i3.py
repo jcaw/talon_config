@@ -2,7 +2,7 @@ import subprocess
 import platform
 import shutil
 
-from talon import Module, Context
+from talon import Module, Context, actions, app
 
 
 module = Module()
@@ -14,6 +14,16 @@ if platform.system() == "Linux" and shutil.which("xprop"):
     if '"i3"' in result.stdout.decode("utf-8"):
         i3_context = Context()
         i3_context.tags = ["user.i3"]
+
+        # HOTFIX: Talon doesn't update parts of the i3 context until first
+        #   window switch, so force it.
+        def _force_window_switch():
+            actions.key("alt-tab")
+            actions.key("alt-shift-tab")
+
+        # Delay it so it fires after Talon grabs its own context (this also
+        # ensures actions.key is already registered).
+        app.register("launch", _force_window_switch)
 
 
 i3_context = Context()
