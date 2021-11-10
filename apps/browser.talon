@@ -41,3 +41,5 @@ action(edit.zoom_out): key(ctrl-minus)
 
 action(user.go_back):    key(alt-left)
 action(user.go_forward): key(alt-right)
+
+(spritz | spritzlet): user.spritzlet()
