@@ -17,7 +17,7 @@ cancel_job = None
 
 
 # TODO: Better placement
-@imgui.open(y=100, x=5)
+@imgui.open(y=20, x=5)
 def gui(gui: imgui.GUI):
     global cancel_job
     if pomodoro_type is not None:
@@ -35,7 +35,7 @@ def gui(gui: imgui.GUI):
                 gui.text(f"{pomodoro_type} -- {suffix}")
             else:
                 # remaining_time = (current_duration + start_time - current_time) / 60
-                gui.text(f"{pomodoro_type} {remaining_time:2d}")
+                gui.text(f"{pomodoro_type} {remaining_time:02d}")
 
 
 def delete_cancel_cron():

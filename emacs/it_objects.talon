@@ -14,6 +14,8 @@ tag: user.emacs
     sleep(500ms)
 
 action(edit.select_line): user.emacs_command("it-mark-line")
+# HACK: Override general command binding to use prefix version
+sell line [<number>]: user.emacs_prefix_command("it-mark-line", number or 0)
 
 # TODO: Maybe make a nicer system than this
 {user.emacs_object_wrapping_commands} <user.character>:

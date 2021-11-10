@@ -121,6 +121,7 @@ symbols = multi_map(
         # Multi-char Symbols
         # TODO: Extract these into a separate list
         "quiver": "= =",  # E[quiva]lent
+        "trip eek": "= = =",
         ("walrus", "wally"): ": =",
         "rittoe": "- >",
         "leffoe": "< -",

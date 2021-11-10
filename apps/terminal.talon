@@ -1,14 +1,17 @@
 # Generic commands for any terminal
-
+os: windows
+os: mac
+os: linux
 tag: terminal
 -
 repeat:
     key(up)
     key(enter)
 # "can"?
-(cancel | cell): key(ctrl-c)
+actions(user.cancel): key(ctrl-c)
 # For things like Python
 other cancel: key(ctrl-d)
+(kill | exit) python: key(ctrl-d)
 restart:
     key(ctrl-c)
     key(up)

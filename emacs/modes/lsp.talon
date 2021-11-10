@@ -2,14 +2,6 @@ tag: user.emacs
 user.emacs-minor-mode: lsp-mode
 -
 # Code modification
-#
-# TODO: Probably extract to generic action
-rename: user.emacs_command("lsp-rename")
-rename <user.complex_phrase>:
-    user.emacs_command("lsp-rename")
-    # It will have a default value, need to clear that.
-    user.emacs_command("clear-buffer")
-    user.complex_insert(complex_phrase)
 (fix | action): user.emacs_command("lsp-execute-code-action")
 sort imports: user.emacs_command("lsp-organize-imports")
 

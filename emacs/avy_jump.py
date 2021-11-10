@@ -13,8 +13,8 @@ class Actions:
     def emacs_jump(char: str) -> None:
         """Jump to a specific character."""
         # TODO: More flexible version of subword jump that catches parentheses
-        # user.emacs_command("avy-goto-word-or-subword-1")
-        user.emacs_command("avy-goto-char")
+        user.emacs_command("avy-goto-word-or-subword-1")
+        # user.emacs_command("avy-goto-char")
         key(char)
 
     def emacs_jump_chars(chars: List[str]) -> None:

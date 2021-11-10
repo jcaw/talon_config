@@ -6,7 +6,7 @@ exit: user.emacs_command("mc/keyboard-quit")
 action(user.on_pop): user.emacs_command("mc/mark-next-like-this")
 multi: user.emacs_command("mc/mark-next-like-this")
 
-(neck | next): user.emacs_command("mc/mark-next-like-this")
+(necks | next): user.emacs_command("mc/mark-next-like-this")
 (last | larse): user.emacs_command("mc/mark-previous-like-this")
 skip [(down | neck | neck)]: user.emacs_command("mc/skip-to-next-like-this")
 skip (up | last | larse): user.emacs_command("mc/skip-to-previous-like-this")

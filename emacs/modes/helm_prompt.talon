@@ -1,8 +1,6 @@
 tag: user.emacs
 user.emacs-in-helm-prompt: True
 -
-^<number>:
-    user.emacs_helm_command("helm-confirm-and-exit-minibuffer", number)
 # TODO: Probably pull common number commands out?
 move <number>: user.emacs_helm_goto_line(number)
 pick [<number>]:

@@ -183,10 +183,12 @@ class EditActions:
         emacs_fallbacks(["yank"], keypress="ctrl-y")
 
     def undo():
-        emacs_fallbacks(["undo-tree-undo"], keypress="ctrl-/")
+        emacs_fallbacks(["undo-tree-undo", "undo-fu-only-undo"], keypress="ctrl-/")
 
     def redo():
-        emacs_fallbacks(["undo-tree-redo"], keypress="ctrl-shift-/")
+        emacs_fallbacks(
+            ["undo-tree-redo", "undo-fu-only-redo"], keypress="ctrl-shift-/"
+        )
 
 
 @context.action_class("user")

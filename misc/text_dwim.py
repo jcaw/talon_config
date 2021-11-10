@@ -1,4 +1,5 @@
 import time
+from typing import Optional
 
 from talon import Module, actions, clip, app
 
@@ -20,6 +21,15 @@ class ModuleActions:
 
         """
         return user.get_highlighted()
+
+    def get_that_dwim_plus_text(text: Optional[str] = ""):
+        """Like ``get_that_dwim``, but append optional ``text``.
+
+        Useful for e.g. web searching the thing at point, plus some
+        clarification text to narrow the search.
+
+        """
+        return user.get_that_dwim() + (f" {text}" if text else "")
 
     def copy_that_dwim() -> None:
         """Copy the current text object - meaning depends on context.

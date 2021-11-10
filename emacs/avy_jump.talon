@@ -10,6 +10,8 @@ jump in <user.any_key>$:
 grab <user.any_key>$:
     user.emacs_command("voicemacs-avy-copy")
     key(any_key)
+after <user.any_key>$:
+    user.emacs_command("voicemacs-avy-end-of-word")
 kill <user.any_key>$:
     user.emacs_command("voicemacs-avy-kill")
     key(any_key)

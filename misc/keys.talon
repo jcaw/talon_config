@@ -20,9 +20,8 @@ pad <user.insertable>: user.insert_key_padded(insertable)
     insert(".")
     user.type_number(digits)
 
-# "sky" for a series of uppercase letters. Terminate and go back to lowercase
-# with "sunk".
-sky <user.letters> [sunk]: user.insert_uppercase(letters)
+
+<user.letters>: insert(letters)
 
 
 # TODO: Remove these once I've broken the old habits

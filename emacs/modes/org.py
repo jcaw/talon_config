@@ -80,7 +80,7 @@ class Actions:
             emacs_command("end-of-line")
 
 
-@context.action_class
+@context.action_class("self")
 class OrgActions:
     def emacs_toggle_fold():
         user.emacs_command("+org/toggle-fold")

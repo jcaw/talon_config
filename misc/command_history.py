@@ -67,8 +67,8 @@ def on_phrase(j):
         # TODO: Is stripping Dragon formatting still necessary?
         phrase = " ".join(word.split("\\")[0] for word in word_list)
         with history_lock:
-            history.append(phrase)
-            history = history[-HISTORY_SIZE:]
+            history = [phrase] + history
+            history = history[:HISTORY_SIZE]
         reset_gui_timer()
 
 
@@ -77,8 +77,9 @@ def on_phrase(j):
 def gui(gui: imgui.GUI):
     global history, history_lock
     with history_lock:
-        text = history[-n_items.get() :]
+        text = history[: n_items.get()]
     for line in text or [DEFAULT_MESSAGE]:
+        # TODO: Show later history items with a paler color?
         gui.text(line)
 
 
@@ -118,4 +119,6 @@ class Actions:
 
 
 # Enable command history by default.
-app.register("launch", lambda: actions.self.command_history_enable())
+#
+# Commented out because subtitles perform this functionality
+# app.register("launch", lambda: actions.self.command_history_enable())

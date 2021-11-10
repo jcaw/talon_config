@@ -94,6 +94,7 @@ short_action_prefixes = {
     "it-mark": ("sell", "sl"),
     # TODO: Maybe select right & left?
     "it-copy": "copp",
+    # TODO: Allow count here
     "it-kill": "kill",  # Should this double as cut across the board?
     # "for" can be unreliable. Use both to increase reliability.
     "it-kill-forward": "neck",

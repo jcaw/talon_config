@@ -1,4 +1,4 @@
-from talon import Module, actions
+from talon import Module, Context, actions
 
 from user.emacs.utils.voicemacs import rpc_call
 
@@ -24,3 +24,16 @@ class Actions:
         if isinstance(number, int):
             actions.self.emacs_dired_highlight(number)
         actions.user.emacs_command(command_name)
+
+
+context = Context()
+context.matches = r"""
+tag: user.emacs
+user.emacs-major-mode: dired-mode
+"""
+
+
+@context.action_class("user")
+class UserActions:
+    def opening_number_action(number: int) -> None:
+        actions.self.emacs_dired_command("dired-find-file", number)

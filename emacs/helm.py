@@ -67,3 +67,16 @@ class EditActions:
         # )
         # if text:
         #     actions.insert(text)
+
+
+in_prompt_context = Context()
+context.matches = r"""
+tag: user.emacs
+user.emacs-in-helm-prompt: True
+"""
+
+
+@context.action_class("user")
+class UserActions:
+    def opening_number_action(number: int) -> None:
+        actions.self.emacs_helm_command("helm-confirm-and-exit-minibuffer", number)

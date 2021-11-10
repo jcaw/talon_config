@@ -10,7 +10,7 @@ user.emacs-is-doom: True
 """
 
 
-@context.action_class
+@context.action_class("self")
 class DoomActions:
     def emacs_restart():
         emacs_command("doom/restart-and-restore")

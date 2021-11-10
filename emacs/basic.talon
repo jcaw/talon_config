@@ -56,6 +56,7 @@ scroll bottom: user.emacs_command("end-of-buffer")
 # Windows
 other [(window | win)]: user.emacs_command("other-window")
 (close | kill) (window | win): user.emacs_command("delete-window")
+single: user.emacs_command("delete-other-windows")
 (close | kill) other (windows | wins): user.emacs_command("delete-other-windows")
 balance [(windows | wins)]: user.emacs_command("balance-windows")
 # TODO: Fallbacks
@@ -71,11 +72,11 @@ move (window | win) bottom: user.emacs_command("evil-window-move-very-bottom")
 
 # Macros
 record [macro]: user.emacs_command("kmacro-start-macro")
-finish [macro]: user.emacs_command("kmacro-finish-macro")
+finish [macro]: user.emacs_command("kmacro-end-macro")
 # Macros are slow. Might cause RPC to become unresponsive. Use prefix to repeat
 # rather than repeating the call, otherwise later calls could time out.
-[call] macro <number>:
-    user.emacs_command("kmacro-call-macro", number or 0)
+[call] macro [<number>]:
+    user.emacs_prefix_command("kmacro-end-or-call-macro", number or 0)
 (last | larse) macro: user.emacs_command("kmacro-cycle-ring-previous")
 (next | neck) macro: user.emacs_command("kmacro-cycle-ring-next")
 store macro: user.emacs_command("kmacro-to-register")
@@ -104,6 +105,16 @@ show all: user.emacs_unfold_all()
 # TODO: Stuff to sort elsewhere
 [pop] (message | messages): user.emacs_command("popwin:messages")
 (close | kill) pop (win | window): user.emacs_command("popwin:close-popup-window")
+
+restart voicemacs:
+    key(alt-x)
+    insert("voicemacs-mode")
+    sleep(1s)
+    key(enter)
+    key(alt-x)
+    insert("voicemacs-mode")
+    sleep(1s)
+    key(enter)
 
 (set | load) theme [<user.dictation>]:
     user.emacs_switch_theme()
@@ -204,3 +215,10 @@ move down: user.emacs_command("drag-stuff-down")
 (switch | toggle) (quotes | string): user.emacs_command("jcaw-toggle-string-quotes")
 # TODO: What's the command to join across lines like this?
 flush: user.emacs_command("just-one-space")
+
+(tran | transpose): user.emacs_command("transpose-chars")
+
+ediff [buffers]: user.emacs_command("ediff-buffers")
+
+# Jump to the last error
+comper [<number>]: user.emacs_prefix_command("jcaw-jump-to-compile-hyperlink", number or 1)
