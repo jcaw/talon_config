@@ -32,7 +32,7 @@ zoom out: edit.zoom_out()
 find [<user.dictation>]$: edit.find(dictation or "")
 find (that | thing)$: edit.find(user.get_that_dwim())
 find <user.complex_phrase>$:
-    user.search()
+    edit.find()
     sleep(500ms)
     user.insert_complex(complex_phrase, "lowercase")
 search [<user.dictation>]$: user.search(dictation or "")
