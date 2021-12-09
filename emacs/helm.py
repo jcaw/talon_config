@@ -32,8 +32,8 @@ class GlobalActions:
         emacs_command(command_name)
 
 
-context = Context()
-context.matches = r"""
+helm_available_context = Context()
+helm_available_context.matches = r"""
 os: windows
 os: linux
 os: mac
@@ -41,10 +41,10 @@ tag: user.emacs
 user.emacs-minor-mode: helm-mode
 """
 # TODO: Remove, uneeded
-context.tags = ["user.emacs-helm-enabled"]
+helm_available_context.tags = ["user.emacs-helm-enabled"]
 
 
-@context.action_class("edit")
+@helm_available_context.action_class("edit")
 class EditActions:
     def find(text: str = None):
         if text:
@@ -70,13 +70,13 @@ class EditActions:
 
 
 in_prompt_context = Context()
-context.matches = r"""
+in_prompt_context.matches = r"""
 tag: user.emacs
 user.emacs-in-helm-prompt: True
 """
 
 
-@context.action_class("user")
+@in_prompt_context.action_class("user")
 class UserActions:
     def opening_number_action(number: int) -> None:
         actions.self.emacs_helm_command("helm-confirm-and-exit-minibuffer", number)
