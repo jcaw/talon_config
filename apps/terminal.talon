@@ -27,3 +27,10 @@ CD: "cd "
 CD <user.complex_phrase>:
     insert("cd ")
     user.complex_insert(complex_phrase)
+
+
+# Specific Apps
+#############################################################################
+
+jupyter:          insert("jupyter")
+jupyter notebook: insert("jupyter notebook")

@@ -89,10 +89,7 @@ class Actions:
     def emacs_switch_theme() -> None:
         """Open the themes menu."""
         emacs_fallbacks(
-            [
-                "spacemacs/helm-themes",
-                "load-theme",
-            ]
+            ["spacemacs/helm-themes", "load-theme",]
         )
 
     def emacs_restart() -> None:
@@ -224,3 +221,9 @@ class UserActions:
         user.toggle_comment()
         # TODO: This nicer or worse?
         user.emacs_pop_mark()
+
+    def document_start() -> None:
+        user.emacs_command("beginning-of-buffer")
+
+    def document_end() -> None:
+        user.emacs_command("end-of-buffer")

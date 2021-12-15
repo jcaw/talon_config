@@ -143,6 +143,14 @@ class ModuleActions:
             "Number DWIM", "No opening number actions available in this context."
         )
 
+    def document_start() -> None:
+        """Move cursor to the start of the document."""
+        actions.key("ctrl-up")
+
+    def document_end() -> None:
+        """Move cursor to the end of the document."""
+        actions.key("ctrl-down")
+
 
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1

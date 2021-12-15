@@ -3,6 +3,7 @@ import logging
 import inspect
 
 from talon import cron, noise, Context
+from user.utils import context_active
 
 
 class _LongNoiseHandler(object):
@@ -89,7 +90,8 @@ class _HandlerMapper(object):
         best_handler = None
         best_priority = -1
         for (context, handler, priority) in self._handlers:
-            if context.enabled and priority >= best_priority:
+            # FIXME: `context.enabled` has been removed
+            if context_active(context) and priority >= best_priority:
                 best_handler = handler
                 best_priority = priority
         return best_handler

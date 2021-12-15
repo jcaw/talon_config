@@ -48,8 +48,6 @@ cursor bottom [<number>]:
     user.emacs_prefix_command("recenter", pos)
 cursor (middle | center) [<number>]:
     user.emacs_prefix_command("evil-scroll-line-to-center", number or 0)
-scroll top: user.emacs_command("beginning-of-buffer")
-scroll bottom: user.emacs_command("end-of-buffer")
 # TODO: Scroll up/down by single lines
 
 

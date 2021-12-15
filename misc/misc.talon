@@ -36,3 +36,6 @@ wrong [<number>]:
 prior [<number>]: user.last_speech_recordings(number or 5)
 (play | replay) last [recording]: user.play_last_speech_recording()
 (edit | audacity) last [recording]: user.audacity_last_speech_recording()
+
+scroll top:    user.document_start()
+scroll bottom: user.document_end()
