@@ -4,5 +4,7 @@
 reopen tab: app.tab_reopen()
 (close | kill) tab: app.tab_close()
 detach [tab]: app.tab_detach()
+[move] tab right: user.tab_right()
+[move] tab left: user.tab_left()
 
 (new | open) window: app.window_open()

@@ -151,6 +151,12 @@ class ModuleActions:
         """Move cursor to the end of the document."""
         actions.key("ctrl-down")
 
+    def tab_right() -> None:
+        """Move the current tab to the right in the tab order."""
+
+    def tab_left() -> None:
+        """Move the current tab to the left in the tab order."""
+
 
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1

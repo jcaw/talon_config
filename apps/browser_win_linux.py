@@ -76,6 +76,12 @@ class UserActions:
             actions.insert(text.lower())
             key("enter")
 
+    def tab_right() -> None:
+        key("ctrl-shift-pagedown")
+
+    def tab_left() -> None:
+        key("ctrl-shift-pageup")
+
 
 @context.action_class("browser")
 class BrowserActions:
