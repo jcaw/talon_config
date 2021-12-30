@@ -16,4 +16,4 @@ snap bottom left:  user.snap_window_win("left left down")
 # screen left:       user.snap_screen_win("left")
 # screen right:      user.snap_screen_win("right")
 
-flip:              user.swap_last_screen()
+flip:              user.swap_screens(1)

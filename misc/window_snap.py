@@ -8,10 +8,16 @@ Originally from dweil/talon_community - modified for newapi by jcaw.
 #   platforms
 
 import time
+import re
+import os
 from operator import xor
 from typing import Optional
+import logging
 
 from talon import ui, Module, Context, actions
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
 
 
 def sorted_screens():
@@ -33,6 +39,7 @@ def _set_window_pos(window, x, y, width, height):
     #   than setting the position?
     window.rect = ui.Rect(round(x), round(y), round(width), round(height))
     actions.sleep("10ms")
+    # HACK: Windows doesn't necessarily move it properly the first time.
     window.rect = ui.Rect(round(x), round(y), round(width), round(height))
 
 
@@ -55,22 +62,58 @@ def _window_to_screen(window: ui.Window, dest_screen: ui.Screen):
     if src_screen == dest_screen:
         return
 
-    # Retain the same proportional position on the new screen.
     dest = dest_screen.visible_rect
     src = src_screen.visible_rect
-    # TODO: Test this on different-sized screens
-    #
-    # TODO: Is this the best behaviour for moving to a vertical screen? Probably
-    #   not.
-    proportional_width = dest.width / src.width
-    proportional_height = dest.height / src.height
-    _set_window_pos(
-        window,
-        x=dest.left + (window.rect.left - src.left) * proportional_width,
-        y=dest.top + (window.rect.top - src.top) * proportional_height,
-        width=window.rect.width * proportional_width,
-        height=window.rect.height * proportional_height,
-    )
+    # TODO: Test vertical screen with different aspect ratios
+    # Does the orientation between the screens change? (vertical/horizontal)
+    if (src.width / src.height > 1) != (dest.width / dest.height > 1):
+        # Horizontal -> vertical or vertical -> horizontal
+        # Retain proportional window size, but flip x/y of the vertical monitor to account for the monitors rotation.
+        if src.width / src.height > 1:
+            # horizontal -> vertical
+            width = window.rect.width * dest.height / src.width
+            height = window.rect.height * dest.width / src.height
+        else:
+            # vertical -> horizontal
+            width = window.rect.width * dest.width / src.height
+            height = window.rect.height * dest.height / src.width
+        # Deform window if width or height is bigger than the target monitors while keeping the window area the same.
+        if width > dest.width:
+            over = (width - dest.width) * height
+            width = dest.width
+            height += over / width
+        if height > dest.height:
+            over = (height - dest.height) * width
+            height = dest.height
+            width += over / height
+        # Proportional position:
+        # Since the window size in respect to the monitor size is not proportional (x/y was flipped),
+        # the positioning is more complicated than proportionally scaling the x/y coordinates.
+        # It is computed by keeping the free space to the left of the window proportional to the right
+        # and respectively for the top/bottom free space.
+        # The if conditions account for division by 0. TODO: Refactor positioning without division by 0
+        if src.height == window.rect.height:
+            x = dest.left + (dest.width - width) / 2
+        else:
+            x = dest.left + (window.rect.top - src.top) * (dest.width - width) / (
+                src.height - window.rect.height
+            )
+        if src.width == window.rect.width:
+            y = dest.top + (dest.height - height) / 2
+        else:
+            y = dest.top + (window.rect.left - src.left) * (dest.height - height) / (
+                src.width - window.rect.width
+            )
+    else:
+        # Horizontal -> horizontal or vertical -> vertical
+        # Retain proportional size and position
+        proportional_width = dest.width / src.width
+        proportional_height = dest.height / src.height
+        x = dest.left + (window.rect.left - src.left) * proportional_width
+        y = dest.top + (window.rect.top - src.top) * proportional_height
+        width = window.rect.width * proportional_width
+        height = window.rect.height * proportional_height
+    _set_window_pos(window, x=x, y=y, width=width, height=height)
 
 
 def _window_to_numbered_screen(
@@ -216,7 +259,7 @@ class Actions:
     def move_app_to_screen(app_name: str, screen_number: int):
         """Move a specific application to another screen."""
         window = _get_app_window(app_name)
-        print(window)
+        # print(window)
         _bring_forward(window)
         _window_to_numbered_screen(
             window, screen_number=screen_number,
@@ -228,6 +271,47 @@ class Actions:
         This physically moves all windows from source to target.
 
         """
+        # Invalid app names will not be moved to a different screen. Use this
+        # for e.g. the Windows Taskbar
+        if os.name == "nt":  # On Windows
+            # excluded_titles = [
+            #     "^Action Centre",
+            #     "^System Clock",
+            #     "^Program Manager$",
+            #     "^Running applications$",
+            #     "^Start$",
+            #     "^Microsoft Text Input Application$",
+            #     "^Settings$",
+            #     "^Search$",
+            #     "^Windows Shell Experience Host$",
+            #     "^Task view$",
+            #     "^New notification$",
+            #     "^&Open$",
+            #     "^Cancel$",
+            #     "^action centre$",
+            #     "^Task View$",
+            #     "^Type here to search$",
+            #     "^Windows Default Lock Screen$",
+            # ]
+            invalid_app_names = {
+                "Windows Explorer",
+                "Console Window Host",
+                "COM Surrogate",
+                "Runtime Broker",
+                "Windows Shell Experience Host",
+                "TextInputHost.exe",
+                "StartMenuExperienceHost.exe",
+                "Settings",
+                "Application Frame Host",
+                "Search application",
+                "LockApp.exe",
+                # Talon right-click menus can show up otherwise
+                "Talon",
+            }
+        else:
+            # excluded_titles = []
+            invalid_app_names = {}
+        # excluded_titles = list(map(re.compile, excluded_titles))
 
         def _window_on_screen(window: ui.Window, screen: ui.Screen) -> bool:
             """Is `window` is currently on `screen`?
@@ -236,26 +320,39 @@ class Actions:
             primarily on the given screen, and unminimized.
 
             """
-            return (
-                # `ui.Window.hidden` is pretty unreliable on Windows as of
-                # 2020/10/05.
-                not window.hidden
-                and window.rect
-                and window.rect.width > 0
-                and window.rect.height > 0
-                and window.screen == screen
-                and screen.rect.contains(*window.rect.center)
-                # HACK: Super hacky way of not affecting things like the taskbar
-                #   icon popup is just to ignore windows with no title.
-                and window.title
+            return all(
+                [
+                    # `ui.Window.hidden` is pretty unreliable on Windows as of
+                    # 2020/10/05.
+                    not window.hidden,
+                    window.rect,
+                    window.rect.width > 0,
+                    window.rect.height > 0,
+                    window.screen == screen,
+                    screen.rect.contains(*window.rect.center),
+                ]
             )
 
         screens = sorted_screens()
         source_screen = screens[source - 1]
         target_screen = screens[target - 1] if target else ui.main_screen()
         # Overtly freeze the window list so we don't affect it by moving them.
+        LOGGER.debug("---")
+        print(source_screen)
         for window in list(ui.windows()):
-            if _window_on_screen(window, source_screen):
-                _window_to_screen(window, target_screen)
-            elif _window_on_screen(window, target_screen):
-                _window_to_screen(window, source_screen)
+            if (
+                # HACK: Super hacky way of not affecting things like the taskbar
+                #   icon popup is just to ignore windows with no title.
+                window.title
+                # Some title regexps are excluded
+                # and not any(
+                # map(lambda t: t.search(window.title.strip()), excluded_titles)
+                # )
+                and window.app.name not in invalid_app_names
+            ):
+                if _window_on_screen(window, source_screen):
+                    LOGGER.debug(f"Source window: {window.app} {window.title}")
+                    _window_to_screen(window, target_screen)
+                elif _window_on_screen(window, target_screen):
+                    LOGGER.debug(f"Target window: {window.app} {window.title}")
+                    _window_to_screen(window, source_screen)
