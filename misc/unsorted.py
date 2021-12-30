@@ -83,7 +83,7 @@ class ModuleActions:
         #
         # TODO: Add an explicit guard here that prevents deleting many files on
         #   accidental repeat.
-        if n_files >= 5:
+        if n_files > 5:
             app.notify(
                 "Talon Warning", "Truncating deleted noise files - only removing 5."
             )
