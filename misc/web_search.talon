@@ -1,5 +1,5 @@
 web search <user.dictation>$:   user.web_search(dictation)
-google <user.dictation>$:       user.google_search(dictation)
+(google | goog) <user.dictation>$:       user.google_search(dictation)
 bing search <user.dictation>$:  user.bing_search(dictation)
 duck duck go <user.dictation>$: user.duckduckgo_search(dictation)
 amazon <user.dictation>$:       user.amazon_search(dictation)
@@ -11,7 +11,7 @@ letterboxed <user.dictation>$:  user.letterboxd_search(dictation)
 
 # Optionally say "plus [whatever]" to add extra stuff to the thing at point
 web search [that | thing] [plus <user.dictation>]$:   user.web_search(user.get_that_dwim_plus_text(dictation or ""))
-google [that | thing] [plus <user.dictation>]$:       user.google_search(user.get_that_dwim_plus_text(dictation or ""))
+(google | goog) [that | thing] [plus <user.dictation>]$:       user.google_search(user.get_that_dwim_plus_text(dictation or ""))
 bing search [that | thing] [plus <user.dictation>]$:  user.bing_search(user.get_that_dwim_plus_text(dictation or ""))
 duck duck go [that | thing] [plus <user.dictation>]$: user.duckduckgo_search(user.get_that_dwim_plus_text(dictation or ""))
 amazon [that | thing] [plus <user.dictation>]$:       user.amazon_search(user.get_that_dwim_plus_text(dictation or ""))
