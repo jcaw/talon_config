@@ -11,7 +11,7 @@ import re
 import time
 import logging
 
-from talon import Context, Module, app, imgui, ui, fs
+from talon import Context, Module, app, imgui, ui, fs, actions
 from talon_init import TALON_USER
 
 LOGGER = logging.getLogger(__name__)
@@ -185,6 +185,13 @@ class Actions:
                 # successful switch, hide it.
                 actions.self.switcher_hide_running()
                 break
+
+    def switcher_focus_temporarily(name: str, pause: str = "300ms") -> None:
+        """Switch to an application by name, then switch back."""
+        current_app = ui.active_app()
+        actions.self.switcher_focus(name)
+        actions.sleep(pause)
+        current_app.focus()
 
     def switcher_launch(path: str):
         """Launch a new application by path"""
