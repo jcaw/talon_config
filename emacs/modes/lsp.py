@@ -12,7 +12,7 @@ user.emacs-minor-mode: lsp-mode
 
 @context.action_class("self")
 class LSPActions:
-    def rename():
+    def rename() -> None:
         actions.self.emacs_command("lsp-rename")
 
     def rename_with_phrase(chunked_phrase: Optional[List] = None) -> None:

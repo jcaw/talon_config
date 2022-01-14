@@ -48,8 +48,8 @@ comment <number>: user.toggle_comment_lines(number)
 comment <user.complex_phrase>$:     user.insert_comment(complex_phrase)
 comment <user.complex_phrase> over: user.insert_comment(complex_phrase)
 
-(rename | run me) [<user.complex_phrase>$]:   user.rename_with_phrase(complex_phrase)
-(rename | run me) <user.complex_phrase> over: user.rename_with_phrase(complex_phrase)
+(rename | run me) [<user.complex_phrase>$]:   user.rename_with_phrase(complex_phrase or "")
+(rename | run me) <user.complex_phrase> over: user.rename_with_phrase(complex_phrase or "")
 
 
 # TODO: Combine properly with Emacs editing commands
