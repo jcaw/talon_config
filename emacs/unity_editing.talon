@@ -9,3 +9,10 @@ or user.emacs-minor-mode: unity-mode
 -
 # Recompile in Unity
 recheck: self.switcher_focus_temporarily("unity editor")
+# HACK: Disk changes take a while to follow through before Unity can detect
+#   them, so add an artificial delay when something is saved and checked
+#   immediately.
+disk recheck:
+    edit.save()
+    sleep(1s)
+    self.switcher_focus_temporarily("unity editor")
