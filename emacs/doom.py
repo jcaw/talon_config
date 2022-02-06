@@ -18,6 +18,12 @@ class DoomActions:
     def emacs_quit():
         emacs_command("save-buffers-kill-terminal")
 
+    def go_back():
+        emacs_command("better-jumper-jump-backward")
+
+    def go_forward():
+        emacs_command("better-jumper-jump-forward")
+
     def find_definition():
         emacs_command("+lookup/definition")
 
