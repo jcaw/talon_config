@@ -65,6 +65,7 @@ formatter_functions = {
     PREVIOUS_FORMATTERS_SIGNIFIER: PREVIOUS_FORMATTERS_SIGNIFIER,
     "speech": apply_speech,
     "uppercase_snake": formatter_chain(apply_snake, apply_uppercase),
+    "uppercase_squash": formatter_chain(apply_squash, apply_uppercase),
     # Language-specific
     # TODO: Find some way to extract this stuff
     "c_path": make_apply_delimiter("::"),
@@ -103,6 +104,7 @@ chainable_formatters = multi_map(
         # "pad": "padded",
         # Common combination, so contract it.
         ("upsnake", "upsnik", "up nick"): "uppercase_snake",
+        "upmash": "uppercase_squash",
         # TODO: Maybe don't allow this to be chained?
         (
             "lower",
