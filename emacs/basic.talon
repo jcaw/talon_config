@@ -164,8 +164,9 @@ action(edit.save_all): key(ctrl-x s)
 submit:  key(ctrl-c ctrl-c)
 discard: key(ctrl-c ctrl-k)
 
-(next | neck) error | nerror:  user.next_error()
-(last | larse) error | larror: user.previous_error()
+# TODO 1: Just use ferror/berror for these?
+(next | neck) error:  user.next_error()
+(last | larse) error: user.previous_error()
 
 (rectangle | rect): user.emacs_command("rectangle-mark-mode")
 
@@ -220,3 +221,7 @@ ediff [buffers]: user.emacs_command("ediff-buffers")
 
 # Jump to the last stacktrace link
 comper [<number>]: user.emacs_prefix_command("jcaw-jump-to-compile-hyperlink", number or 1)
+
+ferror: user.emacs_command("next-error")
+berror: user.emacs_command("previous-error")
+first error: user.emacs_command("first-error")
