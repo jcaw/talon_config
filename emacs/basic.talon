@@ -218,5 +218,5 @@ flush: user.emacs_command("just-one-space")
 
 ediff [buffers]: user.emacs_command("ediff-buffers")
 
-# Jump to the last error
+# Jump to the last stacktrace link
 comper [<number>]: user.emacs_prefix_command("jcaw-jump-to-compile-hyperlink", number or 1)
