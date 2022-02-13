@@ -157,6 +157,12 @@ class ModuleActions:
     def tab_left() -> None:
         """Move the current tab to the left in the tab order."""
 
+    def quit_talon() -> None:
+        """Exit Talon."""
+
+    def restart_talon() -> None:
+        """Restart Talon."""
+
 
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1
