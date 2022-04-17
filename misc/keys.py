@@ -69,7 +69,7 @@ symbols = multi_map(
         ("comma", "camma"): ",",
         ("dot", "period", "full stop", "stop"): ".",
         ("semicolon", "semi"): ";",
-        ("apostrophe", "post", "poess"): "'",
+        ("apostrophe", "post", "poess", "tick"): "'",
         (
             "speech mark",
             "speech",
