@@ -14,24 +14,24 @@ os: windows
 
 @context.action_class("self")
 class UserActions:
-    def quit_talon() -> None:
-        # `taskkill` has weird access permissions, so access may be denied. Use
-        # `wmic` instead, it's more reliable.
+    # def quit_talon() -> None:
+    #     # `taskkill` has weird access permissions, so access may be denied. Use
+    #     # `wmic` instead, it's more reliable.
 
-        # subprocess.Popen(["taskkill", "-pid", str(os.getpid())], start_new_session=True)
-        # subprocess.Popen(["taskkill", "-im", "talon.exe"], start_new_session=True)
+    #     # subprocess.Popen(["taskkill", "-pid", str(os.getpid())], start_new_session=True)
+    #     # subprocess.Popen(["taskkill", "-im", "talon.exe"], start_new_session=True)
 
-        subprocess.Popen(
-            [
-                "wmic",
-                "process",
-                "where",
-                "name='talon.exe'",
-                # "processID='{}'".format(os.getpid()),
-                "delete",
-            ],
-            start_new_session=True,
-        )
+    #     subprocess.Popen(
+    #         [
+    #             "wmic",
+    #             "process",
+    #             "where",
+    #             "name='talon.exe'",
+    #             # "processID='{}'".format(os.getpid()),
+    #             "delete",
+    #         ],
+    #         start_new_session=True,
+    #     )
 
     def restart_talon() -> None:
         # Should be something like: "C:/Program Files/Talon/python/bin/python3"
