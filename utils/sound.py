@@ -47,6 +47,8 @@ def play(path, ignore_missing_file=True):
 
 # Some convenience methods to abstract the specific sound choice and make
 # the soundscape more consistent.
+#
+# TODO: Remove these, exclusively use actions
 def play_ding(**kwargs):
     """Play a pleasant confirmation ding."""
     play(BELL, **kwargs)
