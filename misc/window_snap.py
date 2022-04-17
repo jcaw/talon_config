@@ -294,6 +294,9 @@ class Actions:
             #     "^Windows Default Lock Screen$",
             # ]
             invalid_app_names = {
+                # Lots of Window's native OS chrome (e.g. the taskbar, start
+                # menu) needs to be ignored - moving it results in weird GUI
+                # corruptions.
                 "Windows Explorer",
                 "Console Window Host",
                 "COM Surrogate",
@@ -305,6 +308,9 @@ class Actions:
                 "Application Frame Host",
                 "Search application",
                 "LockApp.exe",
+                # Slack get moved even when it's minimized to the taskbar, which
+                # makes the window unresponsive
+                "Slack",
                 # Talon right-click menus can show up otherwise
                 "Talon",
             }
