@@ -4,6 +4,7 @@ from talon import Module, Context, actions, imgui, app
 from typing import Optional, List
 from pathlib import Path
 import os
+import shlex
 import subprocess
 import webbrowser
 
@@ -157,11 +158,32 @@ class ModuleActions:
     def tab_left() -> None:
         """Move the current tab to the left in the tab order."""
 
+    def terminal_command(command: str) -> None:
+        """Execute a terminal command."""
+        p = subprocess.Popen(shlex.split(command), start_new_session=True)
+
     def quit_talon() -> None:
         """Exit Talon."""
 
     def restart_talon() -> None:
         """Restart Talon."""
+
+    def quit_talon_with_sound() -> None:
+        """Exit Talon, with a confirmation sound."""
+        # TODO: Only play the sound if `actions.self.quit_talon` is implemented
+        actions.user.play_cancel()
+        # Let the sound play out
+        actions.sleep("1s")
+        actions.self.quit_talon()
+
+    def restart_talon_with_sound() -> None:
+        """Restart Talon, with a confirmation sound."""
+        if actions.self.restart_talon:
+            # TODO: Only play the sound if `actions.self.quit_talon` is implemented
+            actions.user.play_ding()
+            # Let the sound play out
+            actions.sleep("1s")
+            actions.self.restart_talon()
 
 
 global_context = Context()

@@ -5,7 +5,7 @@ run <user.dictation>:
     sleep(200ms)
     insert(dictation)
 
-key(ctrl-win-t):  user.quit_talon()
-key(ctrl-alt-t):  user.restart_talon()
-quit talon:       user.quit_talon()
-restart talon:    user.restart_talon()
+# TODO: Maybe generalise these keypresses, make them universal across platforms?
+#   Not sure if there would be any conflicts doing that.
+key(ctrl-win-t):  user.quit_talon_with_sound()
+key(ctrl-alt-t):  user.restart_talon_with_sound()
