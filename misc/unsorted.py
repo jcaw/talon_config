@@ -33,6 +33,11 @@ def last_speech_recording() -> str:
     return str(most_recent_speech_recordings(1)[0])
 
 
+# Stores the previous microphone, for when the microphone is disabled with
+# `toggle_mic_off`
+_previous_mic = None
+
+
 @module.action_class
 class ModuleActions:
     def open_file() -> None:
@@ -184,6 +189,28 @@ class ModuleActions:
             # Let the sound play out
             actions.sleep("1s")
             actions.self.restart_talon()
+
+    def toggle_mic_off() -> None:
+        """Toggle the active microphone on/off. Bind this to a keychord."""
+        global _previous_mic
+
+        active_mic = actions.sound.active_microphone()
+        print(active_mic)
+        if active_mic == "None":
+            mic = _previous_mic or "System Default"
+            actions.sound.set_microphone(mic)
+            _previous_mic = None
+            new_mic = actions.sound.active_microphone()
+            actions.app.notify(
+                # Explicitly notify the user if system default was used. Square
+                # brackets because mic names often have round parens in them
+                f"System Default [{new_mic}]" if mic == "System Default" else new_mic,
+                "Microphone Activated"
+            )
+        else:
+            _previous_mic = active_mic
+            actions.sound.set_microphone("None")
+            actions.app.notify("Toggle again re-enable", "Microphone Disabled")
 
 
 global_context = Context()

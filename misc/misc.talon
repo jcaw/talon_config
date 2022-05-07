@@ -43,3 +43,5 @@ scroll bottom: user.document_end()
 # Don't tell Aegis (use this when Voicemacs deadlocks)
 restart talon: user.restart_talon_with_sound()
 exit talon:    user.quit_talon_with_sound()
+
+key(ctrl-shift-enter): user.toggle_mic_off()
