@@ -80,7 +80,7 @@ class ModuleActions:
 
     def path_talon_recordings() -> Path:
         """Path to Talon speech clip recordings."""
-        return actions.path.talon_home() / "recordings"
+        return Path(actions.path.talon_home()) / "recordings"
 
     def delete_last_speech_recording(n_files: Optional[int] = 1) -> None:
         """Delete the last speech recording."""
