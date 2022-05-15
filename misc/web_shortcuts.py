@@ -23,6 +23,12 @@ context.lists["user.subsearch_site"] = {
 class Actions:
     def open_website(url: str) -> None:
         """Navigate to a website in the default browser."""
+        # HACK: If a URL doesn't open with an explicit HTTP protocol
+        #   declaration, Windows will always open it in Edge, so add one
+        lower_url = url.lower()
+        if not (lower_url.startswith("http://") or lower_url.startswith("https://")):
+            url = f"https://{url}"
+        print(f'Opening URL: "{url}"')
         webbrowser.open(url, new=2, autoraise=True)
 
     def open_website_with_params(base_url: str, params: Dict[str, str]):
