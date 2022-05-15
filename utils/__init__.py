@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 
 
+# TODO: Remove references to these, replace with the actions
 ON_WINDOWS = platform.system() == "Windows"
 ON_LINUX = platform.system() == "Linux"
 ON_MAC = platform.system() == "Darwin"
@@ -496,6 +497,18 @@ class Actions():
 
                     cron.after(deadzone, purge_notification)
                 return app.notify(title, subtitle, body, sound)
+
+    def on_windows():
+        """Is the OS Windows?"""
+        return ON_WINDOWS
+
+    def on_linux():
+        """Is the OS Linux?"""
+        return ON_LINUX
+
+    def on_mac():
+        """Is the OS Mac?"""
+        return ON_MAC
 
 
 def context_active(context):
