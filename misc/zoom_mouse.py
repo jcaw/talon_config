@@ -99,6 +99,13 @@ class Actions:
             if settings["self.click_sounds"]:
                 sound.play_cancel()
 
+    def toggle_gaze_track_dot():
+        """Toggle whether a small dot tracks your gaze outside zoom."""
+        eye_zoom_mouse.config.track_gaze_with_dot = not eye_zoom_mouse.config.track_gaze_with_dot
+        if eye_zoom_mouse.zoom_mouse.enabled:
+            eye_zoom_mouse.zoom_mouse.disable()
+            eye_zoom_mouse.zoom_mouse.enable()
+
 
 context = Context()
 context.matches = r"""
