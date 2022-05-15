@@ -4,10 +4,19 @@ import urllib
 import webbrowser
 from typing import Dict
 
-from talon import Module, actions
+from talon import Module, actions, Context
 
 
 module = Module()
+module.list(
+    "subsearch_site", desc="Websites that can be subsearched on google with a command"
+)
+
+context = Context()
+context.lists["user.subsearch_site"] = {
+    "papers": "paperswithcode.com",
+    "papers with code": "paperswithcode.com",
+}
 
 
 @module.action_class
@@ -75,3 +84,7 @@ class Actions:
         actions.self.open_website(
             "https://letterboxd.com/search/{}".format(urllib.parse.quote(text))
         )
+
+    def google_subsearch(site: str, text: str) -> None:
+        """Google search, restricting results to a specific website."""
+        actions.self.google_search(text + f"    site:{site}")
