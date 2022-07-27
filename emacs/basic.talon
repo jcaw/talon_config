@@ -225,3 +225,6 @@ comper [<number>]: user.emacs_prefix_command("jcaw-jump-to-compile-hyperlink", n
 ferror: user.emacs_command("next-error")
 berror: user.emacs_command("previous-error")
 first error: user.emacs_command("first-error")
+
+highlight:               user.emacs_command("highlight-symbol-at-point")
+(unhighlight | unlight): user.emacs_command("unhighlight-regexp")

@@ -101,10 +101,16 @@ class Actions:
 
     def toggle_gaze_track_dot():
         """Toggle whether a small dot tracks your gaze outside zoom."""
-        eye_zoom_mouse.config.track_gaze_with_dot = not eye_zoom_mouse.config.track_gaze_with_dot
+        eye_zoom_mouse.config.track_gaze_with_dot = (
+            not eye_zoom_mouse.config.track_gaze_with_dot
+        )
         if eye_zoom_mouse.zoom_mouse.enabled:
             eye_zoom_mouse.zoom_mouse.disable()
             eye_zoom_mouse.zoom_mouse.enable()
+
+    def maybe_queue_drag() -> None:
+        """Queue a drag + drop iff in zoom mouse mode."""
+        pass
 
 
 context = Context()
@@ -151,6 +157,13 @@ class MouseActions:
 
             # Add drop on a delay so the ding rings twice.
             cron.after("150ms", queue_drop)
+
+    def maybe_queue_drag() -> None:
+        # TODO: Use `self` or `user` consistently for actions
+        actions.self.queue_zoom_action(lambda: actions.self.drag())
+        cron.after(
+            "150ms", lambda: actions.self.queue_zoom_action(lambda: actions.self.drop())
+        )
 
 
 # HACK: Unbind the default zoom_mouse pop, manually bind it ourselves so we can

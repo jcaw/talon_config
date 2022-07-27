@@ -8,14 +8,26 @@ from talon import Module, actions, Context
 
 
 module = Module()
+context = Context()
+
 module.list(
     "subsearch_site", desc="Websites that can be subsearched on google with a command"
 )
-
-context = Context()
 context.lists["user.subsearch_site"] = {
     "papers": "paperswithcode.com",
     "papers with code": "paperswithcode.com",
+}
+
+module.list("quick_site", desc="Quick names for easy-access websites")
+context.lists["user.quick_site"] = {
+    "whatsapp": "web.whatsapp.com",
+    "twitter": "twitter.com",
+    "google": "google.com",
+    "amazon": "amazon.com",
+    "github": "github.com",
+    "jist": "gist.github.com",
+    "youtube": "youtube.com",
+    "history": "youtube.com/feed/history",
 }
 
 

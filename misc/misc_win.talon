@@ -1,4 +1,7 @@
 # Unsorted MS Windows commands
 os: windows
 -
-action(user.lock_screen): key("windows-l")
+snip (shot | screen):
+    key("win-shift-s")
+    # Queue a drag automatically iff using zoom mouse
+    user.maybe_queue_drag()

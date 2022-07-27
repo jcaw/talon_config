@@ -89,7 +89,10 @@ class Actions:
     def emacs_switch_theme() -> None:
         """Open the themes menu."""
         emacs_fallbacks(
-            ["spacemacs/helm-themes", "load-theme",]
+            [
+                "spacemacs/helm-themes",
+                "load-theme",
+            ]
         )
 
     def emacs_restart() -> None:

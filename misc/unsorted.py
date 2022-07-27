@@ -118,8 +118,11 @@ class ModuleActions:
         """Notify with the most recent `n_recordings` speech recordings."""
         app.notify(
             f"{n_recordings} Newest Recordings",
-            str(
-                list(map(recording_words, most_recent_speech_recordings(n_recordings)))
+            ", ".join(
+                [
+                    f"{recording_words(s)} ({i+2})"
+                    for i, s in enumerate(most_recent_speech_recordings(n_recordings))
+                ]
             ),
         )
 
@@ -205,7 +208,7 @@ class ModuleActions:
                 # Explicitly notify the user if system default was used. Square
                 # brackets because mic names often have round parens in them
                 f"System Default [{new_mic}]" if mic == "System Default" else new_mic,
-                "Microphone Activated"
+                "Microphone Activated",
             )
         else:
             _previous_mic = active_mic
@@ -220,6 +223,30 @@ global_context.settings["imgui.dark_mode"] = 1
 @global_context.action_class("self")
 class GlobalActions:
     pass
+
+
+windows_context = Context(name="unsorted_windows")
+windows_context.matches = r"""
+os: windows
+"""
+
+
+@windows_context.action_class("self")
+class WindowsActions:
+    def lock_screen():
+        key("win-l")
+
+
+linux_context = Context(name="unsorted_linux")
+linux_context.matches = r"""
+os: linux
+"""
+
+
+# @linux_context.action_class("self")
+# class LinuxActions:
+#     def action():
+#         pass
 
 
 win_linux_context = Context(name="unsorted_win_linux")
