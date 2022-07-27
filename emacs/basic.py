@@ -133,15 +133,20 @@ context.matches = """
 # TODO: This is depracated? Is it the case sensitivity?
 # app: /Emacs/
 app: /emacs/
-
-# Use this for Cygwin X on Windows, displaying WSL Emacs
-app: /XWin/
-and title: /^emacs@/
-
 # HACK: Circumvent tags losing priority
 os: windows
 os: linux
 os: mac
+
+# Use this for Cygwin X on Windows, displaying WSL Emacs
+app: /XWin/
+and title: /^emacs@/
+and os: windows
+
+# VC X Server on Windows, displaying WSL Emacs. Note this title will only work for Doom Emacs.
+app: /vcxsrv/
+and title: /Emacs$/
+and os: windows
 """
 context.tags = ["user.emacs"]
 
