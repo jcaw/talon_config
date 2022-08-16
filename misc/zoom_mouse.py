@@ -161,9 +161,13 @@ class MouseActions:
     def maybe_queue_drag() -> None:
         # TODO: Use `self` or `user` consistently for actions
         actions.self.queue_zoom_action(lambda: actions.self.drag())
-        cron.after(
-            "150ms", lambda: actions.self.queue_zoom_action(lambda: actions.self.drop())
-        )
+
+        def drop_after_pause():
+            """Undrag the mouse, after a short pause. Gives time for visual feedback."""
+            actions.sleep("1000ms")
+            actions.self.drop()
+
+        cron.after("150ms", lambda: actions.self.queue_zoom_action(drop_after_pause))
 
 
 # HACK: Unbind the default zoom_mouse pop, manually bind it ourselves so we can
