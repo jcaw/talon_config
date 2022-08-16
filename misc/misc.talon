@@ -33,7 +33,7 @@ wrong [<number>]:
     # TODO: Undo *and* cancel?
     user.cancel()
 # To establish what needs to be deleted
-prior [<number>]: user.last_speech_recordings(number or 5)
+prior [<number>]: user.show_last_speech_recordings(number or 5)
 (play | replay) last [recording]: user.play_last_speech_recording()
 (edit | audacity) last [recording]: user.audacity_last_speech_recording()
 

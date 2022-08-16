@@ -9,6 +9,10 @@ import subprocess
 import webbrowser
 
 
+# Max number of most recent speech recordings to display
+MAX_PRIOR_RECORDINGS = 5
+
+
 module = Module()
 
 
@@ -89,11 +93,15 @@ class ModuleActions:
         #
         # TODO: Add an explicit guard here that prevents deleting many files on
         #   accidental repeat.
-        if n_files > 5:
+        # Add 1 because "prior" will add one to the index of those displayed in
+        # the notification
+        max_deleted = MAX_PRIOR_RECORDINGS + 1
+        if n_files > max_deleted:
             app.notify(
-                "Talon Warning", "Truncating deleted noise files - only removing 5."
+                "Talon Warning",
+                f"Truncating deleted noise files - only removing {max_deleted}.",
             )
-            n_files = 5
+            n_files = max_deleted
 
         files = most_recent_speech_recordings(n_files)
 
@@ -114,7 +122,9 @@ class ModuleActions:
         #     # No message if no files deleted
         #     pass
 
-    def last_speech_recordings(n_recordings: Optional[int] = 5) -> None:
+    def show_last_speech_recordings(
+        n_recordings: Optional[int] = MAX_PRIOR_RECORDINGS,
+    ) -> None:
         """Notify with the most recent `n_recordings` speech recordings."""
         app.notify(
             f"{n_recordings} Newest Recordings",
