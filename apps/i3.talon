@@ -20,8 +20,3 @@ layout tabbed:          key("super-w")
 layout (split | tiled): key("super-e")
 ([toggle] borders | toggle title):  key("ctrl-shift-x")
 (focus | kiss) (floating | tiling): key("super-space")
-
-
-action(user.toggle_fullscreen): key(f11)
-action(app.window_close):       key(super-shift-q)
-action(user.lock_screen):       key(super-x)

@@ -26,8 +26,6 @@ paste cell [below]: user.emacs_command("ein:worksheet-yank-cell-km")
 merge cells: user.emacs_command("ein:worksheet-merge-cell-km")
 [change | set] cell type: user.emacs_command("ein:worksheet-change-cell-type-km")
 split cell: user.emacs_command("ein:worksheet-split-cell-at-point-km")
-
-action(edit.save): user.emacs_command("ein:notebook-save-notebook-command-km")
 restart [kernel | notebook]: user.emacs_command("ein:notebook-restart-session-command-km")
 restart [[and] run] all:
     user.emacs_command("ein:notebook-restart-session-command-km")

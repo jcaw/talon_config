@@ -10,10 +10,6 @@ os: mac
 #    key_wait = 100
 
 
-# Fundamental Commands
-
-# "c-g" is the interrupt command. It's hardcoded in C - can't remap it.
-action(user.cancel): key(ctrl-g)
 # Triple esc will get us out of any context
 # TODO: Settle on one of these
 (reset | rescue): key(esc esc esc)
@@ -123,30 +119,13 @@ open [file]: user.open_file()
 open [file] <user.dictation>:
     user.open_file()
     insert(dictation)
-action(edit.select_all):
-    user.emacs_command("mark-whole-buffer")
-
-# TODO: Generic Unsorted
-#
-# TODO: Fallbacks
-action(user.toggle_comment): user.emacs_command("spacemacs/comment-or-uncomment-lines")
 reflow:
     user.emacs_command("end-of-line")
     user.emacs_command("fill-paragraph")
 tight [reflow | flow]: user.emacs_command("jcaw-fill-this-line")
-action(edit.zoom_in): user.emacs_command("voicemacs-increase-text")
-action(edit.zoom_out): user.emacs_command("voicemacs-decrease-text")
-action(edit.save): user.emacs_command("save-buffer")
 save and kill:
     edit.save()
     user.emacs_command("kill-this-buffer")
-# TODO: save as
-# action(edit.save_as): user.emacs_command("")
-# FIXME: Doesn't work, "wrong type argument, listp". RPC problem?
-# action(edit.save_all): user.emacs_command("save-some-buffers")
-# Fall back to keypress for now. Should work everywhere anyway, who rebinds
-# this?
-action(edit.save_all): key(ctrl-x s)
 
 # TODO: Fallbacks
 [show] kill ring: user.emacs_command("helm-show-kill-ring")
@@ -203,8 +182,6 @@ bleak:
     user.emacs_command("just-one-space")
     key("{ enter")
 
-action(edit.undo): user.emacs_command("undo-fu-only-undo")
-action(edit.redo): user.emacs_command("undo-fu-only-redo")
 
 ^restart emacs$: user.emacs_restart()
 

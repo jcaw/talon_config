@@ -28,6 +28,7 @@ context.lists["user.quick_site"] = {
     "jist": "gist.github.com",
     "youtube": "youtube.com",
     "history": "youtube.com/feed/history",
+    "discord": "discord.com/channels/@me",
 }
 
 

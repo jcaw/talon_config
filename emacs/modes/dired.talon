@@ -6,7 +6,6 @@ move <number>: user.emacs_dired_highlight(number)
     user.emacs_dired_command("dired-find-file", number or 0)
 [(open | follow)] other [<number>]:
     user.emacs_dired_command("dired-find-file-other-window", number or 0)
-action(user.rename): user.emacs_dired_command("dired-do-rename", 0)
 (rename | move) [<number>]:
     user.emacs_dired_command("dired-do-rename", number or 0)
 
