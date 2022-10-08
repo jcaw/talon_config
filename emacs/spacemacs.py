@@ -1,4 +1,4 @@
-from talon import Module, actions
+from talon import Context, Module, actions
 
 emacs_command = actions.user.emacs_command
 insert = actions.insert
@@ -29,3 +29,19 @@ class Actions:
             # This regexp should work for arbitrary symbols
             insert(f"[{symbol}]")
             key("enter")
+
+
+context = Context()
+context.matches = r"""
+tag: user.emacs
+user.emacs-is-spacemacs: True
+"""
+
+@context.action_class('user')
+class UserActions:
+    ## Navigation
+    def emacs_find_definition(): actions.user.emacs_command('spacemacs/jump-to-definition')
+    # TODO: Pop mesages
+
+    def emacs_restart() -> None: actions.user.emacs_command('spacemacs/restart-emacs-resume-layouts')
+    def emacs_exit():            actions.user.emacs_command('spacemacs/prompt-kill-emacs')

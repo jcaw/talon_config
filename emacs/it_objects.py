@@ -251,6 +251,12 @@ class EmacsActions:
         actions.self.emacs_command("it-kill-dwim")
 
 
+@context.action_class("edit")
+class EditActions:
+    def select_line(n: int=None):
+        actions.user.emacs_command('it-mark-line')
+
+
 def short_commands(object_name, action):
     """Yield every short command for `action` on `object_name`."""
     suffix = short_suffixes.get(object_name)
