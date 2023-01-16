@@ -329,7 +329,7 @@ def complex_phrase(m) -> List:
         "("
         "<user.dictation_chunk> "
         # "| <user.active_symbol_chunk>"
-        ")"
+        ") "
         "[<user.complex_phrase>]"
     )
 )
