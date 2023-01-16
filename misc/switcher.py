@@ -17,6 +17,8 @@ from talon_init import TALON_USER
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
 
+key = actions.key
+
 
 # Construct at startup a list of overides for application names (similar to how homophone list is managed)
 # ie for a given talon recognition word set  `one note`, recognized this in these switcher functions as `ONENOTE`
@@ -149,6 +151,34 @@ fs.watch(settings_dir, update_overrides)
 
 @mod.action_class
 class Actions:
+    def switcher_kill(executable: str = "", title: str = "") -> None:
+        """Kill all apps matching `executable` and `title`."""
+        assert title or executable, (executable, title)
+        for cur_app in ui.apps():
+            print("Title:", cur_app.active_window.title)
+            print("Name: ", cur_app.exe)
+            if (
+                (title in cur_app.active_window.title)
+                and (executable in cur_app.exe)
+                # and not cur_app.background
+            ):
+                try:
+                    cur_app.focus()
+                    time.sleep(0.1)
+                    # TODO: Raise error off windows
+                    key("alt-f4")
+                except:
+                    pass
+
+    def switcher_focus_title(title: str) -> None:
+        """Focus an application by title."""
+        # running = ctx.lists["self.running"]
+
+        for cur_app in ui.apps():
+            # print(dir(cur_app.active_window.title))
+            if title in cur_app.active_window.title and not cur_app.background:
+                cur_app.focus()
+
     def switcher_focus(name: str):
         """Focus a new application by  name"""
 
