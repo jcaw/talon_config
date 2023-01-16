@@ -180,7 +180,7 @@ class Actions:
                 cur_app.focus()
 
     def switcher_focus(name: str):
-        """Focus a new application by  name"""
+        """Focus an application by  name"""
 
         wanted_app = name
 
