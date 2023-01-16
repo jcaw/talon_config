@@ -20,7 +20,7 @@ context.lists["user.chainable_formatters"] = {
 }
 
 
-@context.action_class
+@context.action_class("self")
 class EmacsLispActions:
     def rename():
         actions.self.emacs_command("erefactor-rename-symbol-in-buffer")
