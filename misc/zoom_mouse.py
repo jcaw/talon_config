@@ -66,8 +66,8 @@ class Actions:
         # TODO: Will this be reactive enough, or should we make this accessible
         #   anywhere in the zoom mouse?
         _, origin = eye_zoom_mouse.zoom_mouse.get_pos()
+        eye_zoom_mouse.zoom_mouse.cancel()
         if origin:
-            eye_zoom_mouse.zoom_mouse.cancel()
             actions.mouse_move(origin.x, origin.y)
         return origin
 
