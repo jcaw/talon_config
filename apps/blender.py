@@ -1,4 +1,7 @@
-from talon import Module, Context
+from talon import Module, Context, actions
+
+key = actions.key
+insert = actions.insert
 
 module = Module()
 module.list(
@@ -98,3 +101,21 @@ context.lists["user.blender_create_menu_options"] = {
     # Collection Instance
     "collection": "oc",
 }
+
+
+@module.action_class
+class Actions:
+    def blender(action_name: str):
+        """Find a command in blender, then execute it."""
+
+
+@context.action_class("user")
+class BlenderActions:
+    def blender(action_name: str):
+        key("f3")
+        insert(action_name)
+        # key("enter")
+
+    def toggle_fullscreen():
+        # NOTE: Not a default shortcut. Must be manually bound.
+        key("alt-enter")

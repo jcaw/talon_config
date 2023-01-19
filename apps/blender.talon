@@ -34,7 +34,7 @@ fly: key(~)
 toolbar: key(t)
 properties: key(n)
 new | create: key(A)
-(new | create) {user.blender_create_menu_options}:
+(new | create | add) {user.blender_create_menu_options}:
     key(A)
     insert(blender_create_menu_options)
 funk | function:key(f3)
@@ -50,3 +50,10 @@ unhide all: key(alt-h)
 hide others: key(H)
 faves: key(q)
 annotate: key(d)
+
+details:key(n)
+scale:key(s)
+snap (camera | cam): key(ctrl-alt-keypad_0)
+
+
+subdiv | subdivision [surface]: blender(subdivision)
