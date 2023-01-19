@@ -113,6 +113,9 @@ restart voicemacs:
 (set | load) theme [<user.dictation>]:
     user.emacs_switch_theme()
     user.insert_lowercase(dictation or "")
+set font [<user.dictation>]:
+    user.emacs_command("set-frame-font")
+    user.insert_lowercase(dictation or "")
 
 # TODO: Stuff to pull to more generic modules.
 open [file]: user.open_file()

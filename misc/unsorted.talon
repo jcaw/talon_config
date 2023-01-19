@@ -40,6 +40,13 @@ prior [<number>]: user.show_last_speech_recordings(number or 5)
 scroll top:    user.document_start()
 scroll bottom: user.document_end()
 
+
+# Huion tablet stuff
+#
+# This is the default key bind to open the tablet "driver" (settings menu)
+(hwyon | tablet) settings: key(ctrl-alt-h)
+
+
 # Don't tell Aegis (use this when Voicemacs deadlocks)
 restart talon: user.restart_talon_with_sound()
 exit talon:    user.quit_talon_with_sound()
