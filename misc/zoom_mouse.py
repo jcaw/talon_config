@@ -3,7 +3,17 @@ import logging
 import time
 from random import randint
 
-from talon import Module, Context, actions, settings, ctrl, cron, speech_system, noise
+from talon import (
+    Module,
+    Context,
+    actions,
+    settings,
+    ctrl,
+    cron,
+    speech_system,
+    noise,
+    app,
+)
 from talon.types import Point2d
 from talon_plugins import eye_zoom_mouse
 
@@ -26,6 +36,11 @@ def zoom_mouse_active():
 def is_zooming():
     """Is the zoom mouse currently zooming?"""
     return eye_zoom_mouse.zoom_mouse.state == eye_zoom_mouse.STATE_OVERLAY
+
+
+def _no_queued_actions():
+    """Does the zoom mouse have zero queued actions?"""
+    return eye_zoom_mouse.zoom_mouse.queued_actions.empty()
 
 
 module = Module()
@@ -53,6 +68,30 @@ noise.register("pre:pop", scope.update)
 noise.register("pre:hiss", scope.update)
 
 
+# Stores
+_gaze_tracking_prior_state = None
+
+
+def _set_gaze_tracking(enabled: bool):
+    eye_zoom_mouse.config.track_gaze_with_dot = bool(enabled)
+    eye_zoom_mouse.zoom_mouse.disable()
+    eye_zoom_mouse.zoom_mouse.enable()
+    try:
+        noise.unregister("pop", eye_zoom_mouse.zoom_mouse.on_pop)
+    except Exception as e:
+        LOGGER.warn(f'Error unbinding pop: "{e}"')
+    # eye_zoom_mouse.zoom_mouse.re_track_gaze()
+
+
+def _reset_gaze_tracking():
+    """Reset temprarily enabled visual gaze tracking for queued action(s)."""
+    global _gaze_tracking_prior_state
+
+    if _gaze_tracking_prior_state is not None:
+        _set_gaze_tracking(_gaze_tracking_prior_state)
+        _gaze_tracking_prior_state = None
+
+
 @module.action_class
 class Actions:
     def end_zoom() -> Point2d:
@@ -78,6 +117,7 @@ class Actions:
         the zoom, a right click will be performed instead of a left click.
 
         """
+        global _gaze_tracking_prior_state
 
         def do_action(position):
             """Perform the queued action at `position`."""
@@ -85,28 +125,45 @@ class Actions:
             LOGGER.debug(f"Performing queued zoom function `{function}` at {position}")
             actions.mouse_move(position.x, position.y)
             function()
+            if _no_queued_actions():
+                _reset_gaze_tracking()
 
         LOGGER.debug(f"Queuing zoom function `{function}`")
         eye_zoom_mouse.zoom_mouse.queue_action(do_action)
+        # Track gaze while actions are queued, for increased precision
+        #
+        # TODO: Switch to "action_queue_empty" or something
+        if _gaze_tracking_prior_state is None:
+            _gaze_tracking_prior_state = eye_zoom_mouse.config.track_gaze_with_dot
+            _set_gaze_tracking(True)
         if settings["self.click_sounds"]:
             sound.play_ding()
 
     def clear_zoom_queue():
         """Clear all queued zoom mouse actions."""
-        # Possible race here. Not important or likely to happen; tolerate it.
-        if not eye_zoom_mouse.zoom_mouse.queued_actions.empty():
+        # Possible race here. Not important or likely to happen - tolerate it.
+        if not _no_queued_actions():
             eye_zoom_mouse.zoom_mouse.cancel_actions()
+            _reset_gaze_tracking()
+
             if settings["self.click_sounds"]:
                 sound.play_cancel()
 
     def toggle_gaze_track_dot():
         """Toggle whether a small dot tracks your gaze outside zoom."""
-        eye_zoom_mouse.config.track_gaze_with_dot = (
-            not eye_zoom_mouse.config.track_gaze_with_dot
-        )
-        if eye_zoom_mouse.zoom_mouse.enabled:
-            eye_zoom_mouse.zoom_mouse.disable()
-            eye_zoom_mouse.zoom_mouse.enable()
+        global _gaze_tracking_prior_state
+
+        if _gaze_tracking_prior_state is None:
+            _set_gaze_tracking(not eye_zoom_mouse.config.track_gaze_with_dot)
+        else:
+            # Always show dot when there are queued actions, for precision. If
+            # the next action is queued, it's important we click the right spot,
+            # because a hiss will cancel both the overlay *and* clear the queue
+            # (at the time of writing, 2022/01/14).
+            #
+            # Thus, defer changes to the baseline state until after the queue is
+            # empty.
+            _gaze_tracking_prior_state = not _gaze_tracking_prior_state
 
     def maybe_queue_drag() -> None:
         """Queue a drag + drop iff in zoom mouse mode."""
