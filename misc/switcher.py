@@ -206,7 +206,7 @@ class Actions:
                     break
 
             if wanted_app is None:
-                return
+                raise ValueError(f'Running app not found: "{name}"')
 
         for cur_app in ui.apps():
             if cur_app.name == wanted_app and not cur_app.background:
