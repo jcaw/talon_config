@@ -24,11 +24,7 @@ class Actions:
         # Get the URL
         # HACK: Not implemented at time of writing - instead do it manually.
         # url = actions.browser.address()
-        actions.browser.focus_address()
-        actions.edit.select_all()
-        with clip.capture() as c:
-            actions.edit.copy()
-        url = c.text()
+        url = actions.user.browser_address_backup()
 
         # regex for official unreal docs (for the URL). Do the docs follow the
         # normal URL format?
