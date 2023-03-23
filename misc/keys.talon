@@ -4,6 +4,7 @@
 <user.letter>: key(letter)
 <user.symbol>: key(symbol)
 <user.special>: key(special)
+<user.keypad_key>: key(keypad_key)
 
 pad <user.insertable>: user.insert_key_padded(insertable)
 

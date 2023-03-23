@@ -105,7 +105,7 @@ symbols = multi_map(
         # Currency
         "dollar": "$",
         "pound": "£",
-        "euro": "€",  # FIXME: comes out as "4"
+        "euro": "€",
         # Brackets
         ("left square", "lack"): "[",
         ("right square", "rack"): "]",
@@ -212,6 +212,12 @@ complex_symbols = multi_map(
         "leffoe": "<-",
         "riteek": "=>",
         "leffeek": "<=",
+        "degrees": "°",
+        "degrees see": "°C",
+        "degrees eff": "°F",
+        "copyright": "©",
+        "tee em": "™",
+        "registered": "®",
     }
 )
 ctx.lists["self.complex_symbol"] = complex_symbols
@@ -284,8 +290,22 @@ def special(m) -> str:
     return m.special
 
 
+# TODO: keypad keys like minus, plus, etc. - not just digits.
+#
+# keep = key pad
+@mod.capture(rule="keep <self.digit>")
+def keypad_key(m) -> str:
+    """The numpad/keypad version of a number."""
+    return f"keypad_{m.digit}"
+
+
 @mod.capture(
-    rule="(<self.arrow> | <self.digit> | <self.letter> | <self.special> | <self.symbol>)"
+    rule=(
+        "("
+        "<self.arrow> | <self.digit> | <self.letter> | <self.special> | <self.symbol> | "
+        "<self.keypad_key>"
+        ")"
+    )
 )
 def any_key(m) -> str:
     """Any single key"""
