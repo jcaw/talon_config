@@ -69,6 +69,10 @@ class Actions:
         """Play a thunk sound."""
         play(THUNK)
 
+    def play_wood_hit():
+        """Play a wood hit sound."""
+        play(WOOD_HIT)
+
     def play_glass_tap():
         """Play a glass tap sound."""
         play(GLASS_TAP)
