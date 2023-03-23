@@ -7,8 +7,6 @@ tag: terminal
 repeat:
     key(up)
     key(enter)
-# "can"?
-actions(user.cancel): key(ctrl-c)
 # For things like Python
 other cancel: key(ctrl-d)
 (kill | exit) python: key(ctrl-d)
