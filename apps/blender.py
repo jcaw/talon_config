@@ -2,6 +2,13 @@ from talon import Module, Context, actions
 
 key = actions.key
 insert = actions.insert
+sleep = actions.sleep
+
+
+# Time to sleep between certain sequantial inputs (e.g. shortcuts) to ensure
+# they register.
+PAUSE_PERIOD = "50ms"
+
 
 module = Module()
 module.list(
@@ -107,15 +114,23 @@ context.lists["user.blender_create_menu_options"] = {
 class Actions:
     def blender(action_name: str):
         """Find a command in blender, then execute it."""
-
-
-@context.action_class("user")
-class BlenderActions:
-    def blender(action_name: str):
         key("f3")
         insert(action_name)
         # key("enter")
 
+    def blender_meshmachine(subkey: str):
+        """Run a specific MESHmachin3 command, denoted by its MM menu letter.
+
+        Accesses via the menu, so the menu must be accessible in the current context.
+
+        """
+        key("y")
+        # sleep("50ms")
+        key(subkey)
+
+
+@context.action_class("user")
+class BlenderActions:
     def toggle_fullscreen():
         # NOTE: Not a default shortcut. Must be manually bound.
         key("alt-enter")
