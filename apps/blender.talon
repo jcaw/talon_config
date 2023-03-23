@@ -129,14 +129,3 @@ wedge: user.blender_meshmachine("g")
 # Faster command - although I should probably just use the shortcut for this
 # one.
 loop: key(alt-t)
-
-
-# MISC: Experimental Stuff. Ignore.
-
-# TODO: Implement RPC commands for Blender
-subdiv | subdivision [surface]: blender(subdivision)
-# Individual blender commands can be cross-referenced with python by right
-# clicking on them
-
- # bpy.ops.object.modifier_add(type='SUBSURF')
-# blender_bevel_to_segment
