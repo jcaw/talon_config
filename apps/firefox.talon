@@ -16,3 +16,6 @@ dark (mode | reader): key(alt-shift-d)
     browser.focus_page()
 read (aloud | it):
     key(alt-p)
+
+
+chrome it: user.open_current_page_in_chrome()
