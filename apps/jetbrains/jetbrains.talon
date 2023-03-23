@@ -9,6 +9,8 @@ refack:      user.idea("action Refactorings.QuickListPopupAction")
 pop def:     user.idea("action QuickImplementations")
 pop type:    user.idea("action ExpressionTypeInfo")
 pop params:  user.idea("action ParameterInfo")
+# TODO: Change if show_documentation is reimplemented
+pop docs:    user.show_documentation()
 
 breakpoints: user.idea("action ViewBreakpoints")
 

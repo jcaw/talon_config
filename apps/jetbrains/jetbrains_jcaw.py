@@ -2,10 +2,11 @@
 
 from typing import Optional
 
-from talon import Context, actions
+from talon import Context, actions, Module
 
 idea = actions.user.idea
 sleep = actions.sleep
+key = actions.key
 
 
 context = Context()
@@ -21,7 +22,8 @@ class UserActions:
 
     def find_definition() -> None:
         # FIXME: This seems wrong
-        idea("action GotoAction")
+        # idea("action GotoAction")
+        idea("action GotoDeclaration")
 
     def show_autocomplete() -> None:
         idea("action CodeCompletion")
@@ -42,8 +44,10 @@ class UserActions:
         idea("action GotoTest")
 
     def show_documentation() -> None:
-        raise NotImplementedError()
-        idea("action FindDocumentation")
+        # raise NotImplementedError()
+        # This doesn't work. Neither does `GotoDocumentation` or `QuickDocumentation`
+        # idea("action ShowDocumentation")
+        key("ctrl-q")
 
     def wrap(wrapper: Optional[str] = None) -> None:
         idea("action SurroundWith")
