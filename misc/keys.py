@@ -88,7 +88,7 @@ symbols = multi_map(
             "qual",
         ): "=",
         "plus": "+",
-        ("question mark", "question", "quest"): "?",
+        ("question mark", "question", "quess"): "?",
         "tilde": "~",
         ("exclamation", "bang"): "!",
         ("dollar sign", "dollar"): "$",
