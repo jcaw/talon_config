@@ -58,6 +58,7 @@ formatter_functions = {
     "capitalized_sentence": apply_capitalized_sentence,
     "parens_sentence": make_apply_brackets("(", ")"),
     "crotchet_sentence": make_apply_brackets("[", "]"),
+    "inline_monospace": make_apply_brackets("`", "`"),
     "title": apply_title,
     "keywords": apply_programming_keywords,
     # "padded": apply_padded,
@@ -121,6 +122,7 @@ chainable_formatters = multi_map(
         "see path": "c_path",  # c path
         # FIXME: Clashes with C path?
         "path": "forward_slash_path",
+        "mono": "inline_monospace",
     }
 )
 # Only one of these formatters can be applied to each chunk.
