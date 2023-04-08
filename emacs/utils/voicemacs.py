@@ -7,7 +7,7 @@ import time
 import logging
 from user.utils import context_active
 from user.utils.key_value_store import KeyValueStore
-from talon import ui, cron, Module, app, Context, scope
+from talon import ui, cron, Module, app, Context, scope, actions
 import platform
 import os
 
@@ -31,6 +31,7 @@ _CONNECT_ATTEMPT_INTERVAL = 1000
 _PING_INTERVAL = 1000
 _AUTH_TIMEOUT = 5  # In secs
 _RE_TERMINATION_CHAR = re.compile("\0")
+DISCONNECT_DEADZONE = 5.0
 
 
 # Unique ID for each sent request
@@ -50,6 +51,18 @@ _pending_lock = threading.Lock()
 
 
 module = Module()
+
+
+_LAST_NOTIFICATION = time.monotonic()
+
+
+def _notify_with_deadzone(title, message, deadzone=1):
+    """Send a notification, unless another was sent recently."""
+    global _LAST_NOTIFICATION
+    now = time.monotonic()
+    if now > _LAST_NOTIFICATION + deadzone:
+        _LAST_NOTIFICATION = now
+        app.notify(title, message)
 
 
 class DeferredResult(object):
@@ -179,8 +192,11 @@ def _connect() -> None:
             app.notify("Talon", "Voicemacs connected")
             LOGGER.info("Voicemacs authenticated. Ready to communicate with Emacs.")
     except:
-        actions.user.notify("Talon", "Voicemacs failed to connect.", deadzone=5.0)
+        _notify_with_deadzone(
+            "Talon", "Voicemacs failed to connect.", deadzone=DISCONNECT_DEADZONE
+        )
         _force_disconnect()
+        raise
 
 
 # TODO: Maybe put voicemacs in the title to reduce polls on a non-Voicemacs
@@ -257,7 +273,9 @@ def _force_disconnect(*_, **__):
     except:
         pass
     finally:
-        app.notify("Talon", "Voicemacs disconnected")
+        _notify_with_deadzone(
+            "Talon", "Voicemacs disconnected", deadzone=DISCONNECT_DEADZONE
+        )
 
 
 def _handle_message(s, message_string):
