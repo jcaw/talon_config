@@ -11,6 +11,7 @@ import webbrowser
 
 # Max number of most recent speech recordings to display
 MAX_PRIOR_RECORDINGS = 5
+MISRECOGNITIONS_SUBFOLDER = "possible_misrecognitions"
 
 
 module = Module()
@@ -86,13 +87,23 @@ class ModuleActions:
         """Path to Talon speech clip recordings."""
         return Path(actions.path.talon_home()) / "recordings"
 
+    def quarantine_speech_recording(file_number: Optional[int] = 1) -> None:
+        """Move a specific speech recording to the potential misrecognitions folder."""
+        files = most_recent_speech_recordings(file_number)
+        if files:
+            flac = files[file_number - 1]
+            misrecognition_folder = flac.parent / MISRECOGNITIONS_SUBFOLDER
+            misrecognition_folder.mkdir(exist_ok=True)
+            flac.rename(misrecognition_folder / flac.name)
+            # Also delete word alignment file
+            alignment = flac.with_suffix(".txt")
+            if alignment.is_file():
+                alignment.rename(misrecognition_folder / alignment.name)
+
+            app.notify("Moved Recording", f'"{recording_words(flac)}"')
+
     def delete_last_speech_recording(n_files: Optional[int] = 1) -> None:
-        """Delete the last speech recording."""
-        # TODO: Also store these recognitions so i can examine them for patterns
-        #   later
-        #
-        # TODO: Add an explicit guard here that prevents deleting many files on
-        #   accidental repeat.
+        """Delete the last n speech recordings."""
         # Add 1 because "prior" will add one to the index of those displayed in
         # the notification
         max_deleted = MAX_PRIOR_RECORDINGS + 1
@@ -116,16 +127,13 @@ class ModuleActions:
                 alignment.unlink()
         if len(files_deleted) > 0:
             app.notify("Deleted Recordings", f"{files_deleted}")
-        # elif len(files_deleted) == 1:
-        #     app.notify("Deleted Recording", f"'{files_deleted[0]}'")
-        # else:
-        #     # No message if no files deleted
-        #     pass
 
     def show_last_speech_recordings(
         n_recordings: Optional[int] = MAX_PRIOR_RECORDINGS,
     ) -> None:
         """Notify with the most recent `n_recordings` speech recordings."""
+        # TODO: Show a list of loads of the previous recordings, in a window.
+
         app.notify(
             f"{n_recordings} Newest Recordings",
             ", ".join(
