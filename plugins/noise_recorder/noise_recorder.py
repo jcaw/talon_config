@@ -287,7 +287,9 @@ class _RecordingSession(object):
             self._frames = []
             ctx = cubeb.Context()
             params = cubeb.StreamParams(
-                format=cubeb.SampleFormat.FLOAT32NE, rate=16000, channels=1,
+                format=cubeb.SampleFormat.FLOAT32NE,
+                rate=16000,
+                channels=1,
             )
             existing = (
                 _duration_in_folder(recordings_path(self.device.name, self.noise_name))
