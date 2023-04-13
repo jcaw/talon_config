@@ -137,8 +137,10 @@ class ModuleActions:
             actions.app.notify("Toggle again re-enable", "Microphone Disabled")
 
 
+# TODO: Dedicated settings file?
 global_context = Context()
 global_context.settings["imgui.dark_mode"] = 1
+global_context.settings["imgui.scale"] = 1.8
 
 
 @global_context.action_class("self")
