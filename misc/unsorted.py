@@ -149,7 +149,14 @@ class GlobalActions:
 
 
 windows_context = Context(name="unsorted_windows")
-windows_context.matches = r"""
+windows_context.matches = r"os: windows"
+linux_context = Context(name="unsorted_linux")
+linux_context.matches = r"os: linux"
+mac_context = Context(name="unsorted_mac")
+mac_context.matches = r"os: mac"
+win_linux_context = Context(name="unsorted_win_linux")
+win_linux_context.matches = r"""
+os: linux
 os: windows
 """
 
@@ -160,35 +167,16 @@ class WindowsActions:
         key("win-l")
 
 
-linux_context = Context(name="unsorted_linux")
-linux_context.matches = r"""
-os: linux
-"""
-
-
 # @linux_context.action_class("self")
 # class LinuxActions:
 #     def action():
 #         pass
 
 
-win_linux_context = Context(name="unsorted_win_linux")
-win_linux_context.matches = r"""
-os: linux
-os: windows
-"""
-
-
 @win_linux_context.action_class("self")
 class WinLinuxActions:
     def open_file() -> None:
         actions.key("ctrl-o")
-
-
-mac_context = Context(name="unsorted_mac")
-mac_context.matches = r"""
-os: mac
-"""
 
 
 @mac_context.action_class("self")
