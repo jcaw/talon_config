@@ -23,26 +23,6 @@ cancel: user.cancel()
 settings(): speech.record_all = 1
 
 
-# Discarding Recordings
-#
-# It's useful to store some misrecognitions, e.g. for frequent issues.
-nope [<number>]:
-    user.quarantine_speech_recording(number or 1)
-    # user.cancel()
-# Sometimes I don't want to store what has been recorded, or I just want to
-# clear out multiple recordings.
-nuke [<number>]:
-    user.delete_last_speech_recording(number or 1)
-wrong [<number>]:
-    user.delete_last_speech_recording(number or 1)
-    edit.undo()
-    # TODO: Undo *and* cancel?
-    user.cancel()
-# To establish what needs to be deleted
-prior [<number>]: user.show_last_speech_recordings(number or 5)
-(play | replay) last [recording]: user.play_last_speech_recording()
-(edit | audacity) last [recording]: user.audacity_last_speech_recording()
-
 scroll top:    user.document_start()
 scroll bottom: user.document_end()
 

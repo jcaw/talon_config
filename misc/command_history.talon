@@ -1,2 +1,3 @@
-command history: user.command_history_toggle()
-[set] [command] history size <number>: user.command_history_set_size(number)
+tag: user.command_history_showing
+-
+(cancel | close): command_history_close()
