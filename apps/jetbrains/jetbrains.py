@@ -141,10 +141,10 @@ os: mac
 and app.bundle: com.google.android.studio
 """
 # windows
-mod.apps.jetbrains = "app.exe: idea64.exe"
-mod.apps.jetbrains = "app.exe: PyCharm64.exe"
-mod.apps.jetbrains = "app.exe: pycharm64.exe"
-mod.apps.jetbrains = "app.exe: webstorm64.exe"
+mod.apps.jetbrains = "app: idea64.exe"
+mod.apps.jetbrains = "app: PyCharm64.exe"
+mod.apps.jetbrains = "app: pycharm64.exe"
+mod.apps.jetbrains = "app: webstorm64.exe"
 mod.apps.jetbrains = """
 os: mac
 and app.bundle: com.jetbrains.pycharm
@@ -153,7 +153,7 @@ mod.apps.jetbrains = """
 os: windows
 and app.name: JetBrains Rider
 os: windows
-and app.exe: rider64.exe
+and app: rider64.exe
 """
 
 
