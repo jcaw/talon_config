@@ -274,3 +274,13 @@ class UserActions:
 
     def document_end() -> None:
         user.emacs_command("end-of-buffer")
+
+    def tiling_split_horizontal() -> None:
+        # I have this method duplicated in my custom config so it should always
+        # exist.
+        user.emacs_command("spacemacs/split-window-horizontally-and-switch")
+
+    def tiling_split_vertical() -> None:
+        # I have this method duplicated in my custom config so it should always
+        # exist.
+        user.emacs_command("spacemacs/split-window-vertically-and-switch")
