@@ -18,4 +18,4 @@ read (aloud | it):
     key(alt-p)
 
 
-chrome it: user.open_current_page_in_chrome()
+(open in chrome | chrome it): user.open_current_page_in_chrome()
