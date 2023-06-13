@@ -3,7 +3,7 @@ import re
 from talon import Module, actions, clip
 
 
-CURRENT_UNREAL_VERSION = "5.1"
+CURRENT_UNREAL_VERSION = "5.2"
 
 
 module = Module()
