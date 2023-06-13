@@ -1,3 +1,3 @@
 tag: user.command_history_showing
 -
-(cancel | close): command_history_close()
+(cancel | close): user.command_history_hide()
