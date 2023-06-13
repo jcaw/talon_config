@@ -11,6 +11,11 @@ class Actions:
         """Sleep speech recognition."""
         speech.disable()
 
+    def noisy_sleep():
+        """Sleep speech recognition and play a sound."""
+        actions.self.sleep()
+        actions.user.play_thunk()
+
     def wake():
         """Wake speech recognition."""
         speech.enable()

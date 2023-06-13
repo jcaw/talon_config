@@ -34,15 +34,71 @@ def most_recent_speech_recordings(n_files: int) -> List:
     return files[:n_files]
 
 
-def nth_speech_recording(n) -> str:
-    """Get the path to the speech recording numbered by `n`, as a string."""
+def nth_speech_recording(n) -> Path:
+    """Get the path to the speech recording numbered by `n`, as a string.
+
+    Throws an error if no matching recording exists.
+
+    """
     assert n >= 1, n
-    return str(most_recent_speech_recordings(n)[n - 1])
+    return most_recent_speech_recordings(n)[n - 1]
 
 
 def is_misrecognition(recording):
     """Is file `recording` in the misrecognitions folder?"""
     return recording.parent.name == MISRECOGNITIONS_SUBFOLDER
+
+
+def quarantine_recording(flac: Path):
+    alignment = flac.with_suffix(".txt")
+    if is_misrecognition(flac):
+        # Delete
+        flac.unlink()
+        if alignment.is_file():
+            alignment.unlink()
+        app.notify("Deleted Recording", f'"{recording_words(flac)}"')
+    else:
+        misrecognition_folder = flac.parent / MISRECOGNITIONS_SUBFOLDER
+        misrecognition_folder.mkdir(exist_ok=True)
+        flac.rename(misrecognition_folder / flac.name)
+        # Also delete word alignment file
+        if alignment.is_file():
+            alignment.rename(misrecognition_folder / alignment.name)
+
+        app.notify("Moved Recording", f'"{recording_words(flac)}"')
+
+
+def delete_recordings(flacs: List[Path]):
+    files_deleted = []
+    for f in flacs:
+        # files_deleted.append(f.name)
+        files_deleted.append(recording_words(f))
+        f.unlink()
+        # Also delete word alignment file
+        alignment = f.with_suffix(".txt")
+        if alignment.is_file():
+            alignment.unlink()
+    if len(files_deleted) > 0:
+        app.notify("Deleted Recordings", f"{files_deleted}")
+
+
+def recent_recordings_cropped(n_files: int) -> List[Path]:
+    """Get a safety-limited number of the most recent recordings.
+
+    Use to prevent accidentally deleting a huge number of recordings.
+
+    """
+    # Add 1 because "prior" will add one to the index of those displayed in
+    # the notification
+    max_deleted = MAX_DELETED_RECORDINGS + 1
+    if n_files > max_deleted:
+        app.notify(
+            "Talon Warning",
+            f"Truncating deleted noise files - only removing {max_deleted}.",
+        )
+        n_files = max_deleted
+
+    return most_recent_speech_recordings(n_files)
 
 
 module = Module()
@@ -56,51 +112,21 @@ class Actions:
 
     def quarantine_speech_recording(file_number: Optional[int] = 1) -> None:
         """Move a specific speech recording to the potential misrecognitions folder."""
-        files = most_recent_speech_recordings(file_number)
-        if files:
-            flac = files[file_number - 1]
-            alignment = flac.with_suffix(".txt")
-            if is_misrecognition(flac):
-                # Delete
-                flac.unlink()
-                if alignment.is_file():
-                    alignment.unlink()
-                app.notify("Deleted Recording", f'"{recording_words(flac)}"')
-            else:
-                misrecognition_folder = flac.parent / MISRECOGNITIONS_SUBFOLDER
-                misrecognition_folder.mkdir(exist_ok=True)
-                flac.rename(misrecognition_folder / flac.name)
-                # Also delete word alignment file
-                if alignment.is_file():
-                    alignment.rename(misrecognition_folder / alignment.name)
+        quarantine_recording(nth_speech_recording(file_number + 1))
 
-                app.notify("Moved Recording", f'"{recording_words(flac)}"')
+    def quarantine_speech_recordings(n_files: Optional[int] = 1) -> None:
+        """Move a number of speech recording to the potential misrecognitions folder."""
+        # HACK: Redo this properly, as one group.
+        for flac_path in recent_recordings_cropped(file_number):
+            quarantine_recording(flac_path)
 
-    def delete_last_speech_recording(n_files: Optional[int] = 1) -> None:
+    def delete_speech_recordings(n_files: Optional[int] = 1) -> None:
         """Delete the last n speech recordings."""
-        # Add 1 because "prior" will add one to the index of those displayed in
-        # the notification
-        max_deleted = MAX_DELETED_RECORDINGS + 1
-        if n_files > max_deleted:
-            app.notify(
-                "Talon Warning",
-                f"Truncating deleted noise files - only removing {max_deleted}.",
-            )
-            n_files = max_deleted
+        delete_recordings(recent_recordings_cropped(n_files))
 
-        files = most_recent_speech_recordings(n_files)
-
-        files_deleted = []
-        for f in files:
-            # files_deleted.append(f.name)
-            files_deleted.append(recording_words(f))
-            f.unlink()
-            # Also delete word alignment file
-            alignment = f.with_suffix(".txt")
-            if alignment.is_file():
-                alignment.unlink()
-        if len(files_deleted) > 0:
-            app.notify("Deleted Recordings", f"{files_deleted}")
+    def delete_speech_recording(file_number: Optional[int] = 1) -> None:
+        """Delete the nth most recent speech recording."""
+        delete_recordings([nth_speech_recording(file_number + 1)])
 
     # TODO: Probably remove - just use the imgui approach
     # def show_last_speech_recordings(
@@ -120,15 +146,15 @@ class Actions:
     #     )
 
     # TODO: Specify by index
-    def play_last_speech_recording(n: int = 1):
+    def play_last_speech_recording(n: Optional[int] = 1) -> None:
         """Play the last speech recording using the `webbrowser` default."""
-        webbrowser.open(nth_speech_recording(n))
+        webbrowser.open(str(nth_speech_recording(n)))
 
-    def audacity_last_speech_recording(n: int = 1) -> None:
+    def audacity_last_speech_recording(n: Optional[int] = 1) -> None:
         """Open the last speech recording. Use to check mic setup."""
         # TODO: Switch to the proper method for launching subprocesses from
         #   Talon
-        subprocess.Popen(["audacity", nth_speech_recording(n)])
+        subprocess.Popen(["audacity", str(nth_speech_recording(n))])
 
 
 # Command history
@@ -194,7 +220,7 @@ def _push_history_state(*args):
             ):
                 # Label prefixed commands with "[M]"
                 prefix = "[M] " if is_misrecognition(recording) else "-     "
-                # Add 1 so deletion commands can index correctly
+                # Add  so deletion commands can index correctly
                 _history.append(f"{prefix}{i+1}: {recording_words(recording)}")
         if not history_gui.showing:
             # history_gui.unfreeze()
@@ -209,6 +235,7 @@ def _push_history_state(*args):
 speech_system.register("pre:phrase", _reset_show_flag)
 speech_system.register("post:phrase", _push_history_state)
 # Hide on any noise too
+# FIXME: Zoom mouse screenshot happens before history is closed, so it shows in the zoom#1.
 noise.register("pre:pop", _hide_history)
 noise.register("pre:hiss", _hide_history)
 

@@ -1,19 +1,27 @@
 # It's useful to store some misrecognitions, e.g. for frequent issues.
-nope [<number>]:
-    user.quarantine_speech_recording(number or 1)
-    # user.cancel()
+# nope [<number>]:
+#     user.quarantine_speech_recordings(number or 1)
+#     user.command_history_show()
+nope [<user.ordinal>]:
+    user.quarantine_speech_recording(ordinal or 1)
     user.command_history_show()
 # Sometimes I don't want to store what has been recorded, or I just want to
 # clear out multiple recordings.
-nuke [<number>]:
-    user.delete_last_speech_recording(number or 1)
+#
+# TODO: Remove "nuke", "bomb" is better
+(nuke | bomb) [<number>]:
+    user.delete_speech_recordings(number or 1)
     user.command_history_show()
-wrong [<number>]:
-    user.delete_last_speech_recording(number or 1)
-    edit.undo()
-    # TODO: Undo *and* cancel?
-    user.cancel()
+(nuke | bomb) <user.ordinal>:
+    user.delete_speech_recording(ordinal)
     user.command_history_show()
+# TODO: Probably remove
+# wrong [<number>]:
+#     user.delete_last_speech_recordings(number or 1)
+#     edit.undo()
+#     # TODO: Undo *and* cancel?
+#     user.cancel()
+#     user.command_history_show()
 # To establish what needs to be deleted
 # prior [<number>]: user.show_last_speech_recordings(number or 5)
 prior: user.command_history_show()
