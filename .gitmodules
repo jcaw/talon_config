@@ -1,9 +1,9 @@
 [submodule "settings"]
 	path = settings
-	url = https://github.com/jcaw/private_talon_user
+	url = git@github.com/jcaw/private_talon_user.git
 [submodule "talon_draft_window"]
 	path = talon_draft_window
-	url = https://github.com/splondike/talon_draft_window
+	url = git@github.com/splondike/talon_draft_window.git
 [submodule "noise_recorder"]
 	path = noise_recorder
-	url = https://github.com/jcaw/noise_recorder_talon
+	url = git@github.com/jcaw/noise_recorder_talon.git
