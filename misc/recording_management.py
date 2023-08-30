@@ -44,14 +44,14 @@ def nth_speech_recording(n) -> Path:
     return most_recent_speech_recordings(n)[n - 1]
 
 
-def is_misrecognition(recording):
+def in_misrecognitions_folder(recording):
     """Is file `recording` in the misrecognitions folder?"""
     return recording.parent.name == MISRECOGNITIONS_SUBFOLDER
 
 
 def quarantine_recording(flac: Path):
     alignment = flac.with_suffix(".txt")
-    if is_misrecognition(flac):
+    if in_misrecognitions_folder(flac):
         # Delete
         flac.unlink()
         if alignment.is_file():
@@ -91,6 +91,8 @@ def recent_recordings_cropped(n_files: int) -> List[Path]:
     # Add 1 because "prior" will add one to the index of those displayed in
     # the notification
     max_deleted = MAX_DELETED_RECORDINGS + 1
+    # TODO: Just cancel in this case? Force at the limit only to stop randomly
+    #   deleting a bunch of files?
     if n_files > max_deleted:
         app.notify(
             "Talon Warning",
@@ -112,21 +114,21 @@ class Actions:
 
     def quarantine_speech_recording(file_number: Optional[int] = 1) -> None:
         """Move a specific speech recording to the potential misrecognitions folder."""
-        quarantine_recording(nth_speech_recording(file_number + 1))
+        quarantine_recording(nth_speech_recording(file_number))
 
     def quarantine_speech_recordings(n_files: Optional[int] = 1) -> None:
         """Move a number of speech recording to the potential misrecognitions folder."""
         # HACK: Redo this properly, as one group.
-        for flac_path in recent_recordings_cropped(file_number):
+        for flac_path in recent_recordings_cropped(n_files):
             quarantine_recording(flac_path)
+
+    def delete_speech_recording(file_number: Optional[int] = 1) -> None:
+        """Delete the nth most recent speech recording."""
+        delete_recordings([nth_speech_recording(file_number)])
 
     def delete_speech_recordings(n_files: Optional[int] = 1) -> None:
         """Delete the last n speech recordings."""
         delete_recordings(recent_recordings_cropped(n_files))
-
-    def delete_speech_recording(file_number: Optional[int] = 1) -> None:
-        """Delete the nth most recent speech recording."""
-        delete_recordings([nth_speech_recording(file_number + 1)])
 
     # TODO: Probably remove - just use the imgui approach
     # def show_last_speech_recordings(
@@ -219,7 +221,7 @@ def _push_history_state(*args):
                 most_recent_speech_recordings(history_n_items.get())
             ):
                 # Label prefixed commands with "[M]"
-                prefix = "[M] " if is_misrecognition(recording) else "-     "
+                prefix = "[M] " if in_misrecognitions_folder(recording) else "-     "
                 # Add  so deletion commands can index correctly
                 _history.append(f"{prefix}{i+1}: {recording_words(recording)}")
         if not history_gui.showing:

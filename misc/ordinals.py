@@ -83,14 +83,14 @@ def ordinal_word(n):
             result += ordinal_tenty[floor(n / 10) - 2]
             result += ordinal_ones[(n % 10) - 1]
     elif n > 9:
-        result += ordinal_teens[n - 11]
+        result += ordinal_teens[n - 10]
     else:
         result += ordinal_ones[n - 1]
     return result
 
 
-for n in range(2, 100):
-    ordinal_words[ordinal_word(n)] = n - 1
+for n in range(1, 100):
+    ordinal_words[ordinal_word(n)] = n
 
 
 mod = Module()
