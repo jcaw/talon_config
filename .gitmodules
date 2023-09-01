@@ -10,3 +10,6 @@
 [submodule "plugins/talon_draft_window"]
 	path = plugins/talon_draft_window
 	url = git@github.com:jcaw/talon_draft_window.git
+[submodule "plugins/talon_wm"]
+	path = plugins/talon_wm
+	url = git@github.com:jcaw/talon_wm.git
