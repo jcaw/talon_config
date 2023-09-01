@@ -7,3 +7,6 @@
 [submodule "noise_recorder"]
 	path = noise_recorder
 	url = git@github.com:jcaw/noise_recorder_talon.git
+[submodule "plugins/talon_draft_window"]
+	path = plugins/talon_draft_window
+	url = git@github.com:jcaw/talon_draft_window.git
