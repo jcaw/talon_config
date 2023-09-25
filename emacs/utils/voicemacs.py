@@ -7,9 +7,12 @@ import time
 import logging
 from user.utils import context_active
 from user.utils.key_value_store import KeyValueStore
-from talon import ui, cron, Module, app, Context, scope, actions
 import platform
 import os
+import math
+
+from talon import ui, cron, Module, app, Context, scope, actions, imgui, canvas
+from talon.ui import Rect, Point2d
 
 
 # TODO: Move everything associated with one connection into an object and deal
@@ -40,6 +43,7 @@ _outgoing_nonce = 1
 _receive_thread = None
 _socket = None
 _socket_lock = threading.RLock()
+voicemacs_connected = False
 
 emacs_context = Context()
 emacs_context.matches = "tag: user.emacs"
@@ -161,7 +165,7 @@ def emacs_focussed():
 
 
 def _connect() -> None:
-    global _socket, _outgoing_nonce, _receive_thread
+    global _socket, _outgoing_nonce, _receive_thread, voicemacs_connected
     host = "localhost"
     session_file_path = os.path.join(_TEMP_FOLDER, "voicemacs", "session.json")
     if os.path.isfile(session_file_path):
@@ -189,12 +193,13 @@ def _connect() -> None:
             )
             _receive_thread.start()
             _authenticate(auth_key)
-            app.notify("Talon", "Voicemacs connected")
+            # app.notify("Talon", "Voicemacs connected")
+            voicemacs_connected = True
             LOGGER.info("Voicemacs authenticated. Ready to communicate with Emacs.")
     except:
-        _notify_with_deadzone(
-            "Talon", "Voicemacs failed to connect.", deadzone=DISCONNECT_DEADZONE
-        )
+        # _notify_with_deadzone(
+        #     "Talon", "Voicemacs failed to connect.", deadzone=DISCONNECT_DEADZONE
+        # )
         _force_disconnect()
         raise
 
@@ -259,7 +264,7 @@ def _force_disconnect(*_, **__):
     Use this to ensure the connection is terminated.
 
     """
-    global _socket, _socket_lock
+    global _socket, _socket_lock, voicemacs_connected
     try:
         with _socket_lock:
             if _socket:
@@ -273,9 +278,10 @@ def _force_disconnect(*_, **__):
     except:
         pass
     finally:
-        _notify_with_deadzone(
-            "Talon", "Voicemacs disconnected", deadzone=DISCONNECT_DEADZONE
-        )
+        # _notify_with_deadzone(
+        #     "Talon", "Voicemacs disconnected", deadzone=DISCONNECT_DEADZONE
+        # )
+        voicemacs_connected = False
 
 
 def _handle_message(s, message_string):
@@ -492,6 +498,78 @@ def run_command(command, prefix_arg=None):
     return rpc_call("voicemacs-inject-command", params=[command, prefix_arg])
 
 
+# TODO: An overlay that shows voicemacs connection status (iff Emacs is active)
+
+
+# -----------------------------------------------------------------------------
+# - Canvas showing the connection state
+
+connection_canvas = None
+canvas_connection_state = None
+
+
+def redraw_connection_state(canvas):
+    global canvas_connection_state
+    color = "7bc44f" if voicemacs_connected else "d30000"
+    canvas_connection_state = voicemacs_connected
+
+    midpoint = int(round(canvas.width / 2))
+    paint = canvas.paint
+    paint.antialias = True
+    paint.color = color
+
+    # TODO: Scale based on DPI, not resolution
+    half_bar_width = max(30, int(round(canvas.width / 70)))
+    bar_height = max(2, int(round(canvas.height / 500)))
+    corner_diam = int(math.floor(bar_height / 2))
+    draw_rect = Rect(
+        canvas.x + midpoint - half_bar_width,
+        canvas.y,
+        half_bar_width * 2,
+        bar_height - corner_diam,
+    )
+    canvas.draw_rect(draw_rect)
+    draw_rect.height = bar_height
+    canvas.draw_round_rect(draw_rect, corner_diam, corner_diam)
+
+
+def delete_canvas():
+    global connection_canvas
+    if connection_canvas:
+        connection_canvas.unregister("draw", redraw_connection_state)
+        connection_canvas.close()
+        connection_canvas = None
+
+
+def _update_overlay():
+    global connection_canvas, _prior_emacs_rect
+    if emacs_focussed():
+        active_window_rect = ui.active_window().rect
+        if connection_canvas and active_window_rect != connection_canvas.rect:
+            # Layout has changed - just reset the canvas to reposition the bar.
+            connection_canvas.rect = active_window_rect
+            connection_canvas.resume()
+            connection_canvas.freeze()
+        if not connection_canvas:
+            # Need to create a new canvas
+            #
+            connection_canvas = canvas.Canvas(*active_window_rect)
+            # HACK: Canvas isn't being created with the dimensions specified, so
+            #   manually set it.
+            # FIXME: Report canvas being created with wrong rect as a bug
+            connection_canvas.rect = active_window_rect
+            connection_canvas.register("draw", redraw_connection_state)
+            connection_canvas.freeze()
+        elif canvas_connection_state != voicemacs_connected:
+            connection_canvas.resume()
+            connection_canvas.freeze()
+    else:
+        delete_canvas()
+
+
+# -----------------------------------------------------------------------------
+
+
 cron.interval(f"{_CONNECT_ATTEMPT_INTERVAL}ms", _try_connect)
 # HACK: Disconnect doesn't always trigger in the receive thread until a message
 #   is sent. Manually ping to trigger these D/Cs.
@@ -499,3 +577,4 @@ cron.interval(f"{_CONNECT_ATTEMPT_INTERVAL}ms", _try_connect)
 # FIXME: Something is causing Talon to silently deadlock. I think it's Voicemacs
 #   and I think it's probably the message system deadlocking.
 cron.interval(f"{_PING_INTERVAL}ms", _ping)
+cron.interval("100ms", _update_overlay)
