@@ -150,6 +150,11 @@ and os: windows
 app: /vcxsrv/
 and title: /Emacs$/
 and os: windows
+
+# Native WSL Gui, displaying WSL Emacs
+app: /msrdc/
+and title: /Emacs/
+and os: windows
 """
 context.tags = ["user.emacs"]
 
