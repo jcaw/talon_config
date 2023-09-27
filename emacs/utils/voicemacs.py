@@ -541,23 +541,39 @@ def delete_canvas():
         connection_canvas = None
 
 
+def _calc_canvas_rect(emacs_window):
+    # Bound the canvas to the edges of the screen - even if the window is poking
+    # off.
+    result = emacs_window.rect.intersect(emacs_window.screen.rect)
+    # HACK: If we use the full height, screen goes black on Windows 11, so just
+    #   take 1 off it.
+    result.height -= 1
+    # FIXME: Why have a full-screen canvas? Make it only as large as necessary.
+    return result
+
+
+_prior_emacs_rect = None
+
+
 def _update_overlay():
     global connection_canvas, _prior_emacs_rect
     if emacs_focussed():
-        active_window_rect = ui.active_window().rect
-        if connection_canvas and active_window_rect != connection_canvas.rect:
+        active_window = ui.active_window()
+        if connection_canvas and active_window.rect != _prior_emacs_rect:
             # Layout has changed - just reset the canvas to reposition the bar.
-            connection_canvas.rect = active_window_rect
+            connection_canvas.rect = _calc_canvas_rect(active_window)
+            _old_window_rect = active_window.rect
             connection_canvas.resume()
             connection_canvas.freeze()
         if not connection_canvas:
             # Need to create a new canvas
             #
-            connection_canvas = canvas.Canvas(*active_window_rect)
             # HACK: Canvas isn't being created with the dimensions specified, so
             #   manually set it.
+            canvas_rect = _calc_canvas_rect(active_window)
+            connection_canvas = canvas.Canvas(*canvas_rect)
             # FIXME: Report canvas being created with wrong rect as a bug
-            connection_canvas.rect = active_window_rect
+            connection_canvas.rect = canvas_rect
             connection_canvas.register("draw", redraw_connection_state)
             connection_canvas.freeze()
         elif canvas_connection_state != voicemacs_connected:
