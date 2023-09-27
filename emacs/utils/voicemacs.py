@@ -568,10 +568,10 @@ def _update_overlay():
         if not connection_canvas:
             # Need to create a new canvas
             #
-            # HACK: Canvas isn't being created with the dimensions specified, so
-            #   manually set it.
             canvas_rect = _calc_canvas_rect(active_window)
             connection_canvas = canvas.Canvas(*canvas_rect)
+            # HACK: Canvas isn't being created with the dimensions specified
+            #   (win 10), so manually set it.
             # FIXME: Report canvas being created with wrong rect as a bug
             connection_canvas.rect = canvas_rect
             connection_canvas.register("draw", redraw_connection_state)
