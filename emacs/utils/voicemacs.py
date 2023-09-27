@@ -519,8 +519,8 @@ def redraw_connection_state(canvas):
     paint.color = color
 
     # TODO: Scale based on DPI, not resolution
-    half_bar_width = max(30, int(round(canvas.width / 70)))
-    bar_height = max(2, int(round(canvas.height / 500)))
+    half_bar_width = max(30, int(round(canvas.width / 40)))
+    bar_height = max(2, int(round(canvas.height / 300)))
     corner_diam = int(math.floor(bar_height / 2))
     draw_rect = Rect(
         canvas.x + midpoint - half_bar_width,
