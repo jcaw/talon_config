@@ -14,3 +14,7 @@
 	path = plugins/talon_wm
 	url = git@github.com:jcaw/talon_wm.git
 	branch = main
+[submodule "plugins/mouse_grid"]
+	path = plugins/mouse_grid
+	url = git@github.com:jcaw/talon_mouse_grid.git
+	branch = master
