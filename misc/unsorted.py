@@ -119,7 +119,6 @@ class ModuleActions:
         global _previous_mic
 
         active_mic = actions.sound.active_microphone()
-        print(active_mic)
         if active_mic == "None":
             mic = _previous_mic or "System Default"
             actions.sound.set_microphone(mic)
