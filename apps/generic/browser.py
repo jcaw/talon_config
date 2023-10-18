@@ -3,7 +3,7 @@ from talon import Context, Module, actions, clip
 key = actions.key
 insert = actions.insert
 user = actions.user
-sleep = actions.sleepb
+sleep = actions.sleep
 
 
 module = Module()
