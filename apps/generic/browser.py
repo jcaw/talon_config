@@ -1,4 +1,4 @@
-from talon import Context, Module, actions, clip
+from talon import Context, Module, actions, clip, ui
 
 key = actions.key
 insert = actions.insert
@@ -85,21 +85,21 @@ windows_context.matches = r"""os: windows"""
 class WindowsActions:
     def switch_start_chrome():
         try:
-            user.switcher_focus("chrome.exe")
+            user.switcher_focus("chrome")
             switched = True
         except ValueError:
             # TODO: Launch from command line with url as pareameter?
-            key("win")
-            sleep("50ms")
-            insert("chrome")
-            sleep("100ms")
-            key("enter")
+
+            user.switcher_launch("chrome")
+
             # Give it time to start up
             sleep("2000ms")
-            switched = False
+
+            user.switcher_focus("chrome")
+            switched = True
 
         if switched:
-            actions.edit.new_tab()
+            actions.edit.tab_open()
 
 
 i3_context = Context()
@@ -123,4 +123,4 @@ class i3Actions:
             switched = False
 
         if switched:
-            actions.edit.new_tab()
+            actions.edit.tab_open()
