@@ -12,6 +12,9 @@ user.emacs-is-doom: True
 
 @context.action_class("self")
 class DoomActions:
+    def search(text: str = None):
+        emacs_command("+default/search-project")
+
     def emacs_restart():
         emacs_command("doom/restart-and-restore")
 
