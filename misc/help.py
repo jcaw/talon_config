@@ -43,6 +43,7 @@ class Actions:
         active_app = ui.active_app()
         info = [
             'Bundle: "{}"'.format(active_app.bundle),
+            'Name:   "{}"'.format(active_app.name),
             'Exe:    "{}"'.format(active_app.exe),
             'Title:  "{}"'.format(ui.active_window().title),
         ]
