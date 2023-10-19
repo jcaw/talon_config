@@ -58,6 +58,7 @@ class BrowserActions:
         actions.browser.focus_address()
         clip.set_text(url)
         actions.edit.paste()
+        # FIXME: Enter isn't carrying through - just stays in the address bar (Windows 10)
         key("enter")
 
 
