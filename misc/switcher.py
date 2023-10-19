@@ -43,7 +43,7 @@ ctx = Context()
 overrides = {}
 
 # a list of the currently running application names
-running_application_dict = {}
+running_names = set()
 
 
 @mod.capture
@@ -86,8 +86,8 @@ def get_words(name):
 
 
 def update_lists():
-    global running_application_dict
-    running_application_dict = {}
+    global running_names
+    running_names.clear()
     running = {}
     launch = {}
     for cur_app in ui.apps(background=False):
@@ -102,7 +102,7 @@ def update_lists():
                 running[word.lower()] = cur_app.name
 
         running[name.lower()] = cur_app.name
-        running_application_dict[cur_app.name] = True
+        running_names.add(cur_app.name)
 
     for override in overrides:
         running[override] = overrides[override]
@@ -150,14 +150,47 @@ update_overrides(None, None)
 fs.watch(settings_dir, update_overrides)
 
 
+def launchable_app(target_name, app_list):
+    target_name = target_name.lower()
+
+
+def running_app_from_title(target_title, app_list=None):
+    if not app_list:
+        app_list = ui.apps(background=False)
+
+    for app in app_list:
+        print(app)
+
+    app_pairs = [(app.active_window.title, app) for app in app_list]
+
+    # TODO: Switch this to a regexp match?
+    matching = actions.user.heirarchical_name_match(
+        target_title, app_pairs, True, True, False
+    )
+    return matching[0] if matching else None
+
+
+def running_app_from_name(
+    target_name, app_list=None, match_start=True, match_fuzzy=True
+):
+    if not app_list:
+        app_list = ui.apps(background=False)
+
+    app_pairs = [(app.name, app) for app in app_list]
+    matching = actions.user.heirarchical_name_match(
+        target_name, app_pairs, match_start, match_fuzzy, match_fuzzy
+    )
+    return matching[0] if matching else None
+
+
 @mod.action_class
 class Actions:
     def switcher_kill(executable: str = "", title: str = "") -> None:
         """Kill all apps matching `executable` and `title`."""
         assert title or executable, (executable, title)
         for cur_app in ui.apps():
-            print("Title:", cur_app.active_window.title)
-            print("Name: ", cur_app.exe)
+            LOGGER.debug("Title:", cur_app.active_window.title)
+            LOGGER.debug("Name: ", cur_app.exe)
             if (
                 (title in cur_app.active_window.title)
                 and (executable in cur_app.exe)
@@ -173,51 +206,45 @@ class Actions:
 
     def switcher_focus_title(title: str) -> None:
         """Focus an application by title."""
-        # running = ctx.lists["self.running"]
+        app = running_app_from_title()
+        if app:
+            app.focus()
+        else:
+            raise IndexError(f'Running app not found matching title: "{title}"')
 
-        for cur_app in ui.apps():
-            # print(dir(cur_app.active_window.title))
-            if title in cur_app.active_window.title and not cur_app.background:
-                cur_app.focus()
+    def switcher_focus(name: str, match_title: bool = True):
+        """Focus an application by name"""
 
-    def switcher_focus(name: str):
-        """Focus an application by  name"""
-
-        wanted_app = name
+        ui_apps = ui.apps(background=False)
 
         # we should use the capture result directly if it's already in the
         # list of running applications
         # otherwise, name is from <user.text> and we can be a bit fuzzier
-        if name not in running_application_dict:
-
+        if name in running_names:
+            wanted_app = running_app_from_name(
+                name, app_list=ui_apps, match_start=False, match_fuzzy=False
+            )
+        elif len(name) < 3:
             # don't process silly things like "focus i"
-            if len(name) < 3:
-                LOGGER.info("switcher_focus skipped: len({}) < 3".format(name))
-                return
+            ValueError(f'switcher_focus skipped: len("{name}") < 3')
+        else:
+            # Prefer matching on app name
+            wanted_app = running_app_from_name(name, app_list=ui_apps)
+            if match_title and wanted_app is None:
+                wanted_app = running_app_from_title(name, app_list=ui_apps)
 
-            running = ctx.lists["self.running"]
-            wanted_app = None
+        if wanted_app is None:
+            raise IndexError(f'Running app not found matching name: "{name}"')
+        else:
+            LOGGER.debug(f"switching to {wanted_app}")
+            wanted_app.focus()
+            # User may have been choosing from the list. So after a
+            # successful switch, hide it.
+            actions.self.switcher_hide_running()
 
-            for running_name in running.keys():
-
-                if running_name == name or running_name.lower().startswith(
-                    name.lower()
-                ):
-                    wanted_app = running[running_name]
-                    break
-
-            if wanted_app is None:
-                raise ValueError(f'Running app not found: "{name}"')
-
-        for cur_app in ui.apps():
-            if cur_app.name == wanted_app and not cur_app.background:
-                cur_app.focus()
-                # User may have been choosing from the list. So after a
-                # successful switch, hide it.
-                actions.self.switcher_hide_running()
-                break
-
-    def switcher_focus_temporarily(name: str, pause: str = "300ms") -> None:
+    def switcher_focus_temporarily(
+        name: str, pause: str = "300ms", match_title: bool = True
+    ) -> None:
         """Switch to an application by name, then switch back."""
         current_app = ui.active_app()
         actions.self.switcher_focus(name)
@@ -227,9 +254,7 @@ class Actions:
     # TODO: Allow command line parameters (see code search for `ui.launch` implementations)
     def switcher_launch(path: str):
         """Launch a new application by path (all OSes), or AppUserModel_ID path on Windows"""
-        if app.platform != "windows":
-            ui.launch(path=path)
-        else:
+        if app.platform == "windows":
             is_valid_path = False
             try:
                 current_path = Path(path)
@@ -239,8 +264,12 @@ class Actions:
             if is_valid_path:
                 ui.launch(path=path)
             else:
+                # TODO: Maybe try searching for it in the start menu before reverting to this method?
                 cmd = "explorer.exe shell:AppsFolder\\{}".format(path)
                 subprocess.Popen(cmd, shell=False)
+        else:
+            # TODO: Search all programs for this one
+            ui.launch(path=path)
 
     def switcher_list_running():
         """Toggles display of running applications"""
