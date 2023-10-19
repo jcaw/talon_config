@@ -1,6 +1,6 @@
 from typing import List
 
-from talon import Module, Context, registry, clip, ui, actions
+from talon import Module, Context, registry, clip, ui, actions, app
 
 from user.utils import sound
 
@@ -14,6 +14,7 @@ def _print_and_copy_lines(lines: List):
     print(string)
     clip.set_text(string)
     print("String copied to clipboard.")
+    app.notify(string)
 
 
 @module.action_class
