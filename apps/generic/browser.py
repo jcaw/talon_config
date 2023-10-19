@@ -73,55 +73,7 @@ class UserActions:
     def open_current_page_in_chrome():
         url = actions.user.browser_address_backup()
         print(f"URL: {url}")
-        actions.self.switch_start_chrome()
+        actions.self.switch_or_start("chrome")
 
+        actions.app.tab_open()
         actions.browser.go(url)
-
-
-windows_context = Context()
-windows_context.matches = r"""os: windows"""
-
-
-@windows_context.action_class("user")
-class WindowsActions:
-    def switch_start_chrome():
-        try:
-            user.switcher_focus("chrome")
-            switched = True
-        except ValueError:
-            # TODO: Launch from command line with url as pareameter?
-
-            user.switcher_launch("chrome")
-
-            # Give it time to start up
-            sleep("2000ms")
-
-            user.switcher_focus("chrome")
-            switched = True
-
-        if switched:
-            actions.edit.tab_open()
-
-
-i3_context = Context()
-i3_context.matches = r"""tag: i3"""
-
-
-@i3_context.action_class("user")
-class i3Actions:
-    def switch_start_chrome():
-        try:
-            user.switcher_focus("chrome")
-            switched = True
-        except ValueError:
-            # TODO: Launch from command line with url as pareameter?
-            key("super-d")
-            sleep("50ms")
-            insert("chrome")
-            key("enter")
-            # Give it time to start up
-            sleep("2000ms")
-            switched = False
-
-        if switched:
-            actions.edit.tab_open()

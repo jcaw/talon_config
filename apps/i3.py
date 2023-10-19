@@ -87,3 +87,10 @@ class i3Actions:
         key("super-right")
         # Do this in case they're vertically stacked.
         key("super-down")
+
+    def launch_fuzzy(program_name: str) -> None:
+        key("super-d")
+        sleep("50ms")
+        insert(app_name)
+        sleep("50ms")
+        key("enter")
