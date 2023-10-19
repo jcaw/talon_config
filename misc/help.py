@@ -42,9 +42,9 @@ class Actions:
         """Copy all info for the current app."""
         active_app = ui.active_app()
         info = [
-            'Bundle: "{}"'.format(active_app.bundle),
             'Name:   "{}"'.format(active_app.name),
             'Exe:    "{}"'.format(active_app.exe),
             'Title:  "{}"'.format(ui.active_window().title),
+            'Bundle: "{}"'.format(active_app.bundle),
         ]
         _print_and_copy_lines(info)
