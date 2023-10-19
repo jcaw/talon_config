@@ -1,4 +1,9 @@
+import logging
 from talon import Context, Module, actions, clip, ui
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
+
 
 key = actions.key
 insert = actions.insert
@@ -72,7 +77,7 @@ class UserActions:
 
     def open_current_page_in_chrome():
         url = actions.user.browser_address_backup()
-        print(f"URL: {url}")
+        LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
         actions.self.switch_or_start("chrome")
 
         actions.app.tab_open()
