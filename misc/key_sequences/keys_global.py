@@ -61,4 +61,4 @@ def bind():
 
 
 # HACK: Actions won't be registered on startup, so wait until they are.
-cron.after("1ms", bind)
+cron.after("50ms", bind)
