@@ -56,6 +56,10 @@ def bind():
                 "m space": user.toggle_mic_off,
                 "=": "Utils",
                 "= i": user.copy_current_app_info,
+                "= p": user.command_history_show,
+                "= h": user.command_history_hide,
+                "= d": user.delete_speech_recordings,
+                "= n": user.quarantine_speech_recording,
             }
         )
 
