@@ -35,6 +35,9 @@ _PING_INTERVAL = 1000
 _AUTH_TIMEOUT = 5  # In secs
 _RE_TERMINATION_CHAR = re.compile("\0")
 DISCONNECT_DEADZONE = 5.0
+# How long to wait after injecting a command, to ensure the command has been
+# processed before pressing any keys.
+POST_COMMAND_INJECTION_WAIT = "100ms"
 
 
 # Unique ID for each sent request
@@ -495,7 +498,14 @@ def run_command(command, prefix_arg=None):
     #
     # FIXME: With e.g. the it commands, this is too fast. Need to ensure the
     #   stuff gets into the command loop, I think.
-    return rpc_call("voicemacs-inject-command", params=[command, prefix_arg])
+    result = rpc_call("voicemacs-inject-command", params=[command, prefix_arg])
+    # If a key is pressed too soon after injecting a command, it can cause a
+    # race condition where Emacs processes the keypress before the injected
+    # command. Injection is already hacky, pushing events into Emacs' internal
+    # event loop - fixing this may be impossible without modifying Emacs' source
+    # code. So, to avoid the race, just wait after injecting.
+    actions.sleep(POST_COMMAND_INJECTION_WAIT)
+    return result
 
 
 # TODO: An overlay that shows voicemacs connection status (iff Emacs is active)
