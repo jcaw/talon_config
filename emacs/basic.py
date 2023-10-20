@@ -150,6 +150,10 @@ and os: windows
 app: /vcxsrv/
 and title: /Emacs$/
 and os: windows
+# Win 11 Version
+app: /vcxsrv/
+and title: /Emacs@/
+and os: windows
 
 # Native WSL Gui, displaying WSL Emacs
 app: /msrdc/
