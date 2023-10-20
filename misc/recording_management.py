@@ -115,20 +115,24 @@ class Actions:
     def quarantine_speech_recording(file_number: Optional[int] = 1) -> None:
         """Move a specific speech recording to the potential misrecognitions folder."""
         quarantine_recording(nth_speech_recording(file_number))
+        actions.self.command_history_show()
 
     def quarantine_speech_recordings(n_files: Optional[int] = 1) -> None:
         """Move a number of speech recording to the potential misrecognitions folder."""
         # HACK: Redo this properly, as one group.
         for flac_path in recent_recordings_cropped(n_files):
             quarantine_recording(flac_path)
+        actions.self.command_history_show()
 
     def delete_speech_recording(file_number: Optional[int] = 1) -> None:
         """Delete the nth most recent speech recording."""
         delete_recordings([nth_speech_recording(file_number)])
+        actions.self.command_history_show()
 
     def delete_speech_recordings(n_files: Optional[int] = 1) -> None:
         """Delete the last n speech recordings."""
         delete_recordings(recent_recordings_cropped(n_files))
+        actions.self.command_history_show()
 
     # TODO: Probably remove - just use the imgui approach
     # def show_last_speech_recordings(
@@ -250,6 +254,10 @@ class HistoryActions:
     def command_history_show():
         """Show the command_history."""
         global _command_history_flag
+        # HACK: Set, then push, then set again ready for the post:phrase, so
+        #   this command can be invoked via keybind.
+        _command_history_flag = True
+        _push_history_state()
         _command_history_flag = True
 
     def command_history_hide():
