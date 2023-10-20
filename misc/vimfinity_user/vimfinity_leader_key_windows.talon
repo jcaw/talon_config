@@ -5,5 +5,6 @@ key(f16): user.vimfinity_start_sequence()
 # Some windows disable the rebind, so reactivate it here.
 key(capslock):
     user.vimfinity_start_sequence()
-    # HACK: Undo the capslock state on Windows
+    # HACK: Talon doesn't prevent the capslock state from changing on Windows
+    #   when it consumes the keypress, so reset it back.
     key(capslock)
