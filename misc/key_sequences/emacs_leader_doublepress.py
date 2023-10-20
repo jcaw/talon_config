@@ -37,10 +37,10 @@ class Actions:
             # Press again to terminate the sequence
             actions.key(leader_key)
             fresh_sequence = True
-            actions.user.key_sequence_start()
+            actions.user.vimfinity_start_sequence()
         else:
             try:
-                actions.user.key_sequence_quit()
+                actions.user.vimfinity_quit_sequence()
             finally:
                 actions.key(leader_key)
                 fresh_sequence = False

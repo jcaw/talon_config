@@ -22,7 +22,7 @@ tag: user.draft_window_showing
 
 def bind():
     try:
-        user.key_sequence_register(
+        user.vimfinity_bind_keys(
             {
                 # Emacs Muscle Memory
                 "enter": edit.save,
@@ -59,7 +59,7 @@ def bind():
             }
         )
 
-        user.key_sequence_register(
+        user.vimfinity_bind_keys(
             {
                 "o m": user.open_task_manager,
                 "o p": user.open_windows_terminal,
@@ -71,14 +71,14 @@ def bind():
             windows_context,
         )
 
-        user.key_sequence_register(
+        user.vimfinity_bind_keys(
             {
                 "o ,": user.open_current_page_in_chrome,
             },
             browser_context,
         )
 
-        user.key_sequence_register(
+        user.vimfinity_bind_keys(
             {
                 # Hide all the base draft window commands
                 "d": None,
