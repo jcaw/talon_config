@@ -19,6 +19,6 @@
 	url = git@github.com:jcaw/talon_mouse_grid.git
 	branch = master
 [submodule "plugins/key_sequences"]
-	path = plugins/key_sequences
+	path = plugins/vimfinity
 	url = git@github.com:jcaw/talon_key_sequences.git
 	branch = master
