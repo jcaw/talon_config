@@ -516,6 +516,7 @@ def run_command(command, prefix_arg=None):
 
 connection_canvas = None
 canvas_connection_state = None
+canvas_screen = None
 
 
 def redraw_connection_state(canvas):
@@ -529,8 +530,8 @@ def redraw_connection_state(canvas):
     paint.color = color
 
     # TODO: Scale based on DPI, not resolution
-    half_bar_width = max(30, int(round(canvas.width / 40)))
-    bar_height = max(2, int(round(canvas.height / 300)))
+    half_bar_width = max(30, int(round(canvas_screen.width / 40)))
+    bar_height = max(2, int(round(canvas_screen.height / 300)))
     corner_diam = int(math.floor(bar_height / 2))
     draw_rect = Rect(
         canvas.x + midpoint - half_bar_width,
@@ -566,13 +567,14 @@ _prior_emacs_rect = None
 
 
 def _update_overlay():
-    global connection_canvas, _prior_emacs_rect
+    global connection_canvas, _prior_emacs_rect, canvas_screen
     if emacs_focussed():
         active_window = ui.active_window()
         if connection_canvas and active_window.rect != _prior_emacs_rect:
             # Layout has changed - just reset the canvas to reposition the bar.
             connection_canvas.rect = _calc_canvas_rect(active_window)
             _old_window_rect = active_window.rect
+            canvas_screen = active_window.screen
             connection_canvas.resume()
             connection_canvas.freeze()
         if not connection_canvas:
@@ -584,6 +586,7 @@ def _update_overlay():
             #   (win 10), so manually set it.
             # FIXME: Report canvas being created with wrong rect as a bug
             connection_canvas.rect = canvas_rect
+            canvas_screen = active_window.screen
             connection_canvas.register("draw", redraw_connection_state)
             connection_canvas.freeze()
         elif canvas_connection_state != voicemacs_connected:
