@@ -573,8 +573,8 @@ def _update_overlay():
         if connection_canvas and active_window.rect != _prior_emacs_rect:
             # Layout has changed - just reset the canvas to reposition the bar.
             connection_canvas.rect = _calc_canvas_rect(active_window)
-            _old_window_rect = active_window.rect
             canvas_screen = active_window.screen
+            _prior_emacs_rect = Rect(*active_window.rect)
             connection_canvas.resume()
             connection_canvas.freeze()
         if not connection_canvas:
@@ -587,6 +587,7 @@ def _update_overlay():
             # FIXME: Report canvas being created with wrong rect as a bug
             connection_canvas.rect = canvas_rect
             canvas_screen = active_window.screen
+            _prior_emacs_rect = Rect(*active_window.rect)
             connection_canvas.register("draw", redraw_connection_state)
             connection_canvas.freeze()
         elif canvas_connection_state != voicemacs_connected:
