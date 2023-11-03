@@ -1,8 +1,9 @@
 from talon import Context, actions
+
 ctx = Context()
 ctx.matches = r"""
 # Commands for the spreed speed-reading addon for Chrome
-app: /chrome/
+tag: user.chrome
 title: /^Spreed/
 """
 

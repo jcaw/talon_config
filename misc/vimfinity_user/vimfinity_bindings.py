@@ -19,6 +19,12 @@ draft_context.matches = r"""
 tag: user.draft_window_showing
 """
 
+browser_context = Context()
+browser_context.matches = r"""
+tag: user.browser
+"""
+
+
 def press_backslash():
     """Press the backslash key. Useful when using a US keyboard in UK layout."""
     actions.key("\\")
@@ -107,6 +113,17 @@ def bind():
                 "h": user.draft_hide,
             },
             draft_context,
+        )
+
+        user.vimfinity_bind_keys(
+            {
+                "k": user.rango_toggle_keyboard_clicking,
+                "h": user.rango_disable,
+                "r": user.rango_enable,
+                "t": app.tab_open,
+                "w": app.tab_close,
+            },
+            browser_context,
         )
 
         print("Key sequences registered successfully.")

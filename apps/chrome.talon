@@ -1,5 +1,4 @@
-app: /chrome/
-title: /Google Chrome/
+tag: user.chrome
 -
 # Requires "Spreed" extension
 (speed read | spreed): key(alt-v)
