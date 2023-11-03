@@ -47,6 +47,10 @@ def bind():
                 "s": edit.find,
                 "/": user.search,
                 # Everything Else
+                ":": user.toggle_gaze_track_dot,
+                "s": user.mouse_grid_start,
+                # TODO: "space": user.toggle_mark,
+                "j": user.jump_click,
                 # Compensate for using a US keyboard in UK layout
                 "z": press_backslash,
                 "Z": press_pipe,
