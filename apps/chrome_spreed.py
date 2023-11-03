@@ -7,7 +7,11 @@ tag: user.chrome
 title: /^Spreed/
 """
 
-@ctx.action_class('edit')
+
+@ctx.action_class("edit")
 class EditActions:
-    def zoom_in():  actions.key('up')
-    def zoom_out(): actions.key('down')
+    def zoom_in():
+        actions.key("up")
+
+    def zoom_out():
+        actions.key("down")
