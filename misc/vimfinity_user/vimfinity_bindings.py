@@ -19,6 +19,16 @@ draft_context.matches = r"""
 tag: user.draft_window_showing
 """
 
+def press_backslash():
+    """Press the backslash key. Useful when using a US keyboard in UK layout."""
+    actions.key("\\")
+
+
+def press_pipe():
+    """Press the pipe key. Useful when using a US keyboard in UK layout."""
+    # FIXMME: Nothing inserted when I call this
+    actions.key("|")
+
 
 def bind():
     try:
@@ -31,6 +41,9 @@ def bind():
                 "s": edit.find,
                 "/": user.search,
                 # Everything Else
+                # Compensate for using a US keyboard in UK layout
+                "z": press_backslash,
+                "Z": press_pipe,
                 "o": "Open",
                 "d": user.draft_current_textbox,
                 "D": "Draft Window",
