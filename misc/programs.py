@@ -130,6 +130,8 @@ class Actions:
                 actions.user.focus(app_name=focus_name, title=focus_title)
             except (IndexError, ui.UIErr) as e:
                 print(f"Could not focus newly started program: {focus_name}. Skipping.")
+        # Give it time to focus
+        actions.sleep("200ms")
 
     # TODO: Go through each of these and check they all work?
 
