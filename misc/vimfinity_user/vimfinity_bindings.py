@@ -77,12 +77,18 @@ def bind():
                 "m m": user.noisy_sleep,
                 "m w": user.wake,
                 "m space": user.toggle_mic_off,
+                "e": "Emacs",
+                "e e": user.current_file_to_emacs,
+                "e p": user.current_project_to_emacs,
+                "e g": user.current_to_magit_emacs,
                 "=": "Utils",
                 "= i": user.copy_current_app_info,
                 "= p": user.command_history_show,
                 "= h": user.command_history_hide,
                 "= d": user.delete_speech_recordings,
                 "= n": user.quarantine_speech_recording,
+                "= t": user.emacs_search_talon_user,
+                "= T": user.emacs_find_file_talon_user,
             }
         )
 

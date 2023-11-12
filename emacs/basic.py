@@ -31,10 +31,35 @@ class Actions:
 
         """
         # TODO: Start Emacs if it's not already running.
-        rpc_call("x-focus-frame", [None])
-        if path:
-            # FIXME: Porthole can't handle unencodable return values
-            rpc_call("voicemacs-find-file", [path])
+        user.open_emacs()
+        # TODO: Still need this?
+        # rpc_call("x-focus-frame", [None])
+        print(rpc_call("voicemacs-find-file", [path]))
+
+    def current_file_to_emacs():
+        """Open the currently focussed file in Emacs."""
+        path = actions.app.path()
+        print(f"PAth: {path}")
+        user.open_in_emacs(path)
+
+    def current_project_to_emacs():
+        """Open the root folder of the currently active project in Emacs."""
+        user.open_in_emacs(user.project_root())
+
+    def current_to_magit_emacs():
+        """Open the current git repo in magit, even if outside Emacs."""
+        try:
+            path = user.project_root()
+        # TODO: Specific exception
+        except:
+            # Fall back to path, because it will probably more commonly be defined
+            path = None
+        if not path:
+            path = actions.app.path()
+        if not path:
+            RuntimeError("No path found.")
+        user.open_in_emacs(path)
+        user.emacs_command("magit-status")
 
     def emacs_search_directory(text: Optional[str] = None) -> None:
         """Search for some `text` in the current directory."""

@@ -135,6 +135,13 @@ class ModuleActions:
             actions.sound.set_microphone("None")
             actions.app.notify("Toggle again re-enable", "Microphone Disabled")
 
+    def project_root() -> str:
+        """Get the path to the root of the current project.
+
+        The meaning of "project" depends on the program.
+
+        """
+
 
 # TODO: Dedicated settings file?
 global_context = Context()
@@ -145,6 +152,12 @@ global_context.settings["imgui.scale"] = 1.8
 @global_context.action_class("self")
 class GlobalActions:
     pass
+
+
+@global_context.action_class("app")
+class AppActions:
+    def path() -> str:
+        raise NotImplementedError("`path` action not implemented in this context.")
 
 
 windows_context = Context(name="unsorted_windows")
