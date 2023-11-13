@@ -54,6 +54,8 @@ def bind():
                 # Compensate for using a US keyboard in UK layout
                 "z": press_backslash,
                 "Z": press_pipe,
+                "pageup": edit.zoom_in,
+                "pagedown": edit.zoom_out,
                 "o": "Open",
                 "d": user.draft_current_textbox,
                 "D": "Draft Window",
