@@ -130,8 +130,8 @@ def bind():
                 "k": user.rango_toggle_keyboard_clicking,
                 "h": user.rango_disable,
                 "r": user.rango_enable,
-                "t": app.tab_open,
-                "w": app.tab_close,
+                "t": actions.app.tab_open,
+                "w": actions.app.tab_close,
             },
             browser_context,
         )
