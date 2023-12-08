@@ -38,3 +38,15 @@ restart talon: user.restart_talon_with_sound()
 exit talon:    user.quit_talon_with_sound()
 
 key(ctrl-shift-enter): user.toggle_mic_off()
+
+
+# Open with commands
+with chrome:             user.open_current_page_in_chrome()
+
+with emacs:              user.open_current_file_in_emacs()
+project [to] emacs:      user.open_current_project_in_emacs()
+
+with (idea | intelli J): user.open_current_file_in_idea()
+# project to (idea | intelli J): user.open_current_project_in_idea()
+with rider:              user.open_current_file_in_rider()
+# project to rider:        user.open_current_project_in_rider()
