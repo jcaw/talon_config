@@ -1,12 +1,16 @@
 import re
 
-from talon import Module, actions, clip
+from talon import Module, Context, actions, clip, cron
 
 
-CURRENT_UNREAL_VERSION = "5.2"
+CURRENT_UNREAL_VERSION = "5.3"
 
 
 module = Module()
+module.tag(
+    "unreal_online_docs",
+    "Active when the browser is focussed and browsing the Unreal Engine online documentation",
+)
 
 
 @module.action_class
@@ -40,3 +44,23 @@ class Actions:
             clip.set_text(current_url)
             actions.edit.paste()
             actions.key("enter")
+
+
+context = Context()
+context.matches = r"""
+tag: user.browser
+title: /| Unreal Engine Documentation/
+"""
+context.tags = ["user.unreal_online_docs"]
+
+
+def bind_vimfinity_keys():
+    actions.user.vimfinity_bind_keys(
+        {
+            "p c": actions.user.unreal_docs_switch_to_current_version,
+        },
+        context,
+    )
+
+
+cron.after("50ms", bind_vimfinity_keys)
