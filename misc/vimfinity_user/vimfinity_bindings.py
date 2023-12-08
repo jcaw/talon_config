@@ -24,6 +24,12 @@ browser_context.matches = r"""
 tag: user.browser
 """
 
+ide_context = Context()
+ide_context.matches = r"""
+tag: user.jetbrains
+tag: user.emacs
+"""
+
 
 def press_backslash():
     """Press the backslash key. Useful when using a US keyboard in UK layout."""
@@ -34,6 +40,12 @@ def press_pipe():
     """Press the pipe key. Useful when using a US keyboard in UK layout."""
     # FIXMME: Nothing inserted when I call this
     actions.key("|")
+
+
+def press_menu():
+    """Press the menu key."""
+    # actions.mouse_click(button=1)
+    actions.key("menu")
 
 
 def bind():
@@ -48,12 +60,14 @@ def bind():
                 "/": user.search,
                 # Everything Else
                 ":": user.toggle_gaze_track_dot,
-                "s": user.mouse_grid_start,
+                "g": user.mouse_grid_start,
                 # TODO: "space": user.toggle_mark,
                 "j": user.jump_click,
                 # Compensate for using a US keyboard in UK layout
                 "z": press_backslash,
                 "Z": press_pipe,
+                # Compensate for keyboards without a meny key
+                "tab": press_menu,
                 "pageup": edit.zoom_in,
                 "pagedown": edit.zoom_out,
                 "o": "Open",
@@ -109,6 +123,7 @@ def bind():
         user.vimfinity_bind_keys(
             {
                 "o ,": user.open_current_page_in_chrome,
+                "p": "Page-Specific",
             },
             browser_context,
         )
@@ -137,6 +152,16 @@ def bind():
             },
             browser_context,
         )
+
+        # TODO: Build, run, debug commands
+        # user.vimfinity_bind_keys(
+        #     {
+        #         "b b": user.build_project,
+        #         "b r": user.run_project,
+        #         "b d": user.debug_project,
+        #     },
+        #     ide_context,
+        # )
 
         print("Key sequences registered successfully.")
     except KeyError:
