@@ -36,17 +36,17 @@ class Actions:
         # rpc_call("x-focus-frame", [None])
         print(rpc_call("voicemacs-find-file", [path]))
 
-    def current_file_to_emacs():
+    def open_current_file_in_emacs():
         """Open the currently focussed file in Emacs."""
         path = actions.app.path()
         print(f"PAth: {path}")
         user.open_in_emacs(path)
 
-    def current_project_to_emacs():
+    def open_current_project_in_emacs():
         """Open the root folder of the currently active project in Emacs."""
         user.open_in_emacs(user.project_root())
 
-    def current_to_magit_emacs():
+    def send_to_magit_in_emacs():
         """Open the current git repo in magit, even if outside Emacs."""
         try:
             path = user.project_root()
