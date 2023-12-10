@@ -182,8 +182,6 @@ class JetbrainsCopilotActions:
 class RefactorActions:
     def use_base_type_where_possible():
         """Refactor to use the base type wherever possible."""
-        # TODO: Is this right?
-        jetbrains_action("RiderBackendAction-UseBaseTypeAction")
 
     def refactor_copy():
         """Refactor to copy the current thing."""
@@ -196,8 +194,6 @@ class RefactorActions:
 
     def extract_members_to_partial():
         """TODO"""
-        # TODO: Is this right?
-        jetbrains_action("RiderBackendAction-Type2Partial")
 
     def extract_variable():
         """TODO"""
@@ -240,23 +236,18 @@ class RefactorActions:
 
     def inline_master_page_content():
         """TODO"""
-        jetbrains_action("RiderBackendAction-InlineContent")
 
     def inline_global_using():
         """TODO"""
-        jetbrains_action("RiderBackendAction-InlineGlobalUsing")
 
     def invert_boolean():
         """TODO"""
-        jetbrains_action("RiderBackendAction-InvertBool")
 
     def introduce_namespace_alias():
         """TODO"""
-        jetbrains_action("RiderBackendAction-CppIntroduceNamespaceAlias")
 
     def introduce_using_enum():
         """TODO"""
-        jetbrains_action("RiderBackendAction-CppIntroduceUsingEnum")
 
     def introduce_field():
         """TODO"""
@@ -268,11 +259,9 @@ class RefactorActions:
 
     def introduce_typedef():
         """TODO"""
-        jetbrains_action("RiderBackendAction-CppIntroduceType")
 
     def introduce_variable():
         """TODO"""
-        jetbrains_action("RiderBackendAction-CppIntroduceType")
 
     def refactor_move():
         """TODO"""
@@ -280,63 +269,48 @@ class RefactorActions:
 
     def make_method_non_static():
         """TODO"""
-        jetbrains_action("RiderBackendAction-MakeNonStatic")
 
     def convert_method_to_property():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Function2Property")
 
     def convert_property_to_method():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Property2Function")
 
     def convert_method_to_indexer():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Function2Indexer")
 
     def convert_indexer_to_method():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Indexer2Function")
 
     def convert_abstract_class_to_interface():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Abstract2Interface")
 
     def convert_interface_to_abstract_class():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Interface2Abstract")
 
     def convert_static_to_extension_method():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Static2ExtensionAction")
 
     def convert_extension_method_to_plain_static():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Extension2StaticAction")
 
     def convert_constructor_to_factory_method():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Constructor2FactoryMethodAction")
 
     def jetbrains_transform_parameters():
         """TODO"""
-        jetbrains_action("RiderBackendAction-TransformParameters")
 
     def convert_property_to_auto_property():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Property2Auto")
 
     def convert_anonymous_to_named_type():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Anonymous2Declared")
 
     def jetbrains_change_nullability():
         """TODO"""
-        jetbrains_action("RiderBackendAction-ChangeNullability")
 
     def convert_unscoped_enum_to_scoped_enum():
         """TODO"""
-        jetbrains_action("RiderBackendAction-CppConvertToScopedEnumAction")
 
     def pull_members_up():
         """TODO"""
@@ -348,7 +322,6 @@ class RefactorActions:
 
     def make_method_static():
         """TODO"""
-        jetbrains_action("RiderBackendAction-MakeStatic")
 
     def jetbrains_generic_refactor():
         """TODO"""
@@ -360,11 +333,9 @@ class RefactorActions:
 
     def encapsulate_field():
         """TODO"""
-        jetbrains_action("RiderBackendAction-EncapsulateField")
 
     def adjust_namespaces():
         """TODO"""
-        jetbrains_action("RiderBackendAction-Refactorings.AdjustNamespaces")
 
     def refactor_change_signature():
         """TODO"""
@@ -554,6 +525,92 @@ class UserActions:
 
     def clickable_get_focusables() -> List[Clickable]:
         return to_clickables(actions.user.jetbrains_focusable_sections())
+
+
+@rider_context.action_class("user")
+class RiderActions:
+    def use_base_type_where_possible():
+        # TODO: Is this right?
+        jetbrains_action("RiderBackendAction-UseBaseTypeAction")
+
+    def inline_master_page_content():
+        jetbrains_action("RiderBackendAction-InlineContent")
+
+    def inline_global_using():
+        jetbrains_action("RiderBackendAction-InlineGlobalUsing")
+
+    def invert_boolean():
+        jetbrains_action("RiderBackendAction-InvertBool")
+
+    def introduce_namespace_alias():
+        jetbrains_action("RiderBackendAction-CppIntroduceNamespaceAlias")
+
+    def introduce_using_enum():
+        jetbrains_action("RiderBackendAction-CppIntroduceUsingEnum")
+
+    def introduce_typedef():
+        jetbrains_action("RiderBackendAction-CppIntroduceType")
+
+    def introduce_variable():
+        jetbrains_action("RiderBackendAction-CppIntroduceType")
+
+    def make_method_non_static():
+        jetbrains_action("RiderBackendAction-MakeNonStatic")
+
+    def extract_members_to_partial():
+        # TODO: Is this right?
+        jetbrains_action("RiderBackendAction-Type2Partial")
+
+    def convert_method_to_property():
+        jetbrains_action("RiderBackendAction-Function2Property")
+
+    def convert_property_to_method():
+        jetbrains_action("RiderBackendAction-Property2Function")
+
+    def convert_method_to_indexer():
+        jetbrains_action("RiderBackendAction-Function2Indexer")
+
+    def convert_indexer_to_method():
+        jetbrains_action("RiderBackendAction-Indexer2Function")
+
+    def convert_abstract_class_to_interface():
+        jetbrains_action("RiderBackendAction-Abstract2Interface")
+
+    def convert_interface_to_abstract_class():
+        jetbrains_action("RiderBackendAction-Interface2Abstract")
+
+    def convert_static_to_extension_method():
+        jetbrains_action("RiderBackendAction-Static2ExtensionAction")
+
+    def convert_extension_method_to_plain_static():
+        jetbrains_action("RiderBackendAction-Extension2StaticAction")
+
+    def convert_constructor_to_factory_method():
+        jetbrains_action("RiderBackendAction-Constructor2FactoryMethodAction")
+
+    def convert_property_to_auto_property():
+        jetbrains_action("RiderBackendAction-Property2Auto")
+
+    def convert_anonymous_to_named_type():
+        jetbrains_action("RiderBackendAction-Anonymous2Declared")
+
+    def jetbrains_transform_parameters():
+        jetbrains_action("RiderBackendAction-TransformParameters")
+
+    def jetbrains_change_nullability():
+        jetbrains_action("RiderBackendAction-ChangeNullability")
+
+    def convert_unscoped_enum_to_scoped_enum():
+        jetbrains_action("RiderBackendAction-CppConvertToScopedEnumAction")
+
+    def make_method_static():
+        jetbrains_action("RiderBackendAction-MakeStatic")
+
+    def encapsulate_field():
+        jetbrains_action("RiderBackendAction-EncapsulateField")
+
+    def adjust_namespaces():
+        jetbrains_action("RiderBackendAction-Refactorings.AdjustNamespaces")
 
 
 def bind_keys():
