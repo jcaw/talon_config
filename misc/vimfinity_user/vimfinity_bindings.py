@@ -114,6 +114,7 @@ def bind():
                 "o p": user.open_windows_terminal,
                 # "o p": user.open_command_prompt,
                 # "o P": user.open_powershell,
+                "o x": user.open_windows_explorer,
                 "o u": user.open_unreal_engine,
                 "o g": user.open_epic_games,
             },
@@ -147,8 +148,8 @@ def bind():
                 "k": user.rango_toggle_keyboard_clicking,
                 "h": user.rango_disable,
                 "r": user.rango_enable,
-                "t": actions.app.tab_open,
-                "w": actions.app.tab_close,
+                # "t": actions.app.tab_open,
+                # "w": actions.app.tab_close,
             },
             browser_context,
         )

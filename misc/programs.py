@@ -189,6 +189,13 @@ class Actions:
         """Switch to Windows Terminal, starting it if necessary."""
         actions.user.switch_or_start("terminal")
 
+    def open_windows_explorer():
+        """Open windows explorer (specifically, open the file browser)."""
+        # FIXME: Doesn't start file explorer
+        actions.user.switch_or_start(
+            start_name="file explorer", focus_name="windows explorer"
+        )
+
     def open_epic_games():
         """Switch to epic_games, starting it if necessary."""
         actions.user.switch_or_start(start_name="epic games", focus_name="EpicGames")
