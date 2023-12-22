@@ -68,8 +68,8 @@ def bind():
                 "Z": press_pipe,
                 # Compensate for keyboards without a meny key
                 "tab": press_menu,
-                "pageup": edit.zoom_in,
-                "pagedown": edit.zoom_out,
+                "+": edit.zoom_in,
+                "-": edit.zoom_out,
                 "o": "Open",
                 "d": user.draft_current_textbox,
                 "D": "Draft Window",
