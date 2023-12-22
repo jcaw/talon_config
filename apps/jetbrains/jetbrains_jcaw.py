@@ -662,20 +662,56 @@ def bind_keys():
                 "r m": (actions.user.refactor_move, "Move"),
                 "r n": actions.user.make_method_non_static,
                 "r o": "Convert",
-                "r o p": actions.user.convert_method_to_property,
-                "r o m": actions.user.convert_property_to_method,
-                "r o d": actions.user.convert_method_to_indexer,
-                "r o h": actions.user.convert_indexer_to_method,
-                "r o i": actions.user.convert_abstract_class_to_interface,
-                "r o a": actions.user.convert_interface_to_abstract_class,
-                "r o e": actions.user.convert_static_to_extension_method,
-                "r o s": actions.user.convert_extension_method_to_plain_static,
-                "r o f": actions.user.convert_constructor_to_factory_method,
-                "r o r": actions.user.jetbrains_transform_parameters,
-                "r o u": actions.user.convert_property_to_auto_property,
-                "r o t": actions.user.convert_anonymous_to_named_type,
-                "r o n": actions.user.jetbrains_change_nullability,
-                "r o c": actions.user.convert_unscoped_enum_to_scoped_enum,
+                "r o p": (
+                    actions.user.convert_method_to_property,
+                    "Method to Property",
+                ),
+                "r o m": (
+                    actions.user.convert_property_to_method,
+                    "Property to Method",
+                ),
+                "r o d": (actions.user.convert_method_to_indexer, "Method to Indexer"),
+                "r o h": (actions.user.convert_indexer_to_method, "Indexer to Method"),
+                "r o i": (
+                    actions.user.convert_abstract_class_to_interface,
+                    "Abstract Class to Interface",
+                ),
+                "r o a": (
+                    actions.user.convert_interface_to_abstract_class,
+                    "Interface to Abstract Class",
+                ),
+                "r o e": (
+                    actions.user.convert_static_to_extension_method,
+                    "Static to Extension Method",
+                ),
+                "r o s": (
+                    actions.user.convert_extension_method_to_plain_static,
+                    "Extension Method to Plain Static",
+                ),
+                "r o f": (
+                    actions.user.convert_constructor_to_factory_method,
+                    "Constructor to Factory Method",
+                ),
+                "r o r": (
+                    actions.user.jetbrains_transform_parameters,
+                    "Transform Parameters",
+                ),
+                "r o u": (
+                    actions.user.convert_property_to_auto_property,
+                    "Property to Auto Property",
+                ),
+                "r o t": (
+                    actions.user.convert_anonymous_to_named_type,
+                    "Anonymous to Named Type",
+                ),
+                "r o n": (
+                    actions.user.jetbrains_change_nullability,
+                    "Change Nullability",
+                ),
+                "r o c": (
+                    actions.user.convert_unscoped_enum_to_scoped_enum,
+                    "Unscoped Enum to Scoped Enum",
+                ),
                 # TODO: Convert methods
                 "r p": actions.user.pull_members_up,
                 "r r": actions.user.rename,
@@ -686,7 +722,10 @@ def bind_keys():
                 "r z": actions.user.adjust_namespaces,
                 "r y": (actions.user.refactor_change_signature, "Change Signature"),
                 "s": "Search/Lookup",
-                "s n": actions.user.jetbrains_find_with_navigation_bar,
+                "s n": (
+                    actions.user.jetbrains_find_with_navigation_bar,
+                    "Find with Navigation Bar",
+                ),
                 "s d": actions.user.find_definition,
                 "s u": actions.user.find_declaration_or_usages,
                 "s f": actions.user.find_derived_symbols,
