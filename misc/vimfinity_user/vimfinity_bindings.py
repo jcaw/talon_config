@@ -48,6 +48,10 @@ def press_menu():
     actions.key("menu")
 
 
+def google_that():
+    user.google_search(user.get_that_dwim())
+
+
 def bind():
     try:
         user.vimfinity_bind_keys(
@@ -105,6 +109,7 @@ def bind():
                 "= n": user.quarantine_speech_recording,
                 "= t": user.emacs_search_talon_user,
                 "= T": user.emacs_find_file_talon_user,
+                "?": google_that,
             }
         )
 
