@@ -7,6 +7,9 @@ import os
 import shlex
 import subprocess
 import webbrowser
+import logging
+
+LOGGER = logging.getLogger()
 
 
 module = Module()
@@ -141,6 +144,11 @@ class ModuleActions:
         The meaning of "project" depends on the program.
 
         """
+
+    def debug(text: str):
+        """Print and notify with a string."""
+        LOGGER.info(text)
+        app.notify("Talon Debug", text)
 
     def paste_insert(text: str):
         """Insert `text` by pasting it, rather than typing."""
