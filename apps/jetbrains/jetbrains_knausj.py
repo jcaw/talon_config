@@ -184,206 +184,206 @@ app: jetbrains
 """
 
 
-@ctx.action_class("app")
-class AppActions:
-    def tab_next():
-        actions.user.idea("action NextTab")
+# @ctx.action_class("app")
+# class AppActions:
+#     def tab_next():
+#         actions.user.idea("action NextTab")
 
-    def tab_previous():
-        actions.user.idea("action PreviousTab")
+#     def tab_previous():
+#         actions.user.idea("action PreviousTab")
 
-    def tab_close():
-        actions.user.idea("action CloseContent")
+#     def tab_close():
+#         actions.user.idea("action CloseContent")
 
-    def tab_reopen():
-        actions.user.idea("action ReopenClosedTab")
-
-
-@ctx.action_class("code")
-class CodeActions:
-    # talon code actions
-    def toggle_comment():
-        actions.user.idea("action CommentByLineComment")
+#     def tab_reopen():
+#         actions.user.idea("action ReopenClosedTab")
 
 
-@ctx.action_class("edit")
-class EditActions:
-    # talon edit actions
-    def copy():
-        actions.user.idea("action EditorCopy")
-
-    def cut():
-        actions.user.idea("action EditorCut")
-
-    def delete():
-        actions.user.idea("action EditorBackSpace")
-
-    def paste():
-        actions.user.idea("action EditorPaste")
-
-    def find_next():
-        actions.user.idea("action FindNext")
-
-    def find_previous():
-        actions.user.idea("action FindPrevious")
-
-    def find(text: str = None):
-        actions.user.idea("action Find")
-
-    def line_clone():
-        actions.user.idea("action EditorDuplicate")
-
-    def line_swap_down():
-        actions.user.idea("action MoveLineDown")
-
-    def line_swap_up():
-        actions.user.idea("action MoveLineUp")
-
-    def indent_more():
-        actions.user.idea("action EditorIndentLineOrSelection")
-
-    def indent_less():
-        actions.user.idea("action EditorUnindentSelection")
-
-    def select_line(n: int = None):
-        actions.user.idea("action EditorSelectLine")
-
-    def select_word():
-        actions.user.idea("action EditorSelectWord")
-
-    def select_all():
-        actions.user.idea("action $SelectAll")
-
-    def file_start():
-        actions.user.idea("action EditorTextStart")
-
-    def file_end():
-        actions.user.idea("action EditorTextEnd")
-
-    def extend_file_start():
-        actions.user.idea("action EditorTextStartWithSelection")
-
-    def extend_file_end():
-        actions.user.idea("action EditorTextEndWithSelection")
-
-    def extend_word_left():
-        actions.user.idea("action EditorPreviousWordWithSelection")
-
-    def extend_word_right():
-        actions.user.idea("action EditorNextWordWithSelection")
-
-    def jump_line(n: int):
-        actions.user.idea(f"goto {n} 0")
-        # move the cursor to the first nonwhite space character of the line
-        actions.user.idea("action EditorLineEnd")
-        actions.user.idea("action EditorLineStart")
+# @ctx.action_class("code")
+# class CodeActions:
+#     # talon code actions
+#     def toggle_comment():
+#         actions.user.idea("action CommentByLineComment")
 
 
-@ctx.action_class("win")
-class WinActions:
-    def filename() -> str:
-        title: str = actions.win.title()
-        result = title.split()
+# @ctx.action_class("edit")
+# class EditActions:
+#     # talon edit actions
+#     def copy():
+#         actions.user.idea("action EditorCopy")
 
-        # iterate over reversed result
-        # to support titles such as
-        # Class.Library2 – a.js [.workspace]
-        for word in reversed(result):
-            if not word.startswith("[") and "." in word:
-                return word
+#     def cut():
+#         actions.user.idea("action EditorCut")
 
-        return ""
+#     def delete():
+#         actions.user.idea("action EditorBackSpace")
+
+#     def paste():
+#         actions.user.idea("action EditorPaste")
+
+#     def find_next():
+#         actions.user.idea("action FindNext")
+
+#     def find_previous():
+#         actions.user.idea("action FindPrevious")
+
+#     def find(text: str = None):
+#         actions.user.idea("action Find")
+
+#     def line_clone():
+#         actions.user.idea("action EditorDuplicate")
+
+#     def line_swap_down():
+#         actions.user.idea("action MoveLineDown")
+
+#     def line_swap_up():
+#         actions.user.idea("action MoveLineUp")
+
+#     def indent_more():
+#         actions.user.idea("action EditorIndentLineOrSelection")
+
+#     def indent_less():
+#         actions.user.idea("action EditorUnindentSelection")
+
+#     def select_line(n: int = None):
+#         actions.user.idea("action EditorSelectLine")
+
+#     def select_word():
+#         actions.user.idea("action EditorSelectWord")
+
+#     def select_all():
+#         actions.user.idea("action $SelectAll")
+
+#     def file_start():
+#         actions.user.idea("action EditorTextStart")
+
+#     def file_end():
+#         actions.user.idea("action EditorTextEnd")
+
+#     def extend_file_start():
+#         actions.user.idea("action EditorTextStartWithSelection")
+
+#     def extend_file_end():
+#         actions.user.idea("action EditorTextEndWithSelection")
+
+#     def extend_word_left():
+#         actions.user.idea("action EditorPreviousWordWithSelection")
+
+#     def extend_word_right():
+#         actions.user.idea("action EditorNextWordWithSelection")
+
+#     def jump_line(n: int):
+#         actions.user.idea(f"goto {n} 0")
+#         # move the cursor to the first nonwhite space character of the line
+#         actions.user.idea("action EditorLineEnd")
+#         actions.user.idea("action EditorLineStart")
 
 
-@ctx.action_class("user")
-class UserActions:
-    def tab_jump(number: int):
-        # depends on plugin GoToTabs
-        if number < 10:
-            actions.user.idea(f"action GoToTab{number}")
+# @ctx.action_class("win")
+# class WinActions:
+#     def filename() -> str:
+#         title: str = actions.win.title()
+#         result = title.split()
 
-    def extend_until_line(line: int):
-        actions.user.idea(f"extend {line}")
+#         # iterate over reversed result
+#         # to support titles such as
+#         # Class.Library2 – a.js [.workspace]
+#         for word in reversed(result):
+#             if not word.startswith("[") and "." in word:
+#                 return word
 
-    def select_range(line_start: int, line_end: int):
-        # if it's a single line, select the entire thing including the ending new-line5
-        if line_start == line_end:
-            actions.user.idea(f"goto {line_start} 0")
-            actions.user.idea("action EditorSelectLine"),
-        else:
-            actions.user.idea(f"range {line_start} {line_end}")
+#         return ""
 
-    def extend_camel_left():
-        actions.user.idea("action EditorPreviousWordInDifferentHumpsModeWithSelection")
 
-    def extend_camel_right():
-        actions.user.idea("action EditorNextWordInDifferentHumpsModeWithSelection")
+# @ctx.action_class("user")
+# class UserActions:
+#     def tab_jump(number: int):
+#         # depends on plugin GoToTabs
+#         if number < 10:
+#             actions.user.idea(f"action GoToTab{number}")
 
-    def camel_left():
-        actions.user.idea("action EditorPreviousWordInDifferentHumpsMode")
+#     def extend_until_line(line: int):
+#         actions.user.idea(f"extend {line}")
 
-    def camel_right():
-        actions.user.idea("action EditorNextWordInDifferentHumpsMode")
+#     def select_range(line_start: int, line_end: int):
+#         # if it's a single line, select the entire thing including the ending new-line5
+#         if line_start == line_end:
+#             actions.user.idea(f"goto {line_start} 0")
+#             actions.user.idea("action EditorSelectLine"),
+#         else:
+#             actions.user.idea(f"range {line_start} {line_end}")
 
-    def line_clone(line: int):
-        actions.user.idea(f"clone {line}")
+#     def extend_camel_left():
+#         actions.user.idea("action EditorPreviousWordInDifferentHumpsModeWithSelection")
 
-    # multi-cursor tag functions
-    def multi_cursor_enable():
-        actions.skip()
+#     def extend_camel_right():
+#         actions.user.idea("action EditorNextWordInDifferentHumpsModeWithSelection")
 
-    def multi_cursor_disable():
-        actions.key("escape")
+#     def camel_left():
+#         actions.user.idea("action EditorPreviousWordInDifferentHumpsMode")
 
-    def multi_cursor_add_above():
-        actions.user.idea("action EditorCloneCaretAbove")
+#     def camel_right():
+#         actions.user.idea("action EditorNextWordInDifferentHumpsMode")
 
-    def multi_cursor_add_below():
-        actions.user.idea("action EditorCloneCaretBelow")
+#     def line_clone(line: int):
+#         actions.user.idea(f"clone {line}")
 
-    def multi_cursor_select_fewer_occurrences():
-        actions.user.idea("action UnselectPreviousOccurrence")
+#     # multi-cursor tag functions
+#     def multi_cursor_enable():
+#         actions.skip()
 
-    def multi_cursor_select_more_occurrences():
-        actions.user.idea("action SelectNextOccurrence")
+#     def multi_cursor_disable():
+#         actions.key("escape")
 
-    # def multi_cursor_skip_occurrence():
-    def multi_cursor_select_all_occurrences():
-        actions.user.idea("action SelectAllOccurrences")
+#     def multi_cursor_add_above():
+#         actions.user.idea("action EditorCloneCaretAbove")
 
-    def multi_cursor_add_to_line_ends():
-        actions.user.idea("action EditorAddCaretPerSelectedLine")
+#     def multi_cursor_add_below():
+#         actions.user.idea("action EditorCloneCaretBelow")
 
-    # splits tag functions
-    # def split_window_right():
-    #     actions.user.idea("action OpenInRightSplit")
-    # def split_window_left():
-    # def split_window_down():
-    # def split_window_up():
-    def split_window_vertically():
-        actions.user.idea("action SplitVertically")
+#     def multi_cursor_select_fewer_occurrences():
+#         actions.user.idea("action UnselectPreviousOccurrence")
 
-    def split_window_horizontally():
-        actions.user.idea("action SplitHorizontally")
+#     def multi_cursor_select_more_occurrences():
+#         actions.user.idea("action SelectNextOccurrence")
 
-    def split_flip():
-        actions.user.idea("action ChangeSplitOrientation")
+#     # def multi_cursor_skip_occurrence():
+#     def multi_cursor_select_all_occurrences():
+#         actions.user.idea("action SelectAllOccurrences")
 
-    def split_maximize():
-        actions.key("ctrl-shift-f12")
+#     def multi_cursor_add_to_line_ends():
+#         actions.user.idea("action EditorAddCaretPerSelectedLine")
 
-    def split_reset():
-        actions.key("shift-f12")
+#     # splits tag functions
+#     # def split_window_right():
+#     #     actions.user.idea("action OpenInRightSplit")
+#     # def split_window_left():
+#     # def split_window_down():
+#     # def split_window_up():
+#     def split_window_vertically():
+#         actions.user.idea("action SplitVertically")
 
-    # def split_window():
-    def split_clear():
-        actions.user.idea("action Unsplit")
+#     def split_window_horizontally():
+#         actions.user.idea("action SplitHorizontally")
 
-    def split_clear_all():
-        actions.user.idea("action UnsplitAll")
+#     def split_flip():
+#         actions.user.idea("action ChangeSplitOrientation")
 
-    def split_next():
-        actions.user.idea("action NextSplitter")
+#     def split_maximize():
+#         actions.key("ctrl-shift-f12")
 
-    # def split_last():
-    # def split_number(index: int):
+#     def split_reset():
+#         actions.key("shift-f12")
+
+#     # def split_window():
+#     def split_clear():
+#         actions.user.idea("action Unsplit")
+
+#     def split_clear_all():
+#         actions.user.idea("action UnsplitAll")
+
+#     def split_next():
+#         actions.user.idea("action NextSplitter")
+
+#     # def split_last():
+#     # def split_number(index: int):
