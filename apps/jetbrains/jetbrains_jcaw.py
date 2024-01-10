@@ -171,7 +171,7 @@ class JetbrainsCopilotActions:
     def copilot_reference_file():
         # Use the convoluted menu approach, because it allows files to be more
         # easily added from any context - e.g. the file list, editor, etc.
-        copilot_chat_click("Reference File in Chat")
+        copilot_click("Reference File in Chat")
 
     def copilot_full_suggestions():
         jetbrains_action("copilot.openCopilot")
