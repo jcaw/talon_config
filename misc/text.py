@@ -161,13 +161,13 @@ class Actions:
         # FIXME: This restores the clipboard
         with clip.capture() as c:
             edit.copy()
-        return c.get()
+        return c.text()
 
     def cut_safe() -> None:
         """Like `edit.cut` but waits for the clipboard to change."""
         with clip.capture() as c:
             edit.cut()
-        return c.get()
+        return c.text()
 
     # TODO: Condense with `copy_safe`
     def get_highlighted() -> str:
