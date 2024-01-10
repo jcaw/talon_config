@@ -169,8 +169,9 @@ class Actions:
             edit.cut()
         return c.get()
 
-    def get_highlighted() -> None:
+    # TODO: Condense with `copy_safe`
+    def get_highlighted() -> str:
         """Get the currently highlighted text, without altering clipboard."""
         with clip.capture() as c:
             edit.copy()
-        return c.get()
+        return c.text()

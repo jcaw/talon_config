@@ -109,7 +109,9 @@ def bind():
                 "= n": user.quarantine_speech_recording,
                 "= t": user.emacs_search_talon_user,
                 "= T": user.emacs_find_file_talon_user,
+                # TODO: Swap these around?
                 "?": google_that,
+                "end": user.chatgpt_explain_thing,
             }
         )
 

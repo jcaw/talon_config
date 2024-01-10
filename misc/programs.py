@@ -137,7 +137,7 @@ class Actions:
 
     def open_firefox():
         """Switch to firefox, starting it if necessary."""
-        actions.user.switch_or_start("firefox")
+        actions.user.switch_or_start("firefox", "5000s")
 
     def open_chrome():
         """Switch to chrome, starting it if necessary."""

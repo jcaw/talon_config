@@ -1,6 +1,6 @@
 """Behaviours, captures & actions that aren't in a dedicated module yet."""
 
-from talon import Module, Context, actions, imgui, app
+from talon import Module, Context, actions, imgui, app, clip
 from typing import Optional, List
 from pathlib import Path
 import os
@@ -141,6 +141,12 @@ class ModuleActions:
         The meaning of "project" depends on the program.
 
         """
+
+    def paste_insert(text: str):
+        """Insert `text` by pasting it, rather than typing."""
+        with clip.revert():
+            clip.set_text(text)
+            actions.edit.paste()
 
 
 # TODO: Dedicated settings file?
