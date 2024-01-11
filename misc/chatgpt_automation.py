@@ -4,6 +4,7 @@ from talon import Module, ui, actions, Context, app, clip
 
 user = actions.user
 edit = actions.edit
+browser = actions.browser
 insert = actions.insert
 key = actions.key
 sleep = actions.sleep
