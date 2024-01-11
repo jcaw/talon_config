@@ -154,6 +154,10 @@ class ModuleActions:
         """Insert `text` by pasting it, rather than typing."""
         with clip.revert():
             clip.set_text(text)
+            # While the clipboard will have updated, the underlying program may
+            # not have synchronised to the new clipboard state (Jetbrains seems
+            # to have this problem). Sleep to allow it to sync.
+            actions.sleep("200ms")
             actions.edit.paste()
 
 
