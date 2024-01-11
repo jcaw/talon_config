@@ -10,6 +10,7 @@ from user.utils.formatting import SurroundingText
 from user.settings.test.clickable_overlay import Clickable
 
 
+user = actions.user
 idea = actions.user.idea
 sleep = actions.sleep
 key = actions.key
@@ -107,6 +108,17 @@ def copilot_click(text):
     actions.self.copilot_open_chat()
 
 
+def copilot_chat_message(message):
+    # actions.key("escape")
+    actions.self.copilot_open_chat()
+    sleep("50ms")
+    key("ctrl-a")
+    sleep("50ms")
+    user.paste_insert(f"{message}")
+    sleep("50ms")
+    key("enter")
+
+
 def copilot_chat_command(command):
     # In case the chat is already open
     actions.key("escape")
@@ -131,6 +143,9 @@ class Actions:
 
     def copilot_explain():
         """Explain the current file with copilot."""
+
+    def copilot_explain_highlighted():
+        """Explain the highlighted code in the current file with copilot."""
 
     def copilot_fix():
         """Fix the current thing with copilot."""
@@ -158,6 +173,13 @@ class JetbrainsCopilotActions:
 
     def copilot_explain():
         copilot_chat_command("/explain")
+
+    def copilot_explain_highlighted():
+        text = user.get_highlighted()
+        # actions.self.copilot_reference_file()
+        # user.paste_insert(f"Please explain the following code:\n\n```\n{text}\n```")
+        copilot_chat_message(f"Please explain the following code:\n\n```\n{text}\n```")
+        key("enter")
 
     def copilot_fix():
         copilot_chat_command("/fix")
@@ -621,7 +643,8 @@ def bind_keys():
                 "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
                 "p": "GitHub Copilot",
                 "p p": (actions.user.copilot_chat, "Open Copilot Chat"),
-                "p e": (actions.user.copilot_explain, "Explain This"),
+                "p E": (actions.user.copilot_explain, "Explain File"),
+                "p e": (actions.user.copilot_explain_highlighted, "Explain Highlighted"),
                 "p f": (actions.user.copilot_fix, "Fix This"),
                 "p s": (actions.user.copilot_simplify, "Simplify This"),
                 "p d": (actions.user.copilot_generate_docs, "Generate Docs"),
