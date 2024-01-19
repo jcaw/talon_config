@@ -402,6 +402,18 @@ class RefactorActions:
         """TODO"""
         jetbrains_action("GotoClass")
 
+    def jetbrains_build_project():
+        """Build the current project."""
+        jetbrains_action("BuildSolutionAction")
+
+    def jetbrains_run_project():
+        """Build and run the current project."""
+        jetbrains_action("Run")
+
+    def jetbrains_debug_project():
+        """Build and run a debug build of the current project."""
+        jetbrains_action("Debug")
+
 
 @jetbrains_context.action_class("app")
 class AppActions:
@@ -641,6 +653,13 @@ def bind_keys():
             {
                 "c": (actions.user.clickable_start_clickables, "Click by Keyboard"),
                 "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
+                "b": "Build",
+                "b b": (actions.user.jetbrains_run_project, "Run Project"),
+                "b c": (actions.user.jetbrains_build_project, "Build Project"),
+                "b d": (actions.user.jetbrains_debug_project, "Debug Project"),
+                "b t": (actions.user.jetbrains_terminate_build, "Terminate"),
+                # TODO: Pull out to Rider-only actions?
+                # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
                 "p": "GitHub Copilot",
                 "p p": (actions.user.copilot_chat, "Open Copilot Chat"),
                 "p E": (actions.user.copilot_explain, "Explain File"),
