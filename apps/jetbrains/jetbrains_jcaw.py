@@ -11,6 +11,7 @@ from user.settings.test.clickable_overlay import Clickable
 
 
 user = actions.user
+edit = actions.edit
 idea = actions.user.idea
 sleep = actions.sleep
 key = actions.key
@@ -108,22 +109,22 @@ def copilot_click(text):
     actions.self.copilot_open_chat()
 
 
-def copilot_chat_message(message):
+def copilot_chat_message(message, submit=True):
     # actions.key("escape")
     actions.self.copilot_open_chat()
-    sleep("50ms")
     key("ctrl-a")
+    # TODO: Possibly copy what's already there?
     sleep("50ms")
     user.paste_insert(f"{message}")
     sleep("50ms")
-    key("enter")
+    if submit:
+        key("enter")
 
 
 def copilot_chat_command(command):
     # In case the chat is already open
     actions.key("escape")
     actions.self.copilot_open_chat()
-    sleep("50ms")
     key("ctrl-a")
     sleep("50ms")
     # Add a space after so "enter" doesn't just select the autocomplete candidate.
@@ -131,6 +132,54 @@ def copilot_chat_command(command):
     sleep("50ms")
     key("enter")
     # actions.insert("test")
+
+
+COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain the following code:
+
+```{language}
+{code_text}
+```"""
+
+# FIXME: Including the compilation bug causes a weird error, seemingly caused by
+#   exceeding the max tokens. For now, just don't include it.
+COPILOT_EXPLAIN_COMPILATION_ERROR_COMPLEX = """I'm getting an error I that I don't understand. I will list the compilation output, then the error, then the line the compiler claims is causing trouble.
+
+This is the compilation output:
+```
+{compilation_output}
+```
+
+This is the error I would like explained:
+```
+{error_message}
+```
+
+This is the first line of the code that the compiler claims is causing the problem:
+```
+{code_responsible}
+```
+
+Explain why I'm getting this error."""
+
+COPILOT_EXPLAIN_COMPILATION_ERROR = """I'm getting a compilation error I that I don't understand:
+```
+{error_message}
+```
+
+This is the first line of the code that the compiler claims is causing the problem:
+```
+{code_responsible}
+```
+
+Explain why I'm getting this error."""
+
+COPILOT_QUOTE_MESSAGE = """
+
+```
+{text}
+```
+
+"""
 
 
 @module.action_class
@@ -146,6 +195,16 @@ class Actions:
 
     def copilot_explain_highlighted():
         """Explain the highlighted code in the current file with copilot."""
+
+    def copilot_explain_error():
+        """Explain the currently selected error in the build window."""
+
+    def copilot_quote_highlighted():
+        """Open the Copilot Chat window, and quote the highlighted text in a block.
+
+        You can then fill in the rest of the query, and submit it.
+
+        """
 
     def copilot_fix():
         """Fix the current thing with copilot."""
@@ -167,6 +226,7 @@ class Actions:
 class JetbrainsCopilotActions:
     def copilot_open_chat():
         jetbrains_action("ActivateGitHubCopilotChatToolWindow")
+        sleep("200ms")
 
     def copilot_generate_docs():
         copilot_chat_command("/doc")
@@ -176,10 +236,61 @@ class JetbrainsCopilotActions:
 
     def copilot_explain_highlighted():
         text = user.get_highlighted()
-        # actions.self.copilot_reference_file()
-        # user.paste_insert(f"Please explain the following code:\n\n```\n{text}\n```")
-        copilot_chat_message(f"Please explain the following code:\n\n```\n{text}\n```")
-        key("enter")
+        if " " in text.strip():
+            # TODO: language
+            message = COPILOT_EXPLAIN_CODE_TEMPLATE.format(language="", code_text=text)
+        else:
+            message = f"Explain `{text.strip()}`"
+        copilot_chat_message(message)
+
+    def copilot_explain_error():
+        INCLUDE_COMPILATION_OUTPUT = False
+
+        # Assumes the error is focussed.
+        error_message = user.get_highlighted()
+
+        if INCLUDE_COMPILATION_OUTPUT:
+            # Grab the compilation output
+            # HACK: I don't know the shortcut or action to jump to the compilation
+            #   window, so just press tab twice.
+            key("tab:2")
+            edit.select_all()
+            compilation_output = user.get_highlighted()
+            # Dehighlight, jump to end
+            key("right")
+            key("shift-tab:2")
+
+        # Jump to source
+        key("f4")
+        key("home")
+        key("shift-end")
+        code = user.get_highlighted()
+
+        if INCLUDE_COMPILATION_OUTPUT:
+            text = COPILOT_EXPLAIN_COMPILATION_ERROR_COMPLEX.format(
+                compilation_output=compilation_output,
+                error_message=error_message,
+                code_responsible=code,
+            )
+        else:
+            text = COPILOT_EXPLAIN_COMPILATION_ERROR.format(
+                error_message=error_message,
+                code_responsible=code,
+            )
+        copilot_chat_message(text)
+
+    def copilot_quote_highlighted():
+        text = user.get_highlighted()
+        # DWIM behaviour based on what we're copying
+        if " " in text.strip():
+            # For code snippets, use a block quote
+            message = COPILOT_QUOTE_MESSAGE.format(text=text)
+        else:
+            # If it's just a name, use a short quoting style.
+            message = f" `{text.strip()}`"
+        copilot_chat_message(message, submit=False)
+        # Go back to the very start of the message
+        key("ctrl-home")
 
     def copilot_fix():
         copilot_chat_command("/fix")
@@ -661,9 +772,14 @@ def bind_keys():
                 # TODO: Pull out to Rider-only actions?
                 # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
                 "p": "GitHub Copilot",
-                "p p": (actions.user.copilot_chat, "Open Copilot Chat"),
-                "p E": (actions.user.copilot_explain, "Explain File"),
-                "p e": (actions.user.copilot_explain_highlighted, "Explain Highlighted"),
+                "p p": (actions.user.copilot_open_chat, "Open Copilot Chat"),
+                "p q": (actions.user.copilot_explain, "Explain File"),
+                "p e": (
+                    actions.user.copilot_explain_highlighted,
+                    "Explain Highlighted",
+                ),
+                "p z": (actions.user.copilot_explain_error, "Explain Error"),
+                "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
                 "p f": (actions.user.copilot_fix, "Fix This"),
                 "p s": (actions.user.copilot_simplify, "Simplify This"),
                 "p d": (actions.user.copilot_generate_docs, "Generate Docs"),
