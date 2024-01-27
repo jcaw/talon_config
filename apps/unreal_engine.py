@@ -72,9 +72,9 @@ class ShaderErrorUserActions:
     def copilot_explain_error():
         # Select all text, and copy it
         edit.select_all()
-        # Exclude the bottom 4 lines, they're irrelevant.
-        key("shift-up:3")
-        key("shift-end")
+        # Exclude the bottom 3 lines, they're irrelevant.
+        # key("shift-up:3")
+        # key("shift-end")
         sleep("200ms")
         with clip.capture() as c:
             edit.copy()
