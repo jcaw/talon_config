@@ -79,6 +79,14 @@ class Actions:
         else:
             raise RuntimeError("Unrecognised system.")
 
+    def select_all_using_home_end():
+        """Select all the text in a section using the home & end keys.
+
+        This can be used as a fallback when the default `ctrl-a`/`cmd-a` isn't
+        working.
+
+        """
+
 
 # We use this abstraction to allow for mark-based selection, e.g. Emacs.
 class ExtendSelection:
@@ -320,3 +328,28 @@ class Actions:
 
     def up():
         key("up")
+
+
+mac_context = Context()
+mac_context.matches = "os: mac"
+
+
+@mac_context.action_class("self")
+class MacContext:
+    def select_all_using_home_end():
+        key("cmd-home")
+        key("cmd-shift-end")
+
+
+win_linux_context = Context()
+win_linux_context.matches = r"""
+os: windows
+os: linux
+"""
+
+
+@win_linux_context.action_class("self")
+class winLinuxContext:
+    def select_all_using_home_end():
+        key("ctrl-home")
+        key("shift-ctrl-end")

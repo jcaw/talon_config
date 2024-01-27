@@ -1,7 +1,7 @@
 """Separate action implementations for jetbrains products"""
 
 import re
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Callable
 
 from talon import Context, actions, Module, cron
 from talon.ui import Rect
@@ -110,7 +110,7 @@ def copilot_click(text):
 
 
 def copilot_chat_message(message, submit=True):
-    # actions.key("escape")
+    actions.key("escape")
     actions.self.copilot_open_chat()
     key("ctrl-a")
     # TODO: Possibly copy what's already there?
@@ -220,6 +220,13 @@ class Actions:
 
     def copilot_full_suggestions():
         """Generate a full list of suggestions from GitHub Copilot."""
+
+    def jetbrains_switch_and_ask_copilot(
+        message: str, switch_function: Callable[[], None] = user.open_rider
+    ):
+        """Switch to (or start) a Jetbrains IDE and ask copilot a question"""
+        switch_function()
+        copilot_chat_message(message)
 
 
 @jetbrains_context.action_class("user")
