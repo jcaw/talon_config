@@ -7,7 +7,7 @@ from talon import Context, actions, Module, cron
 from talon.ui import Rect
 
 from user.utils.formatting import SurroundingText
-from user.settings.test.clickable_overlay import Clickable
+from user.misc.clickable_overlay.clickable_overlay import Clickable
 
 
 user = actions.user
