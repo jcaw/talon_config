@@ -533,6 +533,58 @@ class RefactorActions:
         jetbrains_action("Debug")
 
 
+@module.action_class
+class MarkerActions:
+    # TODO: Remove
+    # def push_or_toggle_marker():
+    #     """Push the marker - if the cursor is over the marker, toggles it on/off instead."""
+    #     jetbrains_rpc_call("pushOrToggleMarker")
+
+    def push_marker():
+        """Push the marker in the current editor."""
+        jetbrains_rpc_call("pushMarker")
+
+    def enable_and_push_marker():
+        """Enable the marker selection, then push a new marker at the caret."""
+        jetbrains_rpc_call("enableAndPushMarker")
+
+    def pop_marker():
+        """Pop the last marker off the current editor's stack, but don't move to it."""
+        jetbrains_rpc_call("popMarker")
+
+    def pop_and_move_to_marker():
+        """Pop the last marker off the current editor's stack and jump to it."""
+        jetbrains_rpc_call("popAndMoveToMarker")
+
+    def pop_and_enable_marker():
+        """Pop the last marker off the current stack, then enable the selection from the previous marker."""
+        jetbrains_rpc_call("popAndEnableMarker")
+
+    def enable_marker():
+        """Enable the marker."""
+        jetbrains_rpc_call("enableMarker")
+
+    def disable_marker():
+        """Disable the marker."""
+        jetbrains_rpc_call("disableMarker")
+
+    def pop_global_marker():
+        """Pop the last marker off the global stack and jump to it."""
+        jetbrains_rpc_call("popGlobalMarker")
+
+    def enable_visual_markers():
+        """Enable marker visualisations in the editor."""
+        jetbrains_rpc_call("enableVisualMarkers")
+
+    def disable_visual_markers():
+        """Disable marker visualisations in the editor."""
+        jetbrains_rpc_call("disableVisualMarkers")
+
+    def toggle_visual_markers():
+        """Toggle marker visualisations in the editor."""
+        jetbrains_rpc_call("toggleVisualMarkers")
+
+
 @jetbrains_context.action_class("app")
 class AppActions:
     def path() -> str:
@@ -899,6 +951,19 @@ def bind_keys():
                 "' b": actions.user.find_base_symbols,
                 "' e": actions.user.find_related_symbol,
                 "' r": actions.user.find_references,
+                "m": "Markers",
+                "space": actions.user.enable_and_push_marker,
+                "u": actions.user.pop_marker,
+                "m e": actions.user.enable_marker,
+                "m d": actions.user.disable_marker,
+                "m p": actions.user.pop_and_move_to_marker,
+                "m [": actions.user.pop_and_enable_marker,
+                "m g": actions.user.pop_global_marker,
+                "m space": actions.user.push_marker,
+                "m v": actions.user.toggle_visual_markers,
+                # These two bindings don't matter, they are arbitrary. Bump them if another is more important.
+                "m i": actions.user.enable_visual_markers,
+                "m o": actions.user.disable_visual_markers,
             },
             context=jetbrains_context,
         )
