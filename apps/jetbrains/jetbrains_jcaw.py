@@ -183,7 +183,7 @@ COPILOT_QUOTE_MESSAGE = """
 
 
 @module.action_class
-class Actions:
+class CopilotActions:
     def copilot_open_chat():
         """Open copilot chat."""
 
