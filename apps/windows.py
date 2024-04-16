@@ -3,7 +3,23 @@ import subprocess
 import sys
 from pathlib import Path
 
-from talon import Context
+from talon import Context, Module, actions
+
+key = actions.key
+sleep = actions.sleep
+
+
+module = Module()
+
+@module.action_class
+class Actions():
+    def windows_cast_screen():
+        """Open the Windows screen casting interface."""
+        key("win:down")
+        sleep("100ms")
+        key("k")
+        sleep("100ms")
+        key("win:up")
 
 
 context = Context()

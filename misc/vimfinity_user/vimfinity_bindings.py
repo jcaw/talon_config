@@ -126,6 +126,7 @@ def bind():
                 "o x": user.open_windows_explorer,
                 "o u": user.open_unreal_engine,
                 "o g": user.open_epic_games,
+                "= k": user.windows_cast_screen,
             },
             windows_context,
         )
