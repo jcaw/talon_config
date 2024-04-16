@@ -731,6 +731,16 @@ class UserActions:
         return to_clickables(actions.user.jetbrains_focusable_sections())
 
 
+@jetbrains_context.action_class("edit")
+class JetbrainsEditActions():
+    # TODO: Zoom actions by action name, not just keys
+    def zoom_in():
+        key("alt-shift-+")
+
+    def zoom_out():
+        key("alt-shift--")
+
+
 @rider_context.action_class("user")
 class RiderActions:
     def use_base_type_where_possible():
