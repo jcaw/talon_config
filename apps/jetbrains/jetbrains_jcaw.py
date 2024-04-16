@@ -584,6 +584,10 @@ class MarkerActions:
         """Toggle marker visualisations in the editor."""
         jetbrains_rpc_call("toggleVisualMarkers")
 
+    def flash_visual_markers():
+        """Show marker visualisations in the editor for just a short duration."""
+        jetbrains_rpc_call("flashVisualMarkers")
+
 
 @jetbrains_context.action_class("app")
 class AppActions:
@@ -974,6 +978,7 @@ def bind_keys():
                 # These two bindings don't matter, they are arbitrary. Bump them if another is more important.
                 "m i": actions.user.enable_visual_markers,
                 "m o": actions.user.disable_visual_markers,
+                "m f": actions.user.flash_visual_markers,
             },
             context=jetbrains_context,
         )
