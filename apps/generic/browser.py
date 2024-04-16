@@ -19,6 +19,9 @@ class Actions:
     def open_current_page_in_chrome():
         """Open the current web page in Google Chrome."""
 
+    def open_current_page_in_firefox():
+        """Open the current web page in Firefox."""
+
     def browser_address_backup() -> str:
         """Backup action to get the current URL.
 
@@ -79,6 +82,14 @@ class UserActions:
         url = actions.user.browser_address_backup()
         LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
         actions.self.switch_or_start("chrome")
+
+        actions.app.tab_open()
+        actions.browser.go(url)
+
+    def open_current_page_in_firefox():
+        url = actions.user.browser_address_backup()
+        LOGGER.debug(f'Switching to URL in Firefox: "{url}"')
+        actions.self.switch_or_start("firefox")
 
         actions.app.tab_open()
         actions.browser.go(url)

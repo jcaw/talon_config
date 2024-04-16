@@ -132,6 +132,7 @@ def bind():
         user.vimfinity_bind_keys(
             {
                 "o ,": user.open_current_page_in_chrome,
+                "o .": user.open_current_page_in_firefox,
                 "p": "Page-Specific",
             },
             browser_context,

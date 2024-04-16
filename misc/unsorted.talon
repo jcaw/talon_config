@@ -42,6 +42,7 @@ key(ctrl-shift-enter): user.toggle_mic_off()
 
 # Open with commands
 with chrome:             user.open_current_page_in_chrome()
+with firefox:            user.open_current_page_in_firefox()
 
 with emacs:              user.open_current_file_in_emacs()
 project [to] emacs:      user.open_current_project_in_emacs()
