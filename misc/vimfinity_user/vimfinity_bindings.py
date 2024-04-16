@@ -93,7 +93,8 @@ def bind():
                 "o space": actions.app.window_hide,
                 "m": "Mic",
                 # For quicker access
-                "backspace": user.toggle_mic_off,
+                # This used to be backspace, but that caused too many false positives.
+                "delete": user.toggle_mic_off,
                 "m m": user.noisy_sleep,
                 "m w": user.wake,
                 "m space": user.toggle_mic_off,
