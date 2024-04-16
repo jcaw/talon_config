@@ -97,6 +97,21 @@ def hover_button(text=None, component_class=None):
     actions.user.shake_mouse(0.1)
 
 
+@module.action_class
+class JetbrainsActions:
+    def jetbrains_hide_active_window():
+        """Hide the active window."""
+        jetbrains_action("HideActiveWindow")
+
+    def jetbrains_hide_tools():
+        """Hide all the tool windows."""
+        jetbrains_action("HideAllWindows")
+
+    def jetbrains_hide_side_windows():
+        """Hide "minor" windows (this includes e.g. Copilot Chat, but excludes files)."""
+        jetbrains_action("HideSideWindows")
+
+
 def copilot_click(text):
     """Open the GitHub Copilot right-click menu and click a subsection."""
     actions.key("menu")
@@ -835,6 +850,10 @@ def bind_keys():
     try:
         actions.user.vimfinity_bind_keys(
             {
+                "k": "Jetbrains",
+                "k h": (actions.user.jetbrains_hide_tools, "Hide Tool Windows"),
+                "k a": (actions.user.jetbrains_hide_active_window, "Hide Window"),
+                "k s": (actions.user.jetbrains_hide_side_windows, "Hide Side Windows"),
                 "c": (actions.user.clickable_start_clickables, "Click by Keyboard"),
                 "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
                 "b": "Build",

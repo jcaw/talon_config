@@ -114,6 +114,8 @@ def bind():
                 "?": google_that,
                 "q": user.chatgpt_explain_thing,
                 "Q": user.chatgpt_switch_start,
+                # Override this with the program name in more local contexts
+                "k": "Program-Specific",
             }
         )
 
