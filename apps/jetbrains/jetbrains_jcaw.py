@@ -129,9 +129,9 @@ def copilot_chat_message(message, submit=True):
     actions.self.copilot_open_chat()
     key("ctrl-a")
     # TODO: Possibly copy what's already there?
-    sleep("50ms")
+    sleep("100ms")
     user.paste_insert(f"{message}")
-    sleep("50ms")
+    sleep("100ms")
     if submit:
         key("enter")
 
@@ -141,10 +141,10 @@ def copilot_chat_command(command):
     actions.key("escape")
     actions.self.copilot_open_chat()
     key("ctrl-a")
-    sleep("50ms")
+    sleep("100ms")
     # Add a space after so "enter" doesn't just select the autocomplete candidate.
     actions.insert(f"{command} ")
-    sleep("50ms")
+    sleep("100ms")
     key("enter")
     # actions.insert("test")
 
