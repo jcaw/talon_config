@@ -149,7 +149,15 @@ def copilot_chat_command(command):
     # actions.insert("test")
 
 
-COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain the following code:
+# Old code explain wording - new wording below:
+#
+# COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain the following code:
+
+# ```{language}
+# {code_text}
+# ```"""
+
+COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain this code:
 
 ```{language}
 {code_text}
