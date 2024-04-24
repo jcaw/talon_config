@@ -15,6 +15,7 @@ LOGGER = logging.getLogger(__name__)
 
 edit = actions.edit
 user = actions.user
+sleep = actions.sleep
 
 
 SETTINGS_DIR = path.join(TALON_USER, "settings")
@@ -152,16 +153,18 @@ class Actions:
             # TODO: Use generic action
             actions.key("ctrl-shift-left")
         # TODO: Something more reliable than a wait here?
-        time.sleep(0.1)
+        sleep("100ms")
         return actions.user.cut_safe()
 
     # TODO: Timeouts
     def copy_safe() -> None:
         """Like `edit.copy` but waits for the clipboard to change."""
-        # FIXME: This restores the clipboard
+        # TODO 1: Condense this. Is there another clip `with` method that doesn't restore the clipboard?
         with clip.capture() as c:
             edit.copy()
-        return c.text()
+        text = c.text()
+        clip.set_text(text)
+        return text
 
     def cut_safe() -> None:
         """Like `edit.cut` but waits for the clipboard to change."""
