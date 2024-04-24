@@ -110,6 +110,10 @@ def bind():
                 "= n": user.quarantine_speech_recording,
                 "= t": user.emacs_search_talon_user,
                 "= T": user.emacs_find_file_talon_user,
+                "= z": user.toggle_zoom_mouse,
+                "= Z": user.toggle_gaze_track_dot,
+                "= e": user.toggle_eye_mouse,
+                "= c": user.calibrate_tracker,
                 # TODO: Swap these around?
                 "?": google_that,
                 "q": user.chatgpt_explain_thing,
