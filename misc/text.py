@@ -161,7 +161,9 @@ class Actions:
         """Like `edit.copy` but waits for the clipboard to change."""
         # TODO 1: Condense this. Is there another clip `with` method that doesn't restore the clipboard?
         with clip.capture() as c:
+            sleep("50ms")
             edit.copy()
+            sleep("50ms")
         text = c.text()
         clip.set_text(text)
         return text
@@ -169,12 +171,16 @@ class Actions:
     def cut_safe() -> None:
         """Like `edit.cut` but waits for the clipboard to change."""
         with clip.capture() as c:
+            sleep("50ms")
             edit.cut()
+            sleep("50ms")
         return c.text()
 
     # TODO: Condense with `copy_safe`
     def get_highlighted() -> str:
         """Get the currently highlighted text, without altering clipboard."""
         with clip.capture() as c:
+            sleep("50ms")
             edit.copy()
+            sleep("50ms")
         return c.text()
