@@ -174,6 +174,8 @@ class Actions:
             sleep("50ms")
             edit.cut()
             sleep("50ms")
+        text = c.text()
+        clip.set_text(text)
         return c.text()
 
     # TODO: Condense with `copy_safe`
