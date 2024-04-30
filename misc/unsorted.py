@@ -157,8 +157,11 @@ class ModuleActions:
             # While the clipboard will have updated, the underlying program may
             # not have synchronised to the new clipboard state (Jetbrains seems
             # to have this problem). Sleep to allow it to sync.
-            actions.sleep("200ms")
+            actions.sleep("50ms")
             actions.edit.paste()
+            # Also sleep after to ensure the paste doesn't happen after the
+            # clipboard is reverted.
+            actions.sleep("50ms")
 
 
 # TODO: Dedicated settings file?
