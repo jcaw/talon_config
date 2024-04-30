@@ -49,6 +49,8 @@ def press_menu():
 
 
 def google_that():
+    # Pause so the copy happens after the user has released the shortcut key
+    actions.sleep("500ms")
     user.google_search(user.get_that_dwim())
 
 
