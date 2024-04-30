@@ -1009,6 +1009,16 @@ def bind_keys():
             },
             context=jetbrains_context,
         )
+
+        actions.user.vimfinity_bind_keys(
+            {
+                # Insertion
+                "i t": make_inserter("// TODO [jcaw]: "),
+                "i f": make_inserter("// FIXME [jcaw]: "),
+                "i h": make_inserter("// HACK [jcaw]: "),
+            },
+            context=rider_context,
+        )
     except KeyError:
         print("Failed to bind jetbrains vimfinity keys. Retrying in 1s.")
         cron.after("1s", bind_keys)

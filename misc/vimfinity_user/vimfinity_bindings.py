@@ -120,6 +120,8 @@ def bind():
                 "Q": user.chatgpt_switch_start,
                 # Override this with the program name in more local contexts
                 "k": "Program-Specific",
+                # Insertion menu - snippets, etc.
+                "i": "Insert",
             }
         )
 
