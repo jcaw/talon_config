@@ -251,6 +251,9 @@ class CopilotActions:
         switch_function()
         copilot_chat_message(message)
 
+    def copilot_explain_current_function():
+        """Ask GitHub Copilot to explain the function that's being edited (not the function being called)."""
+
 
 @jetbrains_context.action_class("user")
 class JetbrainsCopilotActions:
@@ -264,6 +267,7 @@ class JetbrainsCopilotActions:
     def copilot_explain():
         copilot_chat_command("/explain")
 
+    # TODO: Explain the current "thing", instead of just what's highlighted
     def copilot_explain_highlighted():
         text = user.get_highlighted()
         if " " in text.strip():
@@ -338,6 +342,10 @@ class JetbrainsCopilotActions:
 
     def copilot_full_suggestions():
         jetbrains_action("copilot.openCopilot")
+
+    def copilot_explain_current_function():
+        # TODO 1: Programmatically get current function name, and use that as the reference
+        raise NotImplementedError()
 
 
 # TODO: Pull the rider-specific methods into the Rider context. Test them first though.
@@ -899,6 +907,7 @@ def bind_keys():
                     actions.user.copilot_full_suggestions,
                     "List Completions",
                 ),
+                "p u": (actions.user.copilot_explain_current_function, "Explain Current Function"),
                 "r": "Refactor",
                 "r b": actions.user.use_base_type_where_possible,
                 "r c": (actions.user.refactor_copy, "Copy"),
