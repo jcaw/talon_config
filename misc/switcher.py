@@ -68,8 +68,9 @@ def running_applications(m) -> str:
     return m.running if hasattr(m, "running") else m.dictation
 
 
-@ctx.capture("self", rule="{self.launch}")
-def launch_applications(m):
+# TODO: Removed because it now was just peppering an error through my log. Figure out what this was doing and how it's changed in knausj.
+@mod.capture(rule="{self.launch}")
+def launch_applications(m) -> str:
     return m.launch
 
 
