@@ -854,6 +854,16 @@ class RiderActions:
         jetbrains_action("RiderBackendAction-Refactorings.AdjustNamespaces")
 
 
+MENU_NAME_RE = re.compile(r"[^()A-Za-z0-9 ]")
+
+
+def make_inserter(text_to_insert: str, name_in_menu: Optional[str] = None):
+    """Utility function to create an insertion binding for vimfinity."""
+    if not isinstance(name_in_menu, str):
+        name_in_menu = MENU_NAME_RE.sub("", text_to_insert).strip()
+    return (lambda: insert(text_to_insert), name_in_menu)
+
+
 def bind_keys():
     try:
         actions.user.vimfinity_bind_keys(
