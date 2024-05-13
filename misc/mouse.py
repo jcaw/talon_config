@@ -176,6 +176,20 @@ class Actions:
             time.sleep(FRAME_PAUSE)
         actions.mouse_move(start_x, start_y)
 
+    def shake_click(button: int = 0, seconds: float = 0.1, allowed_deviation: int = 5):
+        """Hold down `button`, shake the cursor around, then release.
+
+        Use to register certain types of click that won't register otherwise.
+
+        """
+        actions.mouse_drag(button=button)
+        try:
+            actions.self.shake_mouse(
+                seconds=seconds, allowed_deviation=allowed_deviation
+            )
+        finally:
+            actions.mouse_release(button=button)
+
     def spline_mouse(x: int, y: int, seconds: float = 1.0) -> None:
         """Move mouse gradually to point `(x, y)`."""
         FRAME_PAUSE = 0.016
