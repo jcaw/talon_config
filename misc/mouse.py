@@ -46,6 +46,9 @@ module = Module()
 
 module.list("clicks", desc="all available click types")
 
+# Currently in a click-drag operation? Left mouse is held?
+_left_mouse_dragging = False
+
 
 @module.action_class
 class Actions:
@@ -98,6 +101,14 @@ class Actions:
             for i in range(2):
                 actions.mouse_click(button=0)
 
+    def shift_left_click():
+        """Hold shift and left click at the current mouse position."""
+        actions.self.left_click(["shift"])
+
+    def control_left_click():
+        """Hold control and left click at the current mouse position."""
+        actions.self.left_click(["ctrl"])
+
     def triple_click(modifiers: List[str] = []):
         """Triple left click at current position."""
         with Modifiers(modifiers):
@@ -106,14 +117,26 @@ class Actions:
 
     def drag(modifiers: List[str] = []):
         """Hold a mouse button at current position (default left)."""
+        global _left_mouse_dragging
+        _left_mouse_dragging = True
         Modifiers(modifiers).__enter__()
         actions.mouse_drag()
 
     def drop(modifiers: List[str] = []):
         """Release a mouse button at current position (default left)."""
+        global _left_mouse_dragging
         actions.mouse_release()
         Modifiers(modifiers).__exit__(None, None, None)
+        _left_mouse_dragging = False
 
+    def drag_or_drop(modifiers:List[str] = []):
+        """Click and hold the left mouse button, or if already dragging, release it (plus modifiers)."""
+        if _left_mouse_dragging:
+            actions.self.drop(modifiers)
+        else:
+            actions.self.drag(modifiers)
+
+    # TODO: Rename this to `eye_click` or something?
     def default_click(click_info: Click):
         """Perform ``click_function`` according to the context."""
         with FrozenEyeMouse():
