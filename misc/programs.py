@@ -231,16 +231,34 @@ class Actions:
         )
 
     def focus_talon_log():
-        """Switch to the talon log."""
-        actions.user.focus(app_name="talon", title="Talon Log")
+        """Switch to the Talon log."""
+        actions.user.focus(app_name="talon", title="Talon Log Viewer")
 
     def focus_talon_repl():
-        """Switch to the talon repl."""
+        """Switch to the Talon repl."""
         # These titles rely on fuzzy match
         if app.platform == "windows":
-            actions.user.focus(app_name="Console", title="Talon REPL")
+            actions.user.focus(app_name="WindowsTerminal", title="Talon - REPL")
         else:
-            actions.user.focus(title="Talon REPL")
+            actions.user.focus(title="Talon - REPL")
+
+    def open_talon_log() -> bool:
+        """Switch to the Talon log, or open it if it's not showing."""
+        try:
+            actions.self.focus_talon_log()
+            return False
+        except IndexError:
+            actions.user.automator_open_talon_log()
+            return True
+
+    def open_talon_repl() -> bool:
+        """Switch to the Talon repl, or start one if it's not running."""
+        try:
+            actions.self.focus_talon_repl()
+            return False
+        except IndexError:
+            actions.user.automator_open_talon_repl()
+            return True
 
 
 windows_context = Context(name="programs_windows")

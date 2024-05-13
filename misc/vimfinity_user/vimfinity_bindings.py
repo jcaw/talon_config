@@ -2,6 +2,7 @@ from talon import actions, cron, Context, app
 
 user = actions.user
 edit = actions.edit
+sleep = actions.sleep
 
 
 browser_context = Context()
@@ -50,8 +51,14 @@ def press_menu():
 
 def google_that():
     # Pause so the copy happens after the user has released the shortcut key
-    actions.sleep("500ms")
+    sleep("500ms")
     user.google_search(user.get_that_dwim())
+
+
+def open_talon_repl_delayed():
+    """Open the Talon REPL on a delay, to allow the user to release the shortcut key."""
+    sleep("500ms")
+    user.open_talon_repl()
 
 
 def bind():
@@ -90,8 +97,8 @@ def bind():
                 "o b": user.open_blender,
                 "o w": user.open_whatsapp,
                 "o e": user.open_emacs,
-                "o t": user.focus_talon_log,
-                "o T": user.focus_talon_repl,
+                "o t": user.open_talon_log,
+                "o T": (open_talon_repl_delayed, "Open Talon REPL"),
                 "o space": actions.app.window_hide,
                 "m": "Mic",
                 # For quicker access
