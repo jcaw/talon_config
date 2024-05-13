@@ -123,6 +123,10 @@ def bind():
                 "= Z": user.toggle_gaze_track_dot,
                 "= e": user.toggle_eye_mouse,
                 "= c": user.calibrate_tracker,
+                "= u": (
+                    user.visualiser_gather_at_point_and_copy,
+                    "Show Automation Path",
+                ),
                 # TODO: Swap these around?
                 "?": google_that,
                 "q": user.chatgpt_explain_thing,
