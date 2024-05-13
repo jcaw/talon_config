@@ -129,7 +129,7 @@ class Actions:
         Modifiers(modifiers).__exit__(None, None, None)
         _left_mouse_dragging = False
 
-    def drag_or_drop(modifiers:List[str] = []):
+    def drag_or_drop(modifiers: List[str] = []):
         """Click and hold the left mouse button, or if already dragging, release it (plus modifiers)."""
         if _left_mouse_dragging:
             actions.self.drop(modifiers)
