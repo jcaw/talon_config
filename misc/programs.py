@@ -110,8 +110,13 @@ class Actions:
         focus_name: Optional[str] = None,
         focus_title: Optional[str] = None,
         start_delay: str = "2000ms",
-    ) -> None:
-        """Switch to a program, starting it if necessary."""
+    ) -> bool:
+        """Switch to a program, starting it if necessary.
+
+        Returns `True` if a new instance was started, `False` if an existing
+        instance was focussed.
+
+        """
         # Revert to the same name used to start the program when no focus
         # parameters have been set.
         if not (focus_name or focus_title):
@@ -119,6 +124,7 @@ class Actions:
 
         try:
             actions.user.focus(app_name=focus_name, title=focus_title)
+            return False
         # Sometimes talon's ui.focus() will pop a `UIErr` because it can't find
         # a window for a running program - in these cases, we assume the program
         # needs to be relaunched.
@@ -132,22 +138,23 @@ class Actions:
                 print(f"Could not focus newly started program: {focus_name}. Skipping.")
         # Give it time to focus
         actions.sleep("200ms")
+        return True
 
     # TODO: Go through each of these and check they all work?
 
-    def open_firefox():
+    def open_firefox() -> bool:
         """Switch to firefox, starting it if necessary."""
-        actions.user.switch_or_start("firefox", "5000s")
+        return actions.user.switch_or_start("firefox", "5000s")
 
-    def open_chrome():
+    def open_chrome() -> bool:
         """Switch to chrome, starting it if necessary."""
-        actions.user.switch_or_start("chrome")
+        return actions.user.switch_or_start("chrome")
 
-    def open_discord():
+    def open_discord() -> bool:
         """Switch to discord, starting it if necessary."""
         # FIXME: Won't launch Discord on Windows - but does switch to it if it's
         #   running and not minimized to the tray.
-        actions.user.switch_or_start("discord")
+        return actions.user.switch_or_start("discord")
 
     def open_slack():
         """Switch to slack, starting it if necessary."""
@@ -155,76 +162,79 @@ class Actions:
         # so just restart it. This functions the same as focussing it.
         actions.user.launch_fuzzy("slack")
 
-    def open_rider():
+    def open_rider() -> bool:
         """Switch to rider, starting it if necessary."""
-        actions.user.switch_or_start("rider")
+        return actions.user.switch_or_start("rider")
 
-    def open_blender():
+    def open_blender() -> bool:
         """Switch to blender, starting it if necessary."""
-        actions.user.switch_or_start("blender")
+        return actions.user.switch_or_start("blender")
 
-    def open_unreal_engine():
+    def open_unreal_engine() -> bool:
         """Switch to unreal_engine, starting it if necessary."""
-        actions.user.switch_or_start(
+        return actions.user.switch_or_start(
             start_name="Unreal Engine", focus_name="UnrealEditor"
         )
 
-    def open_task_manager():
+    def open_task_manager() -> bool:
         """Switch to task_manager, starting it if necessary."""
-        actions.user.switch_or_start("task manager")
+        return actions.user.switch_or_start("task manager")
 
     # TODO: Remove this? Just leave the Windows Terminal command?
-    def open_command_prompt():
+    def open_command_prompt() -> bool:
         """Switch to command_prompt, starting it if necessary."""
         # Doubles as talon's output
-        actions.user.switch_or_start("command prompt")
+        return actions.user.switch_or_start("command prompt")
 
     # TODO: Remove this? Just leave the Windows Terminal command?
-    def open_powershell():
+    def open_powershell() -> bool:
         """Switch to powershell, starting it if necessary."""
         # Doubles as talon's output
-        actions.user.switch_or_start("powershell")
+        return actions.user.switch_or_start("powershell")
 
-    def open_windows_terminal():
+    def open_windows_terminal() -> bool:
         """Switch to Windows Terminal, starting it if necessary."""
-        actions.user.switch_or_start("terminal")
+        return actions.user.switch_or_start("terminal")
 
-    def open_windows_explorer():
+    def open_windows_explorer() -> bool:
         """Open windows explorer (specifically, open the file browser)."""
         # FIXME: Doesn't start file explorer
-        actions.user.switch_or_start(
+        return actions.user.switch_or_start(
             start_name="file explorer", focus_name="windows explorer"
         )
 
-    def open_epic_games():
+    def open_epic_games() -> bool:
         """Switch to epic_games, starting it if necessary."""
-        actions.user.switch_or_start(start_name="epic games", focus_name="EpicGames")
+        return actions.user.switch_or_start(
+            start_name="epic games", focus_name="EpicGames"
+        )
 
-    def open_emacs():
+    def open_emacs() -> bool:
         """Switch to emacs, starting it if necessary."""
         # TODO: An action that focuses based on exe AND title
         try:
             actions.user.focus(app_name="vcxsrv", title="emacs")
-            return
+            return False
         except IndexError:
             pass
         try:
             actions.user.focus(app_name="emacs")
-            return
+            return False
         except IndexError:
             pass
         try:
             # Prefer my custom WSL Emacs shortcut on Windows
             actions.user.launch_fuzzy("WSL Emacs")
-            return
+            return True
         except ValueError:
             pass
         # But if all else fails, just use a basic match.
         actions.user.launch_fuzzy("emacs")
+        return True
 
-    def open_whatsapp():
+    def open_whatsapp() -> bool:
         """Switch to whatsapp, starting it if necessary."""
-        actions.user.switch_or_start(
+        return actions.user.switch_or_start(
             start_name="WhatsApp",
             focus_name="Application Frame Host",
             focus_title="WhatsApp",
