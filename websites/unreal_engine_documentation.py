@@ -3,7 +3,7 @@ import re
 from talon import Module, Context, actions, clip, cron
 
 
-CURRENT_UNREAL_VERSION = "5.3"
+CURRENT_UNREAL_VERSION = "5.4"
 
 
 module = Module()
@@ -32,16 +32,17 @@ class Actions:
 
         # regex for official unreal docs (for the URL). Do the docs follow the
         # normal URL format?
-        docs_regex = r"docs\.unrealengine\.com\/([0-9]+[.][0-9]+)\/"
-        if re.search(docs_regex, url):
+        old_docs_regex = r"docs\.unrealengine\.com\/([0-9]+[.][0-9]+)\/"
+        new_docs_regex = r"dev\.epicgames\.com\/documentation\/.*([0-9]+[.][0-9]+)$"
+        if re.search(old_docs_regex, url) or re.search(new_docs_regex, url):
             # Replace the old version (e.g. "4.27") in the URL with the current
             # version (e.g. "5.1")
-            current_url = re.sub("[0-9]+[.][0-9]+", CURRENT_UNREAL_VERSION, url)
+            new_url = re.sub("[0-9]+[.][0-9]+", CURRENT_UNREAL_VERSION, url)
 
             # Navigate to the newer version of the URL
             # HACK: Not implemented at time of writing - instead do it manually.
             # actions.browser.go(current_url)
-            clip.set_text(current_url)
+            clip.set_text(new_url)
             actions.edit.paste()
             actions.key("enter")
 
