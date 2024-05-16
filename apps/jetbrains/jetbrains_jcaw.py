@@ -3,7 +3,7 @@
 import re
 from typing import Optional, List, Dict, Callable
 
-from talon import Context, actions, Module, cron
+from talon import Context, actions, Module, cron, app
 from talon.ui import Rect
 
 from user.utils.formatting import SurroundingText
@@ -110,6 +110,46 @@ class JetbrainsActions:
     def jetbrains_hide_side_windows():
         """Hide "minor" windows (this includes e.g. Copilot Chat, but excludes files)."""
         jetbrains_action("HideSideWindows")
+
+    def open_file_in_jetbrains(
+        filename: str,
+        start_name: str,
+        focus_name: Optional[str] = None,
+        focus_title: Optional[str] = None,
+    ):
+        """Open a specific file in a jetbrains product."""
+        user.start_or_switch(start_name, focus_name, focus_title)
+        jetbrains_action("openFile", [filename, True])
+
+    def open_current_file_in_jetbrains(
+        start_name: str,
+        focus_name: Optional[str] = None,
+        focus_title: Optional[str] = None,
+    ):
+        """Open the current file in a jetbrains product."""
+        actions.self.open_file_in_jetbrains(
+            app.path(), start_name, focus_name, focus_title
+        )
+
+    # TODO: Open the current project in jetbrains
+
+    def open_current_file_in_rider():
+        """Open the current file in JetBrains Rider."""
+        actions.self.open_current_file_in_jetbrains("rider")
+
+    def open_current_file_in_idea():
+        """Open the current project in IntelliJ IDEA."""
+        actions.self.open_current_file_in_jetbrains("idea")
+
+    def jetbrains_reopen_file():
+        """Close, then reopen, the current file."""
+        current_file = jetbrains_rpc_call("currentFile")
+        jetbrains_action("CloseActiveTab")
+        jetbrains_rpc_call("openFile", [current_file, False])
+
+    def jetbrains_switch_header_and_source():
+        """Switch between a source file and its header."""
+        jetbrains_action("SwitchHeaderSource")
 
 
 def copilot_click(text):
@@ -563,6 +603,18 @@ class RefactorActions:
         """Build and run a debug build of the current project."""
         jetbrains_action("Debug")
 
+    def jetbrains_terminate_build():
+        """Terminate the current build."""
+        jetbrains_action("CancelBuildAction")
+
+    def jetbrains_compile_file():
+        """Compile just the current file."""
+        jetbrains_action("CompileFile")
+
+    def jetbrains_delete_line():
+        """Delete the entire current line."""
+        jetbrains_action("EditorDeleteLine")
+
 
 @module.action_class
 class MarkerActions:
@@ -618,6 +670,21 @@ class MarkerActions:
     def flash_visual_markers():
         """Show marker visualisations in the editor for just a short duration."""
         jetbrains_rpc_call("flashVisualMarkers")
+
+
+@module.action_class
+class GitActions:
+    def jetbrains_include_changed_lines():
+        """Include the current change in the next commit."""
+        jetbrains_rpc_call("Vcs.Diff.IncludeChangedLinesIntoCommit")
+
+    def jetbrains_exclude_changed_lines():
+        """Include the current change in the next commit."""
+        jetbrains_rpc_call("Vcs.Diff.ExcludeChangedLinesFromCommit")
+
+    def jetbrains_revert_changed_lines():
+        """Revert the current VCS change to the current head."""
+        jetbrains_rpc_call("Vcs.RevertSelectedChanges")
 
 
 @jetbrains_context.action_class("app")
@@ -725,36 +792,6 @@ class UserActions:
             text_before=raw_info["textBefore"], text_after=raw_info["textAfter"]
         )
 
-    def open_file_in_jetbrains(
-        filename: str,
-        start_name: str,
-        focus_name: Optional[str] = None,
-        focus_title: Optional[str] = None,
-    ):
-        """Open a specific file in a jetbrains product."""
-        user.start_or_switch(start_name, focus_name, focus_title)
-        jetbrains_action("openFile", [filename, True])
-
-    def open_current_file_in_jetbrains(
-        start_name: str,
-        focus_name: Optional[str] = None,
-        focus_title: Optional[str] = None,
-    ):
-        """Open the current file in a jetbrains product."""
-        actions.self.open_file_in_jetbrains(
-            app.path(), start_name, focus_name, focus_title
-        )
-
-    # TODO: Open the current project in jetbrains
-
-    def open_current_file_in_rider():
-        """Open the current file in JetBrains Rider."""
-        actions.self.open_current_file_in_jetbrains("rider")
-
-    def open_current_file_in_idea():
-        """Open the current project in IntelliJ IDEA."""
-        actions.self.open_current_file_in_jetbrains("idea")
-
     # TODO: Click buttons by index
     # TODO: Focus by index
     # TODO: Ace-jump from internal char positions
@@ -767,7 +804,7 @@ class UserActions:
 
 
 @jetbrains_context.action_class("edit")
-class JetbrainsEditActions():
+class JetbrainsEditActions:
     # TODO: Zoom actions by action name, not just keys
     def zoom_in():
         key("alt-shift-+")
@@ -876,10 +913,17 @@ def bind_keys():
     try:
         actions.user.vimfinity_bind_keys(
             {
+                # General top-level actions
+                "l": (actions.user.jetbrains_delete_line, "Delete Line"),
+                "pagedown": (lambda: key("f7"), "Next Thing"),
+                "pageup": (lambda: key("shift-f7"), "Previous Thing"),
+                "end": (lambda: key("alt-shift-right"), "Next File"),
+                "home": (lambda: key("alt-shift-left"), "Previous File"),
                 "k": "Jetbrains",
                 "k h": (actions.user.jetbrains_hide_tools, "Hide Tool Windows"),
                 "k a": (actions.user.jetbrains_hide_active_window, "Hide Window"),
                 "k s": (actions.user.jetbrains_hide_side_windows, "Hide Side Windows"),
+                "k r": (actions.user.jetbrains_reopen_file, "Reopen File"),
                 "c": (actions.user.clickable_start_clickables, "Click by Keyboard"),
                 "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
                 "b": "Build",
@@ -887,6 +931,7 @@ def bind_keys():
                 "b c": (actions.user.jetbrains_build_project, "Build Project"),
                 "b d": (actions.user.jetbrains_debug_project, "Debug Project"),
                 "b t": (actions.user.jetbrains_terminate_build, "Terminate"),
+                "b f": (actions.user.jetbrains_compile_file, "Compile File"),
                 # TODO: Pull out to Rider-only actions?
                 # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
                 "p": "GitHub Copilot",
@@ -896,7 +941,8 @@ def bind_keys():
                     actions.user.copilot_explain_highlighted,
                     "Explain Highlighted",
                 ),
-                "p z": (actions.user.copilot_explain_error, "Explain Error"),
+                # "x" for "exception"
+                "p x": (actions.user.copilot_explain_error, "Explain Error"),
                 "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
                 "p f": (actions.user.copilot_fix, "Fix This"),
                 "p s": (actions.user.copilot_simplify, "Simplify This"),
@@ -907,7 +953,10 @@ def bind_keys():
                     actions.user.copilot_full_suggestions,
                     "List Completions",
                 ),
-                "p u": (actions.user.copilot_explain_current_function, "Explain Current Function"),
+                "p u": (
+                    actions.user.copilot_explain_current_function,
+                    "Explain Current Function",
+                ),
                 "r": "Refactor",
                 "r b": actions.user.use_base_type_where_possible,
                 "r c": (actions.user.refactor_copy, "Copy"),
@@ -1025,6 +1074,13 @@ def bind_keys():
                 "m i": actions.user.enable_visual_markers,
                 "m o": actions.user.disable_visual_markers,
                 "m f": actions.user.flash_visual_markers,
+                "g": "Git/Version Control",
+                "g s": (actions.user.jetbrains_include_changed_lines, "Stage Change"),
+                "g u": (actions.user.jetbrains_exclude_changed_lines, "Unstage Change"),
+                "g k": (
+                    actions.user.jetbrains_discard_changed_lines,
+                    "Discard Changes",
+                ),
             },
             context=jetbrains_context,
         )
@@ -1035,6 +1091,11 @@ def bind_keys():
                 "i t": make_inserter("// TODO [jcaw]: "),
                 "i f": make_inserter("// FIXME [jcaw]: "),
                 "i h": make_inserter("// HACK [jcaw]: "),
+                # Navigation
+                "' h": (
+                    actions.user.jetbrains_switch_header_and_source,
+                    "Switch to Header/Source",
+                ),
             },
             context=rider_context,
         )
