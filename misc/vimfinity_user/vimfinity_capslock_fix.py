@@ -51,7 +51,10 @@ class WindowsActions:
 
     def vimfinity_disable_capslock_if_enabled():
         caps_lock_enabled = ctypes.windll.user32.GetKeyState(0x14) & 0xFFFF != 0
-        if caps_lock_enabled:
+        if caps_lock_enabled and not actions.user.vimfinity_is_active():
+            print(
+                "[vimfinity_capslock_fix]: CapsLock detected as enabled - automatically disabling."
+            )
             actions.self.vimfinity_disable_capslock_windows()
 
 
