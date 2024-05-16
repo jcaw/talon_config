@@ -73,7 +73,8 @@ def bind():
                 "/": user.search,
                 # Everything Else
                 ":": user.toggle_gaze_track_dot,
-                "g": user.mouse_grid_start,
+                # "g": user.mouse_grid_start,
+                "backspace": user.mouse_grid_start,
                 # TODO: "space": user.toggle_mark,
                 "j": user.jump_click,
                 # Compensate for using a US keyboard in UK layout
