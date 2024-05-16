@@ -33,6 +33,8 @@ app: /chrome/
 # NOTE: Doesn't work properly with Internet Explorer. Will need its own module.
 app: /iexplore/
 app: /opera/
+# HACK: To allow opening of steam pages in other browsers
+app: /steam/
 
 # TODO: Compatibility with Edge?
 # title: /- Microsoft Edge/
