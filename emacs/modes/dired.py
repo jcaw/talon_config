@@ -38,5 +38,5 @@ class UserActions:
     def opening_number_action(number: int) -> None:
         actions.self.emacs_dired_command("dired-find-file", number)
 
-    def rename() -> None:
-        actions.user.emacs_dired_command('dired-do-rename', 0)
+    def rename():
+        actions.user.emacs_dired_command("dired-do-rename", 0)
