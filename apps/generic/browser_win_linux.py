@@ -23,6 +23,9 @@ module.tag("browser", desc="Active when one of the major browsers is active.")
 
 context = Context()
 context.matches = r"""
+os: windows
+os: linux
+
 # FIXME: Can't use tags here - they want to `and` with the `app` matching
 #   criteria below, rather than `or` with them.
 app: /firefox/
