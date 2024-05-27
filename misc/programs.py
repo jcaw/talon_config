@@ -4,6 +4,8 @@ from pathlib import Path
 import os
 import subprocess
 import webbrowser
+import re
+import time
 from itertools import chain
 
 
@@ -13,6 +15,17 @@ module = Module()
 def duplicates_removed(input_list: List[Any]) -> List[Any]:
     seen = set()
     return [x for x in input_list if x not in seen and not seen.add(x)]
+
+
+def wait_string_to_seconds_rough(time_string: str) -> float:
+    if re.match(r"^[0-9]+ms$", time_string):
+        return float(time_string[:-2]) / 1000
+    elif re.match(r"^[0-9]+s$", time_string):
+        return float(time_string[:-1])
+    else:
+        raise ValueError(
+            f'Only "ms" and "s" time formats are supported in the switcher at this time. You gave: "{time_string}"'
+        )
 
 
 @module.action_class
@@ -109,7 +122,11 @@ class Actions:
         start_name: str,
         focus_name: Optional[str] = None,
         focus_title: Optional[str] = None,
-        start_delay: str = "2000ms",
+        # TODO: Rename this to `start_deadline`. Maybe have another parameter
+        #  called `start_delay` after, which is the wait after the window has
+        #  been detected.
+        start_deadline: str = "7000ms",
+        start_delay: str = "300ms",
     ) -> bool:
         """Switch to a program, starting it if necessary.
 
@@ -117,6 +134,8 @@ class Actions:
         instance was focussed.
 
         """
+        start_deadline_secs = wait_string_to_seconds_rough(start_deadline)
+
         # Revert to the same name used to start the program when no focus
         # parameters have been set.
         if not (focus_name or focus_title):
@@ -130,25 +149,37 @@ class Actions:
         # needs to be relaunched.
         except (IndexError, ui.UIErr) as e:
             actions.user.launch_fuzzy(start_name)
-            # Give it time to start up
+            start_limit = time.monotonic() + start_deadline_secs
+            while True:
+                try:
+                    actions.user.focus(app_name=focus_name, title=focus_title)
+                    break
+                except (IndexError, ui.UIErr) as e:
+                    if time.monotonic() > start_limit:
+                        # TODO: Maybe a more formal error here. Easier to catch.
+                        raise RuntimeError("Could not detect app after starting.")
+                    actions.sleep("100ms")
+            # Give it a little time for the window to get into the correct state.
             actions.sleep(start_delay)
-            try:
-                actions.user.focus(app_name=focus_name, title=focus_title)
-            except (IndexError, ui.UIErr) as e:
-                print(f"Could not focus newly started program: {focus_name}. Skipping.")
-        # Give it time to focus
-        actions.sleep("200ms")
+            # try:
+            #     actions.user.focus(app_name=focus_name, title=focus_title)
+            # except (IndexError, ui.UIErr) as e:
+            #     print(f"Could not focus newly started program: {focus_name}. Skipping.")
         return True
 
     # TODO: Go through each of these and check they all work?
 
     def open_firefox() -> bool:
         """Switch to firefox, starting it if necessary."""
-        return actions.user.switch_or_start("firefox", "5000s")
+        return actions.user.switch_or_start(
+            "firefox", start_deadline="15s", start_delay="3s"
+        )
 
     def open_chrome() -> bool:
         """Switch to chrome, starting it if necessary."""
-        return actions.user.switch_or_start("chrome")
+        return actions.user.switch_or_start(
+            "chrome", start_deadline="15s", start_delay="1s"
+        )
 
     def open_discord() -> bool:
         """Switch to discord, starting it if necessary."""
