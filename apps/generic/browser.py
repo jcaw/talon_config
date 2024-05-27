@@ -1,6 +1,10 @@
 import logging
 from talon import Context, Module, actions, clip, ui
 
+from user.plugins.accessibility_automator.accessibility_automator import (
+    AutomationOverlay,
+)
+
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
 
@@ -79,17 +83,19 @@ class UserActions:
         key("alt-right")
 
     def open_current_page_in_chrome():
-        url = actions.user.browser_address_backup()
-        LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
-        actions.self.switch_or_start("chrome")
+        with AutomationOverlay():
+            url = actions.user.browser_address_backup()
+            LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
+            actions.self.switch_or_start("chrome")
 
-        actions.app.tab_open()
-        actions.browser.go(url)
+            actions.app.tab_open()
+            actions.browser.go(url)
 
     def open_current_page_in_firefox():
-        url = actions.user.browser_address_backup()
-        LOGGER.debug(f'Switching to URL in Firefox: "{url}"')
-        actions.self.switch_or_start("firefox")
+        with AutomationOverlay():
+            url = actions.user.browser_address_backup()
+            LOGGER.debug(f'Switching to URL in Firefox: "{url}"')
+            actions.self.switch_or_start("firefox")
 
-        actions.app.tab_open()
-        actions.browser.go(url)
+            actions.app.tab_open()
+            actions.browser.go(url)
