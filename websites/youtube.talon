@@ -11,13 +11,9 @@ pause [(video | vid)]: key("k")
 # TODO: Extract for twitch? (. and ,)
 speed up: key(">")
 (speed | slow) down: key("<")
-(max | full) speed:
-    # Will hit the max regardless
-    key(">:7")
-reset speed | speed reset:
-    # Go to min, then max
-    key("<:7")
-    key(">:3")
+(max | full) speed: user.video_2x_speed()
+reset speed | speed reset: user.video_1x_speed()
+(mid | medium) speed: user.video_1halfx_speed()
 (subtitles | subs | captions): key("c")
 (subtitles | subs | captions) size up: key("+")
 (subtitles | subs | captions) size down: key("-")

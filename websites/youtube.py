@@ -87,6 +87,17 @@ class Actions:
 
             original_window.focus()
 
+    # TODO: Extract
+    def video_2x_speed():
+        """Set the current video to play at 2x speed."""
+
+    # TODO: Extract
+    def video_1x_speed():
+        """Set the current video to play at normal, 1x speed."""
+
+    def video_1halfx_speed():
+        """Set the video to 1.5x speed."""
+
 
 context = Context()
 context.matches = r"""
@@ -95,6 +106,21 @@ title: / - YouTube/
 """
 context.tags = ["user.youtube"]
 
+
+@context.action_class("user")
+class YouTubeActions:
+    def video_2x_speed():
+        # Will hit the max regardless
+        key(">:7")
+
+    def video_1x_speed():
+        # Go to min, then max
+        key("<:7")
+        key(">:3")
+
+    def video_1halfx_speed():
+        actions.user.video_normal_speed()
+        key(">:2")
 
 def bind_vimfinity_keys():
     actions.user.vimfinity_bind_keys(
@@ -108,6 +134,9 @@ def bind_vimfinity_keys():
                 actions.user.youtube_queue_with_yt_dlg,
                 "Add Video to yt-dlg Queue",
             ),
+            "p .": (actions.user.video_2x_speed, "2x Video Speed"),
+            "p ,": (actions.user.video_1x_speed, "1x Video Speed"),
+            "p m": (actions.user.video_1halfx_speed, "1.5x Video Speed"),
         },
         context,
     )
