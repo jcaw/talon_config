@@ -27,12 +27,12 @@ class Actions:
 
 editor_context = Context()
 editor_context.matches = r"""
-app: /UnrealEditor/
+app: UnrealEditor
 """
 # Retry window that up when there's a shader compilation error
 shader_error_context = Context()
 shader_error_context.matches = r"""
-app: /UnrealEditor/
+app: UnrealEditor
 title: /Error/
 """
 
