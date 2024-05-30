@@ -113,7 +113,7 @@ class SlackActions:
     def slack_attach_snippet():
         actions.key("ctrl-shift-enter")
 
-    def fullscreen():
+    def toggle_fullscreen():
         actions.key("ctrl-shift-f")
 
     def edit_last_message() -> None:
