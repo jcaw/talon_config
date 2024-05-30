@@ -19,13 +19,9 @@ context.tags = ["user.browser"]
 class Actions:
     def browser_address_backup() -> str:
         with clip.capture() as c:
-            results = actions.self.ocr_find_text_in_window(re.escape("https://"))
-            if not results:
-                raise RuntimeError('Could not find "https://" via OCR.')
-            # Assume it's the only result, and farthest to the top-left
-            original_position = ctrl.mouse_pos()
+            # TODO: could replace the OCR approach with UI Automation. Steam
+            #   supports it. But it's probably slower.
 
-            actions.mouse_move(*results[0].rect.center)
-            actions.mouse_click(button=0)
-            actions.mouse_move(*original_position)
+            # Assume it's the only result, and farthest to the top-left
+            actions.user.ocr_click_in_window("https://")
         return c.text()

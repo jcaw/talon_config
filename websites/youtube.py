@@ -2,14 +2,11 @@ import re
 
 from talon import Module, Context, actions, clip, cron, ui
 
-from user.plugins.accessibility_automator.accessibility_automator import (
-    AutomationOverlay,
-    Spec,
-    ElementNotFoundError,
-)
 
 user = actions.user
 key = actions.key
+automator_overlay = actions.user.automator_overlay
+automator_spec = actions.user.automator_spec
 
 
 module = Module()
@@ -29,42 +26,47 @@ def add_video_to_yt_dlg():
         actions.sleep("200ms")
         if ui.active_window().title == "Info":
             key("enter")
-        user.automator_click_element([Spec(name="Enter URLs below", class_name="Edit")])
+        user.automator_click_element(
+            [automator_spec(name="Enter URLs below", class_name="Edit")]
+        )
     user.paste_insert(url)
     # HACK: It's faster to just backtab once, even though that might be janky.
-    key("shift-tab")
-    key("enter")
-    # user.automator_click_element([Spec(name="Add", class_name="Button")])
+    #   Another theoretical option is to use ocr - `user.ocr_click_in_window("^Add$")`
+    user.ocr_click_in_window("^Add$")
+    # key("shift-tab")
+    # key("enter")
+    # user.automator_click_element([automator_spec(name="Add", class_name="Button")])
 
 
 @module.action_class
 class Actions:
     def youtube_toggle_short() -> None:
         """Switch between a short and the video player, for the same video."""
-        # Get the URL
-        # HACK: Not implemented at time of writing - instead do it manually.
-        # url = actions.browser.address()
-        url = user.browser_address_backup()
+        with automator_overlay():
+            # Get the URL
+            # HACK: Not implemented at time of writing - instead do it manually.
+            # url = actions.browser.address()
+            url = user.browser_address_backup()
 
-        short_regex = r"www.youtube.com\/shorts/"
-        video_regex = r"www.youtube.com\/watch\?v\="
-        if re.search(short_regex, url):
-            new_url = url.replace("/shorts/", r"/watch?v=")
-        elif re.search(video_regex, url):
-            new_url = url.replace("/watch?v=", "/shorts/")
-        else:
-            RuntimeError("YouTube video not detected in URL.")
+            short_regex = r"www.youtube.com\/shorts/"
+            video_regex = r"www.youtube.com\/watch\?v\="
+            if re.search(short_regex, url):
+                new_url = url.replace("/shorts/", r"/watch?v=")
+            elif re.search(video_regex, url):
+                new_url = url.replace("/watch?v=", "/shorts/")
+            else:
+                RuntimeError("YouTube video not detected in URL.")
 
-        # Navigate to the newer version of the URL
-        # HACK: Not implemented at time of writing - instead do it manually.
-        # actions.browser.go(current_url)
-        clip.set_text(new_url)
-        actions.edit.paste()
-        key("enter")
+            # Navigate to the newer version of the URL
+            # HACK: Not implemented at time of writing - instead do it manually.
+            # actions.browser.go(current_url)
+            clip.set_text(new_url)
+            actions.edit.paste()
+            key("enter")
 
     def youtube_queue_with_yt_dlg():
         """Download the current YouTube video using `yt-dlg`."""
-        with AutomationOverlay():
+        with automator_overlay():
             original_window = ui.active_window()
 
             add_video_to_yt_dlg()
@@ -73,7 +75,7 @@ class Actions:
 
     def youtube_download_with_yt_dlg():
         """Download the current YouTube video using `yt-dlg`, to the default yt-dlg folder."""
-        with AutomationOverlay():
+        with automator_overlay():
             original_window = ui.active_window()
 
             add_video_to_yt_dlg()
@@ -121,6 +123,7 @@ class YouTubeActions:
     def video_1halfx_speed():
         actions.user.video_normal_speed()
         key(">:2")
+
 
 def bind_vimfinity_keys():
     actions.user.vimfinity_bind_keys(
