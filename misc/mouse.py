@@ -192,9 +192,9 @@ class Actions:
 
     def spline_mouse(x: int, y: int, seconds: float = 1.0) -> None:
         """Move mouse gradually to point `(x, y)`."""
-        FRAME_PAUSE = 0.016
+        FRAME_PAUSE_MS = 16
         # Use a defined number of moves (not time) so movement is smooth.
-        n_steps = min(int(seconds // FRAME_PAUSE), 1)
+        n_steps = max(int(seconds // (FRAME_PAUSE_MS / 1000)), 1)
 
         start_x = actions.mouse_x()
         start_y = actions.mouse_y()
@@ -202,8 +202,8 @@ class Actions:
         delta_y = (y - start_y) / n_steps
         for i in range(n_steps):
             actions.mouse_move(start_x + (i * delta_x), start_y + (i * delta_y))
-            time.sleep(FRAME_PAUSE)
-        actions.mouse_move()
+            actions.sleep(f"{FRAME_PAUSE_MS}ms")
+        actions.mouse_move(x, y)
 
 
 context = Context()
