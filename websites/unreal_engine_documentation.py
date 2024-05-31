@@ -50,7 +50,8 @@ class Actions:
 context = Context()
 context.matches = r"""
 tag: user.browser
-title: /| Unreal Engine Documentation/
+title: /\| Unreal Engine Documentation/
+title: /\| Unreal Engine [0-9.]+ Documentation/
 """
 context.tags = ["user.unreal_online_docs"]
 
