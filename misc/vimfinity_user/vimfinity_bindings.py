@@ -32,6 +32,21 @@ tag: user.emacs
 """
 
 
+class ShiftDelayed:
+    """Performs `action` after a short delay, to allow the user to release the shift key."""
+
+    def __init__(self, action):
+        self.action = action
+
+    @property
+    def __name__(self):
+        return self.action.__name__
+
+    def __call__(self, *_, **__):
+        sleep("500ms")
+        return self.action(*_, **__)
+
+
 def press_backslash():
     """Press the backslash key. Useful when using a US keyboard in UK layout."""
     actions.key("\\")
@@ -51,14 +66,7 @@ def press_menu():
 
 def google_that():
     # Pause so the copy happens after the user has released the shortcut key
-    sleep("500ms")
     user.google_search(user.get_that_dwim())
-
-
-def open_talon_repl_delayed():
-    """Open the Talon REPL on a delay, to allow the user to release the shortcut key."""
-    sleep("500ms")
-    user.open_talon_repl()
 
 
 def bind():
@@ -95,11 +103,12 @@ def bind():
                 "o d": user.open_discord,
                 "o s": user.open_slack,
                 "o r": user.open_rider,
+                "o R": ShiftDelayed(user.search_thing_in_rider),
                 "o b": user.open_blender,
                 "o w": user.open_whatsapp,
                 "o e": user.open_emacs,
                 "o t": user.open_talon_log,
-                "o T": (open_talon_repl_delayed, "Open Talon REPL"),
+                "o T": (ShiftDelayed(user.open_talon_repl), "Open Talon REPL"),
                 "o space": actions.app.window_hide,
                 "m": "Mic",
                 # For quicker access
@@ -129,7 +138,7 @@ def bind():
                     "Show Automation Path",
                 ),
                 # TODO: Swap these around?
-                "?": google_that,
+                "?": ShiftDelayed(google_that),
                 "q": user.chatgpt_explain_thing,
                 "Q": user.chatgpt_switch_start,
                 # Override this with the program name in more local contexts
