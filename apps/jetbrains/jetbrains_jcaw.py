@@ -99,6 +99,10 @@ def hover_button(text=None, component_class=None):
 
 @module.action_class
 class JetbrainsActions:
+    def jetbrains_search_everywhere_menu():
+        """Open the search everywhere (double shift) menu in Jetbrains IDEs."""
+        jetbrains_action("SearchEverywhere")
+
     def jetbrains_hide_active_window():
         """Hide the active window."""
         jetbrains_action("HideActiveWindow")
@@ -140,6 +144,16 @@ class JetbrainsActions:
     def open_current_file_in_idea():
         """Open the current project in IntelliJ IDEA."""
         actions.self.open_current_file_in_jetbrains("idea")
+
+    def search_thing_in_rider():
+        """Search the current thing (dwim - usually the highlighted text) in the active Rider project."""
+        text = actions.user.get_that_dwim()
+        actions.user.open_rider()
+        # Give it time for the Talon context to update.
+        sleep("300ms")
+        actions.self.jetbrains_search_everywhere_menu()
+        sleep("100ms")
+        user.paste_insert(text)
 
     def jetbrains_reopen_file():
         """Close, then reopen, the current file."""
@@ -730,6 +744,12 @@ class UserActions:
         # FIXME: This seems wrong
         # jetbrains_action("GotoAction")
         jetbrains_action("GotoDeclarationOnly")
+
+    def search(text: str = None):
+        actions.self.jetbrains_search_everywhere_menu()
+        sleep("100ms")
+        if text:
+            insert(text)
 
     # def show_autocomplete() -> None:
     #     jetbrains_action("CodeCompletion")
