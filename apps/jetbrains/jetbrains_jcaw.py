@@ -3,7 +3,7 @@
 import re
 from typing import Optional, List, Dict, Callable
 
-from talon import Context, actions, Module, cron, app
+from talon import Context, actions, Module, cron, app, ui
 from talon.ui import Rect
 
 from user.utils.formatting import SurroundingText
@@ -312,8 +312,23 @@ class CopilotActions:
 @jetbrains_context.action_class("user")
 class JetbrainsCopilotActions:
     def copilot_open_chat():
-        jetbrains_action("ActivateGitHubCopilotChatToolWindow")
-        sleep("200ms")
+        # NOTE: For now, we assume it opens in a separate window. This method
+        #   will always be slow if that assumption is wrong.
+        try:
+            # We want to disambiguate, only opening the current IDE's chat window
+            actions.user.focus(
+                app_name=ui.active_window().app.name, title="GitHub Copilot Chat"
+            )
+            # actions.user.focus_and_wait(
+            #     focus_name=ide_app_name,
+            #     focus_title="GitHub Copilot Chat",
+            #     timeout="5s",
+            #     start_delay="5s",
+            # )
+        except (IndexError, ui.UIErr):
+            jetbrains_action("ActivateGitHubCopilotChatToolWindow")
+            # jetbrains_action("copilot.chat.show")
+            sleep("2s")
 
     def copilot_generate_docs():
         copilot_chat_command("/doc")
