@@ -137,6 +137,7 @@ def bind():
                     user.visualiser_gather_at_point_and_copy,
                     "Show Automation Path",
                 ),
+                "= l": (user.toggle_os_dark_mode_for_apps, "Toggle OS Dark Mode"),
                 # TODO: Swap these around?
                 "?": ShiftDelayed(google_that),
                 "q": user.chatgpt_explain_thing,

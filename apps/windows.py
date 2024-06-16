@@ -11,8 +11,9 @@ sleep = actions.sleep
 
 module = Module()
 
+
 @module.action_class
-class Actions():
+class Actions:
     def windows_cast_screen():
         """Open the Windows screen casting interface."""
         key("win:down")
@@ -21,11 +22,106 @@ class Actions():
         sleep("100ms")
         key("win:up")
 
+    def os_dark_mode():
+        """Switch to dark mode at the OS level."""
+
+    def os_light_mode():
+        """Switch to light mode at the OS level."""
+
+    def toggle_os_dark_mode():
+        """Switch between light/dark mode at the OS level."""
+
+    def os_dark_mode_for_apps():
+        """Switch to dark mode at the OS level, but just for apps."""
+
+    def os_light_mode_for_apps():
+        """Switch to light mode at the OS level, but just for apps."""
+
+    def toggle_os_dark_mode_for_apps():
+        """Switch between light/dark mode at the OS level."""
+
 
 context = Context()
 context.matches = """
 os: windows
 """
+
+
+PERSONALIZE_PATH = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+APP_LIGHT_THEME_KEY = "AppsUseLightTheme"
+SYSTEM_LIGHT_THEME_KEY = "SystemUseLightTheme"
+
+
+def set_dark_mode(app_only: bool, dark: bool):
+    import winreg
+
+    # Open the registry key with write access
+    registry_key = winreg.OpenKey(
+        winreg.HKEY_CURRENT_USER, PERSONALIZE_PATH, 0, winreg.KEY_SET_VALUE
+    )
+    try:
+        # Set the value of AppsUseLightTheme
+        winreg.SetValueEx(
+            registry_key,
+            APP_LIGHT_THEME_KEY if app_only else SYSTEM_LIGHT_THEME_KEY,
+            0,
+            winreg.REG_DWORD,
+            0 if dark else 1,
+        )
+    finally:
+        winreg.CloseKey(registry_key)
+
+
+def is_dark_mode(app_only: bool):
+    import winreg
+
+    # Open the registry key
+    registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, PERSONALIZE_PATH)
+    try:
+        # Get the value of AppsUseLightTheme
+        value, _ = winreg.QueryValueEx(
+            registry_key, APP_LIGHT_THEME_KEY if app_only else SYSTEM_LIGHT_THEME_KEY
+        )
+        # If the value is 1, light mode is active. If 0, dark mode is active.
+        return value == 0
+    finally:
+        winreg.CloseKey(registry_key)
+
+
+# def set_dark_mode(app_only: bool, dark: bool):
+#     """Create a command that switch between light/dark modes."""
+#     subprocess.run(
+#         [
+#             "reg.exe",
+#             "add",
+#             "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+#             "/v",
+#             APP_LIGHT_THEME_KEY if app_only else SYSTEM_LIGHT_THEME_KEY,
+#             "/t",
+#             "REG_DWORD",
+#             "/d",
+#             "0" if dark else "1",
+#             "/f",
+#         ]
+#     )
+
+
+# def is_dark_mode(app_only: bool):
+#     """Is Windows currently in dark mode?"""
+#     return int(subprocess.run(
+#         [
+#             "reg.exe",
+#             "get",
+#             "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+#             "/v",
+#             APP_LIGHT_THEME_KEY if app_only else SYSTEM_LIGHT_THEME_KEY,
+#             "/t",
+#             "REG_DWORD",
+#             "/d",
+#             "0" if dark else "1",
+#             "/f",
+#         ]
+#     ).strip())
 
 
 @context.action_class("self")
@@ -68,3 +164,22 @@ class UserActions:
             start_new_session=True,
             shell=True,
         )
+
+    def os_dark_mode():
+        set_dark_mode(app_only=False, dark=True)
+
+    def os_light_mode():
+        set_dark_mode(app_only=False, dark=False)
+
+    def toggle_os_dark_mode():
+        set_dark_mode(app_only=False, dark=not is_dark_mode(app_only=False))
+
+    def os_dark_mode_for_apps():
+        set_dark_mode(app_only=True, dark=True)
+
+    def os_light_mode_for_apps():
+        set_dark_mode(app_only=True, dark=False)
+
+    def toggle_os_dark_mode_for_apps():
+        # print(f"IS dark mode: {is_dark_mode(app_only=True)}")
+        set_dark_mode(app_only=True, dark=not is_dark_mode(app_only=True))
