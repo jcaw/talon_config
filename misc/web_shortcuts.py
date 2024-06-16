@@ -2,7 +2,7 @@
 
 import urllib
 import webbrowser
-from typing import Dict
+from typing import Dict, Optional
 
 from talon import Module, actions
 
@@ -24,7 +24,11 @@ class Actions:
         lower_url = url.lower()
         if not (lower_url.startswith("http://") or lower_url.startswith("https://")):
             url = f"https://{url}"
-        print(f'Opening URL: "{url}"')
+
+        # TODO: Determine default browser with method from following link:
+        #   https://stackoverflow.com/a/68292700
+        #   Then, focus it after browsing.
+        print("Browser: ", webbrowser.get(using=None))
         webbrowser.open(url, new=2, autoraise=True)
 
     def open_website_with_params(base_url: str, params: Dict[str, str]):
@@ -90,3 +94,87 @@ class Actions:
     def google_subsearch(site: str, text: str) -> None:
         """Google search, restricting results to a specific website."""
         actions.self.google_search(text + f"    site:{site}")
+
+    def search_that_dwim(text: Optional[str] = None):
+        """Search current thing with the default search engine,
+
+        DWIM behaviour depends on context (usually, highlighted text). Provide a
+        string to override, and search `text` instead.
+
+        """
+        actions.self.web_search(actions.user.get_that_dwim_plus_text(text))
+
+    def google_that_dwim(text: Optional[str] = None):
+        """Google current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.google_search(actions.user.get_that_dwim_plus_text(text))
+
+    def bing_that_dwim(text: Optional[str] = None):
+        """Search Bing for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.bing_search(actions.user.get_that_dwim_plus_text(text))
+
+    # TODO: All duckduckgo actions should have underscores e.g. duck_duck_go
+    def duck_duck_go_that_dwim(text: Optional[str] = None):
+        """Seach Duck Duck Go for the current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.bing_search(actions.user.get_that_dwim_plus_text(text))
+
+    def amazon_that_dwim(text: Optional[str] = None):
+        """Search Amazon for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.amazon_search(actions.user.get_that_dwim_plus_text(text))
+
+    def youtube_that_dwim(text: Optional[str] = None):
+        """Search Youtube for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.youtube_search(actions.user.get_that_dwim_plus_text(text))
+
+    def reddit_that_dwim(text: Optional[str] = None):
+        """Search Reddit for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.reddit_search(actions.user.get_that_dwim_plus_text(text))
+
+    def stackoverflow_that_dwim(text: Optional[str] = None):
+        """Search Stack Overflow for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.stackoverflow_search(actions.user.get_that_dwim_plus_text(text))
+
+    def wikipedia_that_dwim(text: Optional[str] = None):
+        """Search Wikipedia for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.wikipedia_search(actions.user.get_that_dwim_plus_text(text))
+
+    def google_subsearch_that_dwim(subsearch_site: str, text: Optional[str] = None):
+        """Search Bing for current "thing" - depends on context (usually, highlighted text).
+
+        Provide a string to override the dwim behaviour, and search `text` instead.
+
+        """
+        actions.self.google_subsearch(
+            subsearch_site, actions.user.get_that_dwim_plus_text(text)
+        )
