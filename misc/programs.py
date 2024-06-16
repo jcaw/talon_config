@@ -28,6 +28,10 @@ def wait_string_to_seconds_rough(time_string: str) -> float:
         )
 
 
+class FocusTimeoutError(RuntimeError):
+    pass
+
+
 @module.action_class
 class Actions:
     """Class holding cleanly named switcher functions"""
@@ -118,13 +122,61 @@ class Actions:
             # TODO: This is horrifying, rewrite it
             raise IndexError(f'Problem focussing app: "{e}"')
 
+    # TODO: Roll this back into `switch_or_start`? Do I actually want to use it
+    #   given the inherent race condition (what if the program starts before
+    #   it's called)? Maybe, but "maybe" is a bad reason to keep code around.
+    def focus_and_wait(
+        focus_name: Optional[str] = None,
+        focus_title: Optional[str] = None,
+        timeout: str = "5000ms",
+        start_delay: str = "300ms",
+    ):
+        """Focus a window. If it's not open, wait for it to open.
+
+        Use this e.g. when you already opened a window, and you're waiting for
+        it to be created.
+
+        `timeout` is the wait for it to open. `start_delay` is the time to wait
+        afterwards, iff it wasn't immediately detected.
+
+        """
+        assert focus_name or focus_title
+
+        timeout_secs = wait_string_to_seconds_rough(timeout)
+        deadline = time.monotonic() + timeout_secs
+
+        # Try to focus quickly first - only pop the automation overlay if
+        # there's a delay.
+        try:
+            actions.user.focus(app_name=focus_name, title=focus_title)
+            return True
+        except (IndexError, ui.UIErr):
+            pass
+
+        # Now we know this will take non-negligible amount of time, so pop the
+        # automation overlay.
+        with actions.user.automator_overlay():
+            while True:
+                actions.sleep("100ms")
+                try:
+                    print("Trying")
+                    actions.user.focus(app_name=focus_name, title=focus_title)
+                    break
+                except (IndexError, ui.UIErr) as e:
+                    if time.monotonic() > deadline:
+                        raise FocusTimeoutError(
+                            "Could not detect app after trying to focus."
+                        )
+            print("Focussed. Sleeping.")
+            # Give it a little time for the window to get into the correct state.
+            actions.sleep(start_delay)
+            return False
+
     def switch_or_start(
         start_name: str,
         focus_name: Optional[str] = None,
         focus_title: Optional[str] = None,
-        # TODO: Rename this to `start_deadline`. Maybe have another parameter
-        #  called `start_delay` after, which is the wait after the window has
-        #  been detected.
+        # TODO: Rename this to `start_timeout`
         start_deadline: str = "7000ms",
         start_delay: str = "300ms",
     ) -> bool:
@@ -134,7 +186,8 @@ class Actions:
         instance was focussed.
 
         """
-        start_deadline_secs = wait_string_to_seconds_rough(start_deadline)
+        # Early validate the input
+        wait_string_to_seconds_rough(start_deadline)
 
         # Revert to the same name used to start the program when no focus
         # parameters have been set.
@@ -148,24 +201,17 @@ class Actions:
         # a window for a running program - in these cases, we assume the program
         # needs to be relaunched.
         except (IndexError, ui.UIErr) as e:
-            actions.user.launch_fuzzy(start_name)
-            start_limit = time.monotonic() + start_deadline_secs
-            while True:
+            with actions.user.automator_overlay():
+                actions.user.launch_fuzzy(start_name)
                 try:
-                    actions.user.focus(app_name=focus_name, title=focus_title)
-                    break
-                except (IndexError, ui.UIErr) as e:
-                    if time.monotonic() > start_limit:
-                        # TODO: Maybe a more formal error here. Easier to catch.
-                        raise RuntimeError("Could not detect app after starting.")
-                    actions.sleep("100ms")
-            # Give it a little time for the window to get into the correct state.
-            actions.sleep(start_delay)
-            # try:
-            #     actions.user.focus(app_name=focus_name, title=focus_title)
-            # except (IndexError, ui.UIErr) as e:
-            #     print(f"Could not focus newly started program: {focus_name}. Skipping.")
-        return True
+                    actions.user.focus_and_wait(
+                        focus_name, focus_title, start_deadline, start_delay
+                    )
+                except FocusTimeoutError:
+                    raise FocusTimeoutError(
+                        "Could not detect app after trying to start."
+                    )
+                return True
 
     # TODO: Go through each of these and check they all work?
 
@@ -195,7 +241,9 @@ class Actions:
 
     def open_rider() -> bool:
         """Switch to rider, starting it if necessary."""
-        return actions.user.switch_or_start("rider")
+        return actions.user.switch_or_start(
+            "rider", start_deadline="30s", start_delay="10s"
+        )
 
     def open_blender() -> bool:
         """Switch to blender, starting it if necessary."""
@@ -290,6 +338,11 @@ class Actions:
             return False
         except IndexError:
             actions.user.automator_open_talon_log()
+            try:
+                # Just in case it didn't focus, try to do so manually.
+                actions.self.focus_talon_log()
+            except:
+                pass
             return True
 
     def open_talon_repl() -> bool:
@@ -299,6 +352,12 @@ class Actions:
             return False
         except IndexError:
             actions.user.automator_open_talon_repl()
+            try:
+                # Just in case it didn't focus (seems to happen sometimes with
+                # the UI automation), try to manually focus it.
+                actions.self.focus_talon_repl()
+            except:
+                pass
             return True
 
 
