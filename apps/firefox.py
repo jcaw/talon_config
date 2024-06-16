@@ -27,3 +27,8 @@ class Action:
     def rango_enable():
         """Enable Rango browser extension and start showing labels."""
         key("ctrl-shift-6")
+
+    # TODO: Read aloud
+
+
+# TODO: Vimfinity shortcuts for rango and read aloud.
