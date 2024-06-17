@@ -94,22 +94,26 @@ class Actions:
     def focus(app_name: Optional[str] = None, title: Optional[str] = None):
         """Focus a program by either the app name, title, or both."""
         assert app_name or title, "Must provide `app_name` and/or `title`."
-        apps = ui.apps(background=False)
+        # apps = ui.apps(background=False)
+        windows = ui.windows()
         if app_name:
-            names_matcher = [(app.name, app) for app in apps]
-            apps = actions.user.heirarchical_name_match(
+            names_matcher = [(w.app.name, w) for w in windows]
+            windows = actions.user.heirarchical_name_match(
                 app_name, names_matcher, True, True, True
             )
-            if not apps:
-                raise IndexError(f'Running app not found matching name: "{app_name}"')
+            if not windows:
+                raise IndexError(f'Window not found matching app name: "{app_name}"')
         if title:
-            titles_matcher = [(app.active_window.title, app) for app in apps]
-            print(titles_matcher)
+            titles_matcher = [(w.title, w) for w in windows]
             apps = actions.user.heirarchical_name_match(
                 title, titles_matcher, True, True, True
             )
             if not apps:
-                raise IndexError(f'Running app not found matching title: "{title}"')
+                raise IndexError(
+                    f'Window not found matching app name: "{app_name}" and title: "{title}"'
+                    if app_name
+                    else f'Window not found matching title: "{title}"'
+                )
 
         app = apps[0]
 
