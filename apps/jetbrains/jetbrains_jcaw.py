@@ -18,6 +18,7 @@ key = actions.key
 insert = actions.insert
 jetbrains_rpc_call = actions.user.jetbrains_rpc_call
 jetbrains_action = actions.user.jetbrains_action
+automator_overlay = actions.user.automator_overlay
 
 
 module = Module()
@@ -319,6 +320,7 @@ class JetbrainsCopilotActions:
             actions.user.focus(
                 app_name=ui.active_window().app.name, title="GitHub Copilot Chat"
             )
+            sleep("200ms")
             # actions.user.focus_and_wait(
             #     focus_name=ide_app_name,
             #     focus_title="GitHub Copilot Chat",
@@ -326,9 +328,10 @@ class JetbrainsCopilotActions:
             #     start_delay="5s",
             # )
         except (IndexError, ui.UIErr):
-            jetbrains_action("ActivateGitHubCopilotChatToolWindow")
-            # jetbrains_action("copilot.chat.show")
-            sleep("2s")
+            with automator_overlay():
+                jetbrains_action("ActivateGitHubCopilotChatToolWindow")
+                # jetbrains_action("copilot.chat.show")
+                sleep("2s")
 
     def copilot_generate_docs():
         copilot_chat_command("/doc")
