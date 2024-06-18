@@ -96,6 +96,7 @@ class Actions:
         assert app_name or title, "Must provide `app_name` and/or `title`."
         # apps = ui.apps(background=False)
         windows = ui.windows()
+        # TODO 1: Filter windows to ensure they're valid focus targets
         if app_name:
             names_matcher = [(w.app.name, w) for w in windows]
             windows = actions.user.heirarchical_name_match(
@@ -115,6 +116,7 @@ class Actions:
                     else f'Window not found matching title: "{title}"'
                 )
 
+        # TODO 1: Try focussing each in turn, only error out if none can be focussed?
         app = apps[0]
 
         try:
