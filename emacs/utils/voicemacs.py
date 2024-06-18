@@ -570,29 +570,36 @@ def _update_overlay():
     global connection_canvas, _prior_emacs_rect, canvas_screen
     if emacs_focussed():
         active_window = ui.active_window()
-        if connection_canvas and active_window.rect != _prior_emacs_rect:
-            # Layout has changed - just reset the canvas to reposition the bar.
-            connection_canvas.rect = _calc_canvas_rect(active_window)
-            canvas_screen = active_window.screen
-            _prior_emacs_rect = Rect(*active_window.rect)
-            connection_canvas.resume()
-            connection_canvas.freeze()
-        if not connection_canvas:
-            # Need to create a new canvas
-            #
-            canvas_rect = _calc_canvas_rect(active_window)
-            connection_canvas = canvas.Canvas(*canvas_rect)
-            # HACK: Canvas isn't being created with the dimensions specified
-            #   (win 10), so manually set it.
-            # FIXME: Report canvas being created with wrong rect as a bug
-            connection_canvas.rect = canvas_rect
-            canvas_screen = active_window.screen
-            _prior_emacs_rect = Rect(*active_window.rect)
-            connection_canvas.register("draw", redraw_connection_state)
-            connection_canvas.freeze()
-        elif canvas_connection_state != voicemacs_connected:
-            connection_canvas.resume()
-            connection_canvas.freeze()
+        # HACK: Resolve the canvas rect up front to ensure it's valid. Hack to
+        #  get around log spam when e.g. Emacs is minimized and the numbers go
+        #  haywire. Should redo this properly at some point.
+        canvas_rect = _calc_canvas_rect(active_window)
+        if canvas_rect.width > 0 and canvas_rect.height > 0:
+            if connection_canvas and active_window.rect != _prior_emacs_rect:
+                # Layout has changed - just reset the canvas to reposition the bar.
+                connection_canvas.rect = canvas_rect
+                canvas_screen = active_window.screen
+                _prior_emacs_rect = Rect(*active_window.rect)
+                connection_canvas.resume()
+                connection_canvas.freeze()
+            if not connection_canvas:
+                # Need to create a new canvas
+                connection_canvas = canvas.Canvas(*canvas_rect)
+                # HACK: Canvas isn't being created with the dimensions specified
+                #   (win 10), so manually set it.
+                # FIXME: Report canvas being created with wrong rect as a bug
+                connection_canvas.rect = canvas_rect
+                canvas_screen = active_window.screen
+                _prior_emacs_rect = Rect(*active_window.rect)
+                connection_canvas.register("draw", redraw_connection_state)
+                connection_canvas.freeze()
+            elif canvas_connection_state != voicemacs_connected:
+                connection_canvas.resume()
+                connection_canvas.freeze()
+        else:
+            # Edge case - the emacs window was just minimized, so Talon thinks
+            # it's active even though it isn't.
+            delete_canvas()
     else:
         delete_canvas()
 
