@@ -1,3 +1,4 @@
+import ctypes
 import time
 from typing import List
 
@@ -11,25 +12,46 @@ os: windows
 """
 
 
-def _with_win_press(key_sequence):
+def _with_win_move(key_sequence):
     """Press ``keys`` while holding the Windows key down."""
-    # TODO: Convert this to newapi once up/down implemented
+    keys = list(key_sequence.strip().split())
+    for key in keys:
+        assert key in {"up", "down", "left", "right"}
+
+    # Start with a predictable state - maximized window.
+    actions.self.maximize()
+    actions.sleep("100ms")
     actions.key("win:down")
     try:
-        # TODO: Better way to get the inter-key pause?
-        print("type: ", key_sequence, type(key_sequence))
         for keychord in key_sequence.split():
             actions.key(f"{keychord}")
             # Need a relatively long pause to eliminate errors.
-            time.sleep(0.1)
+            actions.sleep("100ms")
     finally:
         actions.key("win:up")
+
+
+def set_show_window_state(state: int):
+    user32 = ctypes.windll.user32
+    hwnd = user32.GetForegroundWindow()
+    user32.ShowWindow(hwnd, state)
 
 
 @context.action_class("user")
 class UserActions:
     def maximize() -> None:
-        _with_win_press("up up up")
+        SW_MAXIMIZE = 3
+        set_show_window_state(SW_MAXIMIZE)
+
+    def minimize() -> None:
+        SW_MINIMIZE = 2
+        set_show_window_state(SW_MINIMIZE)
+
+    def snap_window_right():
+        actions.self.snap_window_win("right")
+
+    def snap_window_left():
+        actions.self.snap_window_win("left")
 
     def all_programs() -> None:
         actions.key("win-tab")
@@ -58,7 +80,7 @@ class ModuleActions:
 
         """
         actions.user.maximize()
-        _with_win_press(alignment_keys)
+        _with_win_move(alignment_keys)
 
     # On Windows, to alt-tab through multiple windows, you have to hold alt (or
     # alt-shift) - letting go resets. We need custom actions that eat the
@@ -80,11 +102,9 @@ class ModuleActions:
 
         """
         assert direction in ("left", "right")
-        actions.user.maximize()
-        # 4 times so the arrangement dialogue doesn't pop
-        _with_win_press(f"{direction} " * 4)
-        # Maximize to normalize position
-        actions.user.maximize()
+        # 5 times so the arrangement dialogue doesn't pop
+        # TODO: Need 4 times on win 10, I think, 5 on 11.
+        _with_win_move(f"{direction} " * 5)
 
 
 @context.action_class("app")

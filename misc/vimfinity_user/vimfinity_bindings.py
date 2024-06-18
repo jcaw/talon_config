@@ -146,6 +146,11 @@ def bind():
                 "k": "Program-Specific",
                 # Insertion menu - snippets, etc.
                 "i": "Insert",
+                # Window snapping
+                "up": ShiftDelayed(user.maximize),
+                "down": ShiftDelayed(user.minimize),
+                "left": ShiftDelayed(user.snap_window_left),
+                "right": ShiftDelayed(user.snap_window_right),
             }
         )
 

@@ -6,8 +6,8 @@ os: windows
 # Override the automatic snap commands
 # TODO: Maybe merge the modules?
 snap full:         user.maximize()
-snap right:        user.snap_window_win("right right")
-snap left:         user.snap_window_win("left left")
+snap right:        user.snap_window_right()
+snap left:         user.snap_window_left()
 snap top right:    user.snap_window_win("right right up")
 snap top left:     user.snap_window_win("left left up")
 snap bottom right: user.snap_window_win("right right down")
