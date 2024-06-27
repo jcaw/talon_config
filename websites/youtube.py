@@ -7,6 +7,7 @@ user = actions.user
 key = actions.key
 automator_overlay = actions.user.automator_overlay
 automator_spec = actions.user.automator_spec
+automator_find_elements = actions.user.automator_find_elements
 
 
 module = Module()
@@ -100,6 +101,33 @@ class Actions:
     def video_1halfx_speed():
         """Set the video to 1.5x speed."""
 
+    def youtube_save_to_watch_later():
+        """Save the current video to the `Watch Later` playlist."""
+        # Firefox path to the YouTube video page.
+        with automator_overlay():
+            title = ui.active_window().title
+            tab_title = title[: -len(" - Mozilla Firefox")]
+            page_specs = [
+                automator_spec(
+                    # name="Mozilla Firefox$",
+                    name=title,
+                    class_name="MozillaWindowClass",
+                    search_indirect=False,
+                ),
+                automator_spec(name=tab_title, class_name="^$", search_indirect=True),
+            ]
+            page_elements = list(automator_find_elements(page_specs))
+            if not page_elements:
+                raise RuntimeError(title)
+            save_to_playlist_specs = [
+                automator_spec(
+                    name="Save to playlist", class_name="^$", search_indirect=True
+                )
+            ]
+            save_to_playlist_element = next(
+                iter(automator_find_elements(save_to_playlist_specs, page_elements))
+            )
+
 
 context = Context()
 context.matches = r"""
@@ -140,6 +168,7 @@ def bind_vimfinity_keys():
             "p .": (actions.user.video_2x_speed, "2x Video Speed"),
             "p ,": (actions.user.video_1x_speed, "1x Video Speed"),
             "p m": (actions.user.video_1halfx_speed, "1.5x Video Speed"),
+            "p w": (actions.user.youtube_save_to_watch_later, "Save to Watch Later"),
         },
         context,
     )
