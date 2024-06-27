@@ -43,7 +43,7 @@ class ShiftDelayed:
         return self.action.__name__
 
     def __call__(self, *_, **__):
-        sleep("500ms")
+        sleep("200ms")
         return self.action(*_, **__)
 
 
