@@ -121,6 +121,8 @@ def bind():
                 "e e": user.open_current_file_in_emacs,
                 "e p": user.open_current_project_in_emacs,
                 "e g": user.send_to_magit_in_emacs,
+                "w": "Windows & Screens",
+                # Window/screens actions are defined in other modules.
                 "=": "Utils",
                 "= i": user.copy_current_app_info,
                 "= p": user.command_history_show,
