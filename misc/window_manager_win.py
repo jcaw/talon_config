@@ -44,8 +44,18 @@ class UserActions:
         set_show_window_state(SW_MAXIMIZE)
 
     def minimize() -> None:
+        # This approach doesn't actually take focus away from the window. E.g.
+        # maximising after will re-maximise the same window, not the window that
+        # should be focussed.
         SW_MINIMIZE = 2
         set_show_window_state(SW_MINIMIZE)
+        # In order to focus the window below it, we'll alt-tab. This works ok
+        # but isn't perfect - e.g. it won't allow us to minimize two windows in
+        # a row, it will just cycle them.
+        actions.key("alt-tab")
+
+        # This will minimize, but it won't restore the window's state perfectly.
+        # actions.self.snap_window_win("down down")
 
     def snap_window_right():
         actions.self.snap_window_win("right")
