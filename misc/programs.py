@@ -106,10 +106,10 @@ class Actions:
                 raise IndexError(f'Window not found matching app name: "{app_name}"')
         if title:
             titles_matcher = [(w.title, w) for w in windows]
-            apps = actions.user.heirarchical_name_match(
+            windows = actions.user.heirarchical_name_match(
                 title, titles_matcher, True, True, True
             )
-            if not apps:
+            if not windows:
                 raise IndexError(
                     f'Window not found matching app name: "{app_name}" and title: "{title}"'
                     if app_name
@@ -117,10 +117,10 @@ class Actions:
                 )
 
         # TODO 1: Try focussing each in turn, only error out if none can be focussed?
-        app = apps[0]
+        window = windows[0]
 
         try:
-            app.focus()
+            window.focus()
         except Exception as e:
             # HACK: Raise a generic error to make it easier to catch weird or
             #   platform-specific focus failures
