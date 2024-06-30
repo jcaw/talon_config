@@ -81,7 +81,7 @@ class UserActions:
         key("alt-right")
 
     def open_current_page_in_chrome():
-        with automator_overlay():
+        with automator_overlay("Opening in Chrome"):
             url = actions.user.browser_address_backup()
             LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
             actions.self.switch_or_start("chrome")
@@ -90,7 +90,7 @@ class UserActions:
             actions.browser.go(url)
 
     def open_current_page_in_firefox():
-        with automator_overlay():
+        with automator_overlay("Opening in Firefox"):
             url = actions.user.browser_address_backup()
             LOGGER.debug(f'Switching to URL in Firefox: "{url}"')
             actions.self.switch_or_start("firefox")

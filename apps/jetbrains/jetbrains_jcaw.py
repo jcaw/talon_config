@@ -328,7 +328,7 @@ class JetbrainsCopilotActions:
             #     start_delay="5s",
             # )
         except (IndexError, ui.UIErr):
-            with automator_overlay():
+            with automator_overlay("Opening Copilot Chat"):
                 jetbrains_action("ActivateGitHubCopilotChatToolWindow")
                 # jetbrains_action("copilot.chat.show")
                 sleep("2s")

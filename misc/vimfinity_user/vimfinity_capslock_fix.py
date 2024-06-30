@@ -28,26 +28,27 @@ class Actions:
 @windows_context.action_class("self")
 class WindowsActions:
     def vimfinity_disable_capslock_windows():
-        initial_window = ui.active_window()
-        # When Caps Lock is pressed in the Talon log, it will register and open
-        # the Vimfinity menu, but it will also actually trigger Caps Lock
-        # because the key cannot be perfectly intercepted in all situations. We
-        # can leverage that to disable the CapsLock without actually changing
-        # the state of capitalization.
-        new_instance = user.open_talon_log()
-        if new_instance:
-            # Give it a while to open
-            sleep("1000ms")
-        else:
-            sleep("100ms")
-        key("capslock")
-        sleep("200ms")
-        # Even though Caps Lock fires default behaviour, it will also open the
-        # Vimfinity prompt. Press escape again to close it.
-        key("esc")
-        if new_instance:
-            key("alt-f4")
-        initial_window.focus()
+        with actions.user.automator_overlay("Automatically Disabling CapsLock"):
+            initial_window = ui.active_window()
+            # When Caps Lock is pressed in the Talon log, it will register and open
+            # the Vimfinity menu, but it will also actually trigger Caps Lock
+            # because the key cannot be perfectly intercepted in all situations. We
+            # can leverage that to disable the CapsLock without actually changing
+            # the state of capitalization.
+            new_instance = user.open_talon_log()
+            if new_instance:
+                # Give it a while to open
+                sleep("1000ms")
+            else:
+                sleep("100ms")
+            key("capslock")
+            sleep("200ms")
+            # Even though Caps Lock fires default behaviour, it will also open the
+            # Vimfinity prompt. Press escape again to close it.
+            key("esc")
+            if new_instance:
+                key("alt-f4")
+            initial_window.focus()
 
     def vimfinity_disable_capslock_if_enabled():
         caps_lock_enabled = ctypes.windll.user32.GetKeyState(0x14) & 0xFFFF != 0

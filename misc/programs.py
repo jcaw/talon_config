@@ -161,7 +161,7 @@ class Actions:
 
         # Now we know this will take non-negligible amount of time, so pop the
         # automation overlay.
-        with actions.user.automator_overlay():
+        with actions.user.automator_overlay("Focussing Program"):
             while True:
                 actions.sleep("100ms")
                 try:
@@ -207,7 +207,7 @@ class Actions:
         # a window for a running program - in these cases, we assume the program
         # needs to be relaunched.
         except (IndexError, ui.UIErr) as e:
-            with actions.user.automator_overlay():
+            with actions.user.automator_overlay(f"Starting {start_name}"):
                 actions.user.launch_fuzzy(start_name)
                 try:
                     actions.user.focus_and_wait(

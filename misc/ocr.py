@@ -40,6 +40,9 @@ def click_candidate(results, button: int, ensure_one_match: bool):
         actions.mouse_move(*original_position)
 
 
+OCR_OVERLAY_TEXT = "Automating UI with OCR"
+
+
 @module.action_class
 class Actions:
     def ocr_everything() -> List[ocr.Result]:
@@ -88,7 +91,7 @@ class Actions:
         If you want to allow multiple matches, provide `ensure_one_match`.
 
         """
-        with automator_overlay():
+        with automator_overlay(OCR_OVERLAY_TEXT):
             click_candidate(
                 actions.self.ocr_find_text_anywhere(regexp), button, ensure_one_match
             )
@@ -101,7 +104,7 @@ class Actions:
         If you want to allow multiple matches, provide `ensure_one_match`.
 
         """
-        with automator_overlay():
+        with automator_overlay(OCR_OVERLAY_TEXT):
             click_candidate(
                 actions.self.ocr_find_text_in_window(regexp), button, ensure_one_match
             )
