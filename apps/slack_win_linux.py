@@ -144,7 +144,10 @@ class SlackActions:
         actions.key("ctrl-shift-x")
 
 
-@context.action_class("edit")
-class EditActions:
-    def search():
+@context.action_class("user")
+class UserActions:
+    def search(text: str = None):
         actions.key("ctrl-j")
+        if text:
+            actions.sleep("300ms")
+            actions.insert(text)
