@@ -84,7 +84,7 @@ class UserActions:
         with automator_overlay("Opening in Chrome"):
             url = actions.user.browser_address_backup()
             LOGGER.debug(f'Switching to URL in Chrome: "{url}"')
-            actions.self.switch_or_start("chrome")
+            actions.self.open_chrome()
 
             actions.app.tab_open()
             actions.browser.go(url)
@@ -93,7 +93,7 @@ class UserActions:
         with automator_overlay("Opening in Firefox"):
             url = actions.user.browser_address_backup()
             LOGGER.debug(f'Switching to URL in Firefox: "{url}"')
-            actions.self.switch_or_start("firefox")
+            actions.self.open_firefox()
 
             actions.app.tab_open()
             actions.browser.go(url)
