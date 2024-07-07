@@ -25,6 +25,8 @@
 [submodule "plugins/accessibility_visualiser"]
 	path = plugins/accessibility_visualiser
 	url = git@github.com:jcaw/talon_accessibility_visualiser.git
+	branch = master
 [submodule "plugins/accessibility_automator"]
 	path = plugins/accessibility_automator
 	url = git@github.com:jcaw/talon_ui_automation.git
+	branch = master
