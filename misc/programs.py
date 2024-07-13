@@ -119,8 +119,23 @@ class Actions:
         # TODO 1: Try focussing each in turn, only error out if none can be focussed?
         window = windows[0]
 
+        active_window = ui.active_window()
+        # Another edge case - Windows didn't focus anything. In this case alt-tab to get something in focus before focussing.
+        print("Window:", active_window)
+        if not active_window:
+            print("No window focussed. Alt-tabbing to handle edge case.")
+            key("alt-tab")
+        # Edge case - if the window is already focussed, don't bother re-focussing it.
+        if window == active_window:
+            print("Window already focussed.")
+            return
+
         try:
             window.focus()
+            # Allow some time for it to focus. Failing to do this can cause
+            # weird race conditions where no windows at all end up focussed,
+            # depending how this `focus` action is used.
+            sleep("100ms")
         except Exception as e:
             # HACK: Raise a generic error to make it easier to catch weird or
             #   platform-specific focus failures
@@ -165,7 +180,6 @@ class Actions:
             while True:
                 actions.sleep("100ms")
                 try:
-                    print("Trying")
                     actions.user.focus(app_name=focus_name, title=focus_title)
                     break
                 except (IndexError, ui.UIErr) as e:
@@ -173,7 +187,6 @@ class Actions:
                         raise FocusTimeoutError(
                             "Could not detect app after trying to focus."
                         )
-            print("Focussed. Sleeping.")
             # Give it a little time for the window to get into the correct state.
             actions.sleep(start_delay)
             return False
@@ -408,6 +421,7 @@ def launch_program_windows(
     # First, try it as an exact path.
     try:
         ui.launch(path=program_name)
+        print(f'Launched successfully via ui: "{program_name}"')
         return
     except FileNotFoundError as e:
         pass
