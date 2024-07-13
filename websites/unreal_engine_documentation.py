@@ -34,7 +34,9 @@ class Actions:
         # normal URL format?
         old_docs_regex = r"docs\.unrealengine\.com\/([0-9]+[.][0-9]+)\/"
         new_docs_regex = r"dev\.epicgames\.com\/documentation\/.*([0-9]+[.][0-9]+)$"
-        if re.search(old_docs_regex, url) or re.search(new_docs_regex, url):
+        old_docs_match = re.search(old_docs_regex, url)
+        new_docs_match = re.search(new_docs_regex, url)
+        if old_docs_match or new_docs_match:
             # Replace the old version (e.g. "4.27") in the URL with the current
             # version (e.g. "5.1")
             new_url = re.sub("[0-9]+[.][0-9]+", CURRENT_UNREAL_VERSION, url)
@@ -50,8 +52,10 @@ class Actions:
 context = Context()
 context.matches = r"""
 tag: user.browser
-title: /\| Unreal Engine Documentation/
-title: /\| Unreal Engine [0-9.]+ Documentation/
+and title: /\| Unreal Engine Documentation/
+
+tag: user.browser
+and title: /\| Unreal Engine [0-9.]+ Documentation/
 """
 context.tags = ["user.unreal_online_docs"]
 
