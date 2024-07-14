@@ -214,7 +214,7 @@ class UserActions:
             focused_element = ui.focused_element()
             textedit_pattern = focused_element.textedit_pattern
             text_pattern = focused_element.text_pattern
-            if not textedit_pattern and text_pattern:
+            if not (textedit_pattern and text_pattern):
                 return None
 
             document_range = text_pattern.document_range
