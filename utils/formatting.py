@@ -16,6 +16,20 @@ class SurroundingText:
     def char_after(self):
         return self.text_after[0] if self.text_after else None
 
+    def __str__(self) -> str:
+        PREVIEW_LENGTH = 100
+        text_before_preview = (
+            None
+            if self.text_before is None
+            else (f'"{self.text_before[-PREVIEW_LENGTH:]}"')
+        )
+        text_after_preview = (
+            None
+            if self.text_after is None
+            else f'"{self.text_after[:min(PREVIEW_LENGTH, len(self.text_after))]}"'
+        )
+        return f"<SurroundingText.\nText before: {text_before_preview}\nText after: {text_after_preview}>"
+
 
 class ComplexInsert:
     def __init__(self, insert, text_after=""):
