@@ -226,9 +226,8 @@ class UserActions:
                     "WARNING: Multiple selections detected. This is not supported. Ignoring surrounding text."
                 )
                 return None
-            selection_range = selection_ranges[0]
             selection_start, selection_end = get_selection_hell_mode(
-                document_range, selection_range
+                document_range, selection_ranges[0]
             )
 
             N_CHARS_BEFORE = 30000
