@@ -148,6 +148,16 @@ def get_selection_hell_mode(document_range, selection_range) -> Tuple[int, int]:
     return start, end
 
 
+# TODO: Wire this into actions
+def set_selection_hell_mode(document_range, start: int, end: int):
+    """Set the selection using the horrendous Windows accessibility API."""
+    new_range = document_range.clone()
+    new_range.move_endpoint_by_range("End", "Start", target=document_range)
+    new_range.move_endpoint_by_unit("End", "Character", end)
+    new_range.move_endpoint_by_unit("Start", "Character", start)
+    new_range.select()
+
+
 @context.action_class("self")
 class UserActions:
     # def quit_talon() -> None:

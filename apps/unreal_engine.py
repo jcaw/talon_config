@@ -38,7 +38,7 @@ title: /Error/
 
 
 @editor_context.action_class("self")
-class UnrealActions:
+class UnrealEditorActions:
     def unreal_command(command: str):
         assert "\n" not in command, command
 
