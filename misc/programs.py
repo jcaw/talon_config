@@ -119,14 +119,13 @@ class Actions:
         # TODO 1: Try focussing each in turn, only error out if none can be focussed?
         window = windows[0]
 
-        active_window = ui.active_window()
         # Another edge case - Windows didn't focus anything. In this case alt-tab to get something in focus before focussing.
-        print("Window:", active_window)
-        if not active_window:
+        if not ui.active_window():
+            print("Window:", ui.active_window())
             print("No window focussed. Alt-tabbing to handle edge case.")
-            key("alt-tab")
+            actions.key("alt-tab")
         # Edge case - if the window is already focussed, don't bother re-focussing it.
-        if window == active_window:
+        if window == ui.active_window():
             print("Window already focussed.")
             return
 
@@ -135,7 +134,7 @@ class Actions:
             # Allow some time for it to focus. Failing to do this can cause
             # weird race conditions where no windows at all end up focussed,
             # depending how this `focus` action is used.
-            sleep("100ms")
+            actions.sleep("100ms")
         except Exception as e:
             # HACK: Raise a generic error to make it easier to catch weird or
             #   platform-specific focus failures
@@ -176,7 +175,13 @@ class Actions:
 
         # Now we know this will take non-negligible amount of time, so pop the
         # automation overlay.
-        with actions.user.automator_overlay("Focussing Program"):
+        if focus_name and focus_title:
+            focus_prompt = f'Focussing {focus_name}, "{focus_title}"'
+        elif focus_name:
+            focus_prompt = f"Focussing {focus_name}"
+        else:
+            focus_prompt = f'Focussing "{focus_title}"'
+        with actions.user.automator_overlay(focus_prompt):
             while True:
                 actions.sleep("100ms")
                 try:
@@ -187,6 +192,9 @@ class Actions:
                         raise FocusTimeoutError(
                             "Could not detect app after trying to focus."
                         )
+        with actions.user.automator_overlay(
+            f"Waiting {start_delay} for app to finish startup"
+        ):
             # Give it a little time for the window to get into the correct state.
             actions.sleep(start_delay)
             return False
@@ -309,26 +317,6 @@ class Actions:
 
     def open_emacs() -> bool:
         """Switch to emacs, starting it if necessary."""
-        # TODO: An action that focuses based on exe AND title
-        try:
-            actions.user.focus(app_name="vcxsrv", title="emacs")
-            return False
-        except IndexError:
-            pass
-        try:
-            actions.user.focus(app_name="emacs")
-            return False
-        except IndexError:
-            pass
-        try:
-            # Prefer my custom WSL Emacs shortcut on Windows
-            actions.user.launch_fuzzy("WSL Emacs")
-            return True
-        except ValueError:
-            pass
-        # But if all else fails, just use a basic match.
-        actions.user.launch_fuzzy("emacs")
-        return True
 
     def open_whatsapp() -> bool:
         """Switch to whatsapp, starting it if necessary."""
@@ -391,6 +379,39 @@ class WindowsActions:
 
     def launch_fuzzy(program_name: str) -> None:
         launch_program_windows(program_name, match_start=True, match_fuzzy=True)
+
+    def open_emacs() -> bool:
+        # Emacs needs special handling because it's started weirdly and I may
+        # not be running a consistent version.
+        try:
+            actions.user.focus(app_name="vcxsrv", title="emacs")
+            return False
+        except IndexError:
+            pass
+        try:
+            actions.user.focus(app_name="emacs")
+            return False
+        except IndexError:
+            pass
+        # It's not already open. Start it.
+        with actions.user.automator_overlay("Starting Emacs"):
+            try:
+                # Prefer my custom WSL Emacs shortcut on Windows
+                actions.user.launch_fuzzy("WSL Emacs")
+                return actions.user.focus_and_wait(
+                    focus_name="vcxsrv",
+                    focus_title="emacs",
+                    timeout="10s",
+                    start_delay="10s",
+                )
+            except ValueError:
+                # TODO: Explain `ValueError` here probably.
+                pass
+            # But if all else fails, just use a basic match.
+            actions.user.launch_fuzzy("emacs")
+            return actions.user.focus_and_wait(
+                app_name="emacs", timeout="10s", start_delay="10s"
+            )
 
 
 def list_appx_packages():
