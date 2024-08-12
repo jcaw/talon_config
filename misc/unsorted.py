@@ -78,11 +78,11 @@ class ModuleActions:
 
     def document_start() -> None:
         """Move cursor to the start of the document."""
-        actions.key("ctrl-up")
+        actions.key("ctrl-home")
 
     def document_end() -> None:
         """Move cursor to the end of the document."""
-        actions.key("ctrl-down")
+        actions.key("ctrl-end")
 
     def tab_right() -> None:
         """Move the current tab to the right in the tab order."""

@@ -1,7 +1,7 @@
 """Separate action implementations for jetbrains products"""
 
 import re
-from typing import Optional, List, Dict, Callable
+from typing import Optional, List, Dict, Callable, Tuple
 
 from talon import Context, actions, Module, cron, app, ui
 from talon.ui import Rect
@@ -166,6 +166,13 @@ class JetbrainsActions:
         """Switch between a source file and its header."""
         jetbrains_action("SwitchHeaderSource")
 
+    def jetbrains_switch_and_ask_copilot(
+        message: str, switch_function: Callable[[], None] = user.open_rider
+    ):
+        """Switch to (or start) a Jetbrains IDE and ask copilot a question"""
+        switch_function()
+        actions.user.copilot_chat_message(message)
+
 
 def copilot_click(text):
     """Open the GitHub Copilot right-click menu and click a subsection."""
@@ -177,137 +184,6 @@ def copilot_click(text):
     actions.mouse_click(button=0)
     sleep("100ms")
     actions.self.copilot_open_chat()
-
-
-def copilot_chat_message(message, submit=True):
-    actions.key("escape")
-    actions.self.copilot_open_chat()
-    key("ctrl-a")
-    # TODO: Possibly copy what's already there?
-    sleep("100ms")
-    user.paste_insert(f"{message}")
-    sleep("100ms")
-    if submit:
-        key("enter")
-
-
-def copilot_chat_command(command):
-    # In case the chat is already open
-    actions.key("escape")
-    actions.self.copilot_open_chat()
-    key("ctrl-a")
-    sleep("100ms")
-    # Add a space after so "enter" doesn't just select the autocomplete candidate.
-    actions.insert(f"{command} ")
-    sleep("100ms")
-    key("enter")
-    # actions.insert("test")
-
-
-# Old code explain wording - new wording below:
-#
-# COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain the following code:
-
-# ```{language}
-# {code_text}
-# ```"""
-
-COPILOT_EXPLAIN_CODE_TEMPLATE = """Please explain this code:
-
-```{language}
-{code_text}
-```"""
-
-# FIXME: Including the compilation bug causes a weird error, seemingly caused by
-#   exceeding the max tokens. For now, just don't include it.
-COPILOT_EXPLAIN_COMPILATION_ERROR_COMPLEX = """I'm getting an error I that I don't understand. I will list the compilation output, then the error, then the line the compiler claims is causing trouble.
-
-This is the compilation output:
-```
-{compilation_output}
-```
-
-This is the error I would like explained:
-```
-{error_message}
-```
-
-This is the first line of the code that the compiler claims is causing the problem:
-```
-{code_responsible}
-```
-
-Explain why I'm getting this error."""
-
-COPILOT_EXPLAIN_COMPILATION_ERROR = """I'm getting a compilation error I that I don't understand:
-```
-{error_message}
-```
-
-This is the first line of the code that the compiler claims is causing the problem:
-```
-{code_responsible}
-```
-
-Explain why I'm getting this error."""
-
-COPILOT_QUOTE_MESSAGE = """
-
-```
-{text}
-```
-
-"""
-
-
-@module.action_class
-class CopilotActions:
-    def copilot_open_chat():
-        """Open copilot chat."""
-
-    def copilot_generate_docs():
-        """Generate docs at point with copilot."""
-
-    def copilot_explain():
-        """Explain the current file with copilot."""
-
-    def copilot_explain_highlighted():
-        """Explain the highlighted code in the current file with copilot."""
-
-    def copilot_explain_error():
-        """Explain the currently selected error in the build window."""
-
-    def copilot_quote_highlighted():
-        """Open the Copilot Chat window, and quote the highlighted text in a block.
-
-        You can then fill in the rest of the query, and submit it.
-
-        """
-
-    def copilot_fix():
-        """Fix the current thing with copilot."""
-
-    def copilot_simplify():
-        """Simplify the current thing with copilot."""
-
-    def copilot_generate_tests():
-        """Generate tests for the thing at point with copilot."""
-
-    def copilot_reference_file():
-        """Generate tests for the thing at point with copilot."""
-
-    def copilot_full_suggestions():
-        """Generate a full list of suggestions from GitHub Copilot."""
-
-    def jetbrains_switch_and_ask_copilot(
-        message: str, switch_function: Callable[[], None] = user.open_rider
-    ):
-        """Switch to (or start) a Jetbrains IDE and ask copilot a question"""
-        switch_function()
-        copilot_chat_message(message)
-
-    def copilot_explain_current_function():
-        """Ask GitHub Copilot to explain the function that's being edited (not the function being called)."""
 
 
 @jetbrains_context.action_class("user")
@@ -327,29 +203,31 @@ class JetbrainsCopilotActions:
             #     timeout="5s",
             #     start_delay="5s",
             # )
+
+            # HACK: Focus the actual chat box by pressing tab a bunch of times.
+            #  As of [2024/08/11], It should be the last tabbable element.
+            key("tab:10")
         except (IndexError, ui.UIErr):
             with automator_overlay("Opening Copilot Chat"):
                 jetbrains_action("ActivateGitHubCopilotChatToolWindow")
                 # jetbrains_action("copilot.chat.show")
                 sleep("2s")
 
-    def copilot_generate_docs():
-        copilot_chat_command("/doc")
+    def copilot_chat_message(message: str, submit: bool = True):
+        actions.key("escape")
+        actions.self.copilot_open_chat()
+        key("ctrl-a")
+        # TODO: Possibly copy what's already there?
+        sleep("100ms")
+        user.paste_insert(f"{message}")
+        sleep("100ms")
+        if submit:
+            key("enter")
 
-    def copilot_explain():
-        copilot_chat_command("/explain")
+    def copilot_chat_command(command: str):
+        actions.user.copilot_chat_message(command + " ")
 
-    # TODO: Explain the current "thing", instead of just what's highlighted
-    def copilot_explain_highlighted():
-        text = user.get_highlighted()
-        if " " in text.strip():
-            # TODO: language
-            message = COPILOT_EXPLAIN_CODE_TEMPLATE.format(language="", code_text=text)
-        else:
-            message = f"Explain `{text.strip()}`"
-        copilot_chat_message(message)
-
-    def copilot_explain_error():
+    def copilot_get_compilation_error() -> Tuple[str, str, Optional[str]]:
         INCLUDE_COMPILATION_OUTPUT = False
 
         # Assumes the error is focussed.
@@ -365,6 +243,8 @@ class JetbrainsCopilotActions:
             # Dehighlight, jump to end
             key("right")
             key("shift-tab:2")
+        else:
+            compilation_output = None
 
         # Jump to source
         key("f4")
@@ -372,40 +252,7 @@ class JetbrainsCopilotActions:
         key("shift-end")
         code = user.get_highlighted()
 
-        if INCLUDE_COMPILATION_OUTPUT:
-            text = COPILOT_EXPLAIN_COMPILATION_ERROR_COMPLEX.format(
-                compilation_output=compilation_output,
-                error_message=error_message,
-                code_responsible=code,
-            )
-        else:
-            text = COPILOT_EXPLAIN_COMPILATION_ERROR.format(
-                error_message=error_message,
-                code_responsible=code,
-            )
-        copilot_chat_message(text)
-
-    def copilot_quote_highlighted():
-        text = user.get_highlighted()
-        # DWIM behaviour based on what we're copying
-        if " " in text.strip():
-            # For code snippets, use a block quote
-            message = COPILOT_QUOTE_MESSAGE.format(text=text)
-        else:
-            # If it's just a name, use a short quoting style.
-            message = f" `{text.strip()}`"
-        copilot_chat_message(message, submit=False)
-        # Go back to the very start of the message
-        key("ctrl-home")
-
-    def copilot_fix():
-        copilot_chat_command("/fix")
-
-    def copilot_simplify():
-        copilot_chat_command("/simplify")
-
-    def copilot_generate_tests():
-        copilot_chat_command("/tests")
+        return error_message, code, compilation_output
 
     def copilot_reference_file():
         # Use the convoluted menu approach, because it allows files to be more
@@ -414,10 +261,6 @@ class JetbrainsCopilotActions:
 
     def copilot_full_suggestions():
         jetbrains_action("copilot.openCopilot")
-
-    def copilot_explain_current_function():
-        # TODO 1: Programmatically get current function name, and use that as the reference
-        raise NotImplementedError()
 
 
 # TODO: Pull the rider-specific methods into the Rider context. Test them first though.
@@ -972,29 +815,6 @@ def bind_keys():
                 "b f": (actions.user.jetbrains_compile_file, "Compile File"),
                 # TODO: Pull out to Rider-only actions?
                 # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
-                "p": "GitHub Copilot",
-                "p p": (actions.user.copilot_open_chat, "Open Copilot Chat"),
-                "p q": (actions.user.copilot_explain, "Explain File"),
-                "p e": (
-                    actions.user.copilot_explain_highlighted,
-                    "Explain Highlighted",
-                ),
-                # "x" for "exception"
-                "p x": (actions.user.copilot_explain_error, "Explain Error"),
-                "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
-                "p f": (actions.user.copilot_fix, "Fix This"),
-                "p s": (actions.user.copilot_simplify, "Simplify This"),
-                "p d": (actions.user.copilot_generate_docs, "Generate Docs"),
-                "p t": (actions.user.copilot_generate_tests, "Generate Tests"),
-                "p r": (actions.user.copilot_reference_file, "Reference File in Chat"),
-                "p c": (
-                    actions.user.copilot_full_suggestions,
-                    "List Completions",
-                ),
-                "p u": (
-                    actions.user.copilot_explain_current_function,
-                    "Explain Current Function",
-                ),
                 "r": "Refactor",
                 "r b": actions.user.use_base_type_where_possible,
                 "r c": (actions.user.refactor_copy, "Copy"),
@@ -1137,8 +957,11 @@ def bind_keys():
             },
             context=rider_context,
         )
+
+        # TODO: Probably bind some global "explain with copilot" key to switch
+        #  to copilot in Jetbrains and have it explain something.
     except KeyError:
-        print("Failed to bind jetbrains vimfinity keys. Retrying in 1s.")
+        print("Failed to bind Jetbrains vimfinity keys. Retrying in 1s.")
         cron.after("1s", bind_keys)
 
 
