@@ -198,6 +198,7 @@ def bind_keys():
         )
     except KeyError:
         print("Failed to bind GitHub Copilot vimfinity keys. Retrying in 1s.")
+        cron.after("1s", bind_keys)
 
 
 cron.after("100ms", bind_keys)
