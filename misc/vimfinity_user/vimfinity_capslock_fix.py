@@ -47,6 +47,7 @@ class WindowsActions:
             # Vimfinity prompt. Press escape again to close it.
             key("esc")
             if new_instance:
+                actions.user.flash_rect(ui.active_window().rect, "200ms", "#FF2222")
                 key("alt-f4")
             initial_window.focus()
 
