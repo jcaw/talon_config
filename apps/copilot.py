@@ -177,8 +177,11 @@ def bind_keys():
                     actions.user.copilot_explain_highlighted,
                     "Explain Highlighted",
                 ),
-                # "x" for "exception"
-                "p x": (actions.user.copilot_explain_error, "Explain Error"),
+                # TODO: "x" for "exception"
+                "p x": (
+                    actions.user.copilot_explain_compilation_error,
+                    "Explain Compilation Error",
+                ),
                 "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
                 "p f": (actions.user.copilot_fix, "Fix This"),
                 "p s": (actions.user.copilot_simplify, "Simplify This"),
