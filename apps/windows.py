@@ -128,7 +128,7 @@ def is_dark_mode(app_only: bool):
 
 
 def get_selection_hell_mode(document_range, selection_range) -> Tuple[int, int]:
-    """Get the selection from the hellish Windows API (lol)."""
+    """Get the selection from the hellish Windows API."""
     range_before_selection = document_range.clone()
     range_before_selection.move_endpoint_by_range(
         "End",
