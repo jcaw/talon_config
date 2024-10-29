@@ -21,12 +21,12 @@ class Actions:
     def start_extend_selection():
         """Start extending a selection (or start a new selection)."""
         # TODO: Swap to newapi once I know the interface
-        ctrl.key("shift", down=True)
+        actions.key("shift:down")
 
     def end_extend_selection():
         """Finish extending a selection."""
         # TODO: Swap to newapi once I know the interface
-        ctrl.key("shift", up=True)
+        actions.key("shift:up")
 
     def search(text: str = None) -> None:
         """Perform some generic "search". Behavior depends on the program.
