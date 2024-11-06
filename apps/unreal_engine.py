@@ -1,4 +1,5 @@
 from talon import Module, Context, actions, cron, clip
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 key = actions.key
 insert = actions.insert
@@ -84,23 +85,15 @@ class ShaderErrorUserActions:
         )
 
 
-def bind_keys():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                "b": "Build",
-                "b s": (user.unreal_recompile_shaders, "Recompile Shaders"),
-                "p": "GitHub Copilot",
-            },
-            editor_context,
-        )
-        actions.user.vimfinity_bind_keys(
-            {"p e": (user.copilot_explain_error, "Explain error")},
-            shader_error_context,
-        )
-    except KeyError:
-        print("Failed to bind keys. Retrying in 1s")
-        cron.after("1s", bind_keys)
-
-
-cron.after("50ms", bind_keys)
+vimfinity_bind_keys(
+    {
+        "b": "Build",
+        "b s": (user.unreal_recompile_shaders, "Recompile Shaders"),
+        "p": "GitHub Copilot",
+    },
+    editor_context,
+)
+vimfinity_bind_keys(
+    {"p e": (user.copilot_explain_error, "Explain error")},
+    shader_error_context,
+)

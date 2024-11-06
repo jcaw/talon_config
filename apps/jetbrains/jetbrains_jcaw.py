@@ -6,6 +6,8 @@ from typing import Optional, List, Dict, Callable, Tuple
 from talon import Context, actions, Module, cron, app, ui
 from talon.ui import Rect
 
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
+
 from user.utils.formatting import SurroundingText
 from user.misc.clickable_overlay.clickable_overlay import Clickable
 
@@ -790,179 +792,171 @@ def make_inserter(text_to_insert: str, name_in_menu: Optional[str] = None):
     return (lambda: insert(text_to_insert), name_in_menu)
 
 
-def bind_keys():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                # General top-level actions
-                "l": (actions.user.jetbrains_delete_line, "Delete Line"),
-                "pagedown": (lambda: key("f7"), "Next Thing"),
-                "pageup": (lambda: key("shift-f7"), "Previous Thing"),
-                "end": (lambda: key("alt-shift-right"), "Next File"),
-                "home": (lambda: key("alt-shift-left"), "Previous File"),
-                "k": "Jetbrains",
-                "k h": (actions.user.jetbrains_hide_tools, "Hide Tool Windows"),
-                "k a": (actions.user.jetbrains_hide_active_window, "Hide Window"),
-                "k s": (actions.user.jetbrains_hide_side_windows, "Hide Side Windows"),
-                "k r": (actions.user.jetbrains_reopen_file, "Reopen File"),
-                "c": (actions.user.clickable_start_clickables, "Click by Keyboard"),
-                "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
-                "b": "Build",
-                "b b": (actions.user.jetbrains_run_project, "Run Project"),
-                "b c": (actions.user.jetbrains_build_project, "Build Project"),
-                "b d": (actions.user.jetbrains_debug_project, "Debug Project"),
-                "b t": (actions.user.jetbrains_terminate_build, "Terminate"),
-                "b f": (actions.user.jetbrains_compile_file, "Compile File"),
-                # TODO: Pull out to Rider-only actions?
-                # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
-                "r": "Refactor",
-                "r b": actions.user.use_base_type_where_possible,
-                "r c": (actions.user.refactor_copy, "Copy"),
-                "r d": (actions.user.refactor_safe_delete, "Safe Delete"),
-                "r e": "Extract",
-                "r e p": actions.user.extract_members_to_partial,
-                # TODO: Does this exist?
-                "r e v": actions.user.extract_variable,
-                "r e m": actions.user.extract_method,
-                "r e i": actions.user.extract_interface,
-                "r e s": actions.user.extract_superclass,
-                "r e c": actions.user.extract_class,
-                "r e g": actions.user.extract_global_using,
-                "r e c": actions.user.extract_content_placeholder,
-                "r f": actions.user.move_types_into_matching_files,
-                "r i": "Inline",
-                "r i i": actions.user.inline,
-                "r i m": actions.user.inline_master_page_content,
-                "r i g": actions.user.inline_global_using,
-                "r k": actions.user.invert_boolean,
-                # TODO: Should this just be under extract?
-                "r a": "Introduce",
-                "r a a": actions.user.introduce_namespace_alias,
-                "r a e": actions.user.introduce_using_enum,
-                "r a f": actions.user.introduce_field,
-                "r a p": actions.user.introduce_parameter,
-                "r a t": actions.user.introduce_typedef,
-                "r a v": actions.user.introduce_variable,
-                "r m": (actions.user.refactor_move, "Move"),
-                "r n": actions.user.make_method_non_static,
-                "r o": "Convert",
-                "r o p": (
-                    actions.user.convert_method_to_property,
-                    "Method to Property",
-                ),
-                "r o m": (
-                    actions.user.convert_property_to_method,
-                    "Property to Method",
-                ),
-                "r o d": (actions.user.convert_method_to_indexer, "Method to Indexer"),
-                "r o h": (actions.user.convert_indexer_to_method, "Indexer to Method"),
-                "r o i": (
-                    actions.user.convert_abstract_class_to_interface,
-                    "Abstract Class to Interface",
-                ),
-                "r o a": (
-                    actions.user.convert_interface_to_abstract_class,
-                    "Interface to Abstract Class",
-                ),
-                "r o e": (
-                    actions.user.convert_static_to_extension_method,
-                    "Static to Extension Method",
-                ),
-                "r o s": (
-                    actions.user.convert_extension_method_to_plain_static,
-                    "Extension Method to Plain Static",
-                ),
-                "r o f": (
-                    actions.user.convert_constructor_to_factory_method,
-                    "Constructor to Factory Method",
-                ),
-                "r o r": (
-                    actions.user.jetbrains_transform_parameters,
-                    "Transform Parameters",
-                ),
-                "r o u": (
-                    actions.user.convert_property_to_auto_property,
-                    "Property to Auto Property",
-                ),
-                "r o t": (
-                    actions.user.convert_anonymous_to_named_type,
-                    "Anonymous to Named Type",
-                ),
-                "r o n": (
-                    actions.user.jetbrains_change_nullability,
-                    "Change Nullability",
-                ),
-                "r o c": (
-                    actions.user.convert_unscoped_enum_to_scoped_enum,
-                    "Unscoped Enum to Scoped Enum",
-                ),
-                # TODO: Convert methods
-                "r p": actions.user.pull_members_up,
-                "r r": actions.user.rename,
-                "r s": actions.user.make_method_static,
-                "r t": (actions.user.jetbrains_generic_refactor, "Generic Refactor"),
-                "r u": actions.user.push_members_down,
-                "r w": actions.user.encapsulate_field,
-                "r z": actions.user.adjust_namespaces,
-                "r y": (actions.user.refactor_change_signature, "Change Signature"),
-                "'": "Search/Lookup",
-                "' n": (
-                    actions.user.jetbrains_find_with_navigation_bar,
-                    "Find with Navigation Bar",
-                ),
-                "' d": actions.user.find_definition,
-                "' u": actions.user.find_declaration_or_usages,
-                "' f": actions.user.find_derived_symbols,
-                "' i": actions.user.find_implementations,
-                "' t": actions.user.find_type_declaration,
-                "' b": actions.user.find_base_symbols,
-                "' e": actions.user.find_related_symbol,
-                "' r": actions.user.find_references,
-                "m": "Markers",
-                "space": actions.user.enable_and_push_marker,
-                "u": actions.user.pop_marker,
-                "m e": actions.user.enable_marker,
-                "m d": actions.user.disable_marker,
-                "m p": actions.user.pop_and_move_to_marker,
-                "m [": actions.user.pop_and_enable_marker,
-                "m g": actions.user.pop_global_marker,
-                "m space": actions.user.push_marker,
-                "m v": actions.user.toggle_visual_markers,
-                # These two bindings don't matter, they are arbitrary. Bump them if another is more important.
-                "m i": actions.user.enable_visual_markers,
-                "m o": actions.user.disable_visual_markers,
-                "m f": actions.user.flash_visual_markers,
-                "g": "Git/Version Control",
-                "g s": (actions.user.jetbrains_include_changed_lines, "Stage Change"),
-                "g u": (actions.user.jetbrains_exclude_changed_lines, "Unstage Change"),
-                "g k": (
-                    actions.user.jetbrains_discard_changed_lines,
-                    "Discard Changes",
-                ),
-            },
-            context=jetbrains_context,
-        )
+vimfinity_bind_keys(
+    {
+        # General top-level actions
+        "l": (actions.user.jetbrains_delete_line, "Delete Line"),
+        "pagedown": (lambda: key("f7"), "Next Thing"),
+        "pageup": (lambda: key("shift-f7"), "Previous Thing"),
+        "end": (lambda: key("alt-shift-right"), "Next File"),
+        "home": (lambda: key("alt-shift-left"), "Previous File"),
+        "k": "Jetbrains",
+        "k h": (actions.user.jetbrains_hide_tools, "Hide Tool Windows"),
+        "k a": (actions.user.jetbrains_hide_active_window, "Hide Window"),
+        "k s": (actions.user.jetbrains_hide_side_windows, "Hide Side Windows"),
+        "k r": (actions.user.jetbrains_reopen_file, "Reopen File"),
+        "c": (actions.user.clickable_start_clickables, "Click by Keyboard"),
+        "f": (actions.user.clickable_start_focusables, "Focus by Keyboard"),
+        "b": "Build",
+        "b b": (actions.user.jetbrains_run_project, "Run Project"),
+        "b c": (actions.user.jetbrains_build_project, "Build Project"),
+        "b d": (actions.user.jetbrains_debug_project, "Debug Project"),
+        "b t": (actions.user.jetbrains_terminate_build, "Terminate"),
+        "b f": (actions.user.jetbrains_compile_file, "Compile File"),
+        # TODO: Pull out to Rider-only actions?
+        # "b a": (actions.user.jetbrains_attach_debugger, "Attach Debugger"),
+        "r": "Refactor",
+        "r b": actions.user.use_base_type_where_possible,
+        "r c": (actions.user.refactor_copy, "Copy"),
+        "r d": (actions.user.refactor_safe_delete, "Safe Delete"),
+        "r e": "Extract",
+        "r e p": actions.user.extract_members_to_partial,
+        # TODO: Does this exist?
+        "r e v": actions.user.extract_variable,
+        "r e m": actions.user.extract_method,
+        "r e i": actions.user.extract_interface,
+        "r e s": actions.user.extract_superclass,
+        "r e c": actions.user.extract_class,
+        "r e g": actions.user.extract_global_using,
+        "r e c": actions.user.extract_content_placeholder,
+        "r f": actions.user.move_types_into_matching_files,
+        "r i": "Inline",
+        "r i i": actions.user.inline,
+        "r i m": actions.user.inline_master_page_content,
+        "r i g": actions.user.inline_global_using,
+        "r k": actions.user.invert_boolean,
+        # TODO: Should this just be under extract?
+        "r a": "Introduce",
+        "r a a": actions.user.introduce_namespace_alias,
+        "r a e": actions.user.introduce_using_enum,
+        "r a f": actions.user.introduce_field,
+        "r a p": actions.user.introduce_parameter,
+        "r a t": actions.user.introduce_typedef,
+        "r a v": actions.user.introduce_variable,
+        "r m": (actions.user.refactor_move, "Move"),
+        "r n": actions.user.make_method_non_static,
+        "r o": "Convert",
+        "r o p": (
+            actions.user.convert_method_to_property,
+            "Method to Property",
+        ),
+        "r o m": (
+            actions.user.convert_property_to_method,
+            "Property to Method",
+        ),
+        "r o d": (actions.user.convert_method_to_indexer, "Method to Indexer"),
+        "r o h": (actions.user.convert_indexer_to_method, "Indexer to Method"),
+        "r o i": (
+            actions.user.convert_abstract_class_to_interface,
+            "Abstract Class to Interface",
+        ),
+        "r o a": (
+            actions.user.convert_interface_to_abstract_class,
+            "Interface to Abstract Class",
+        ),
+        "r o e": (
+            actions.user.convert_static_to_extension_method,
+            "Static to Extension Method",
+        ),
+        "r o s": (
+            actions.user.convert_extension_method_to_plain_static,
+            "Extension Method to Plain Static",
+        ),
+        "r o f": (
+            actions.user.convert_constructor_to_factory_method,
+            "Constructor to Factory Method",
+        ),
+        "r o r": (
+            actions.user.jetbrains_transform_parameters,
+            "Transform Parameters",
+        ),
+        "r o u": (
+            actions.user.convert_property_to_auto_property,
+            "Property to Auto Property",
+        ),
+        "r o t": (
+            actions.user.convert_anonymous_to_named_type,
+            "Anonymous to Named Type",
+        ),
+        "r o n": (
+            actions.user.jetbrains_change_nullability,
+            "Change Nullability",
+        ),
+        "r o c": (
+            actions.user.convert_unscoped_enum_to_scoped_enum,
+            "Unscoped Enum to Scoped Enum",
+        ),
+        # TODO: Convert methods
+        "r p": actions.user.pull_members_up,
+        "r r": actions.user.rename,
+        "r s": actions.user.make_method_static,
+        "r t": (actions.user.jetbrains_generic_refactor, "Generic Refactor"),
+        "r u": actions.user.push_members_down,
+        "r w": actions.user.encapsulate_field,
+        "r z": actions.user.adjust_namespaces,
+        "r y": (actions.user.refactor_change_signature, "Change Signature"),
+        "'": "Search/Lookup",
+        "' n": (
+            actions.user.jetbrains_find_with_navigation_bar,
+            "Find with Navigation Bar",
+        ),
+        "' d": actions.user.find_definition,
+        "' u": actions.user.find_declaration_or_usages,
+        "' f": actions.user.find_derived_symbols,
+        "' i": actions.user.find_implementations,
+        "' t": actions.user.find_type_declaration,
+        "' b": actions.user.find_base_symbols,
+        "' e": actions.user.find_related_symbol,
+        "' r": actions.user.find_references,
+        "m": "Markers",
+        "space": actions.user.enable_and_push_marker,
+        "u": actions.user.pop_marker,
+        "m e": actions.user.enable_marker,
+        "m d": actions.user.disable_marker,
+        "m p": actions.user.pop_and_move_to_marker,
+        "m [": actions.user.pop_and_enable_marker,
+        "m g": actions.user.pop_global_marker,
+        "m space": actions.user.push_marker,
+        "m v": actions.user.toggle_visual_markers,
+        # These two bindings don't matter, they are arbitrary. Bump them if another is more important.
+        "m i": actions.user.enable_visual_markers,
+        "m o": actions.user.disable_visual_markers,
+        "m f": actions.user.flash_visual_markers,
+        "g": "Git/Version Control",
+        "g s": (actions.user.jetbrains_include_changed_lines, "Stage Change"),
+        "g u": (actions.user.jetbrains_exclude_changed_lines, "Unstage Change"),
+        "g k": (
+            actions.user.jetbrains_discard_changed_lines,
+            "Discard Changes",
+        ),
+    },
+    context=jetbrains_context,
+)
 
-        actions.user.vimfinity_bind_keys(
-            {
-                # Insertion
-                "i t": make_inserter("// TODO [jcaw]: "),
-                "i f": make_inserter("// FIXME [jcaw]: "),
-                "i h": make_inserter("// HACK [jcaw]: "),
-                # Navigation
-                "' h": (
-                    actions.user.jetbrains_switch_header_and_source,
-                    "Switch to Header/Source",
-                ),
-            },
-            context=rider_context,
-        )
+vimfinity_bind_keys(
+    {
+        # Insertion
+        "i t": make_inserter("// TODO [jcaw]: "),
+        "i f": make_inserter("// FIXME [jcaw]: "),
+        "i h": make_inserter("// HACK [jcaw]: "),
+        # Navigation
+        "' h": (
+            actions.user.jetbrains_switch_header_and_source,
+            "Switch to Header/Source",
+        ),
+    },
+    context=rider_context,
+)
 
-        # TODO: Probably bind some global "explain with copilot" key to switch
-        #  to copilot in Jetbrains and have it explain something.
-    except KeyError:
-        print("Failed to bind Jetbrains vimfinity keys. Retrying in 1s.")
-        cron.after("1s", bind_keys)
-
-
-cron.after("50ms", bind_keys)
+# TODO: Probably bind some global "explain with copilot" key to switch
+#  to copilot in Jetbrains and have it explain something.

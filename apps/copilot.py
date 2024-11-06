@@ -1,6 +1,7 @@
 from typing import Optional, Tuple
 
 from talon import Module, Context, actions, cron
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 
 user = actions.user
@@ -165,43 +166,35 @@ tag: user.jetbrains
 """
 
 
-def bind_keys():
-    try:
-        # Bind Copilot Chat actions
-        actions.user.vimfinity_bind_keys(
-            {
-                "p": "GitHub Copilot",
-                "p p": (actions.user.copilot_open_chat, "Open Copilot Chat"),
-                "p q": (actions.user.copilot_explain, "Explain File"),
-                "p e": (
-                    actions.user.copilot_explain_highlighted,
-                    "Explain Highlighted",
-                ),
-                # TODO: "x" for "exception"
-                "p x": (
-                    actions.user.copilot_explain_compilation_error,
-                    "Explain Compilation Error",
-                ),
-                "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
-                "p f": (actions.user.copilot_fix, "Fix This"),
-                "p s": (actions.user.copilot_simplify, "Simplify This"),
-                "p d": (actions.user.copilot_generate_docs, "Generate Docs"),
-                "p t": (actions.user.copilot_generate_tests, "Generate Tests"),
-                "p r": (actions.user.copilot_reference_file, "Reference File in Chat"),
-                "p c": (
-                    actions.user.copilot_full_suggestions,
-                    "List Completions",
-                ),
-                "p u": (
-                    actions.user.copilot_explain_current_function,
-                    "Explain Current Function",
-                ),
-            },
-            copilot_chat_ide_context,
-        )
-    except KeyError:
-        print("Failed to bind GitHub Copilot vimfinity keys. Retrying in 1s.")
-        cron.after("1s", bind_keys)
-
-
-cron.after("100ms", bind_keys)
+# Bind Copilot Chat actions
+vimfinity_bind_keys(
+    {
+        "p": "GitHub Copilot",
+        "p p": (actions.user.copilot_open_chat, "Open Copilot Chat"),
+        "p q": (actions.user.copilot_explain, "Explain File"),
+        "p e": (
+            actions.user.copilot_explain_highlighted,
+            "Explain Highlighted",
+        ),
+        # TODO: "x" for "exception"
+        "p x": (
+            actions.user.copilot_explain_compilation_error,
+            "Explain Compilation Error",
+        ),
+        "p w": (actions.user.copilot_quote_highlighted, "Quote Highlighted"),
+        "p f": (actions.user.copilot_fix, "Fix This"),
+        "p s": (actions.user.copilot_simplify, "Simplify This"),
+        "p d": (actions.user.copilot_generate_docs, "Generate Docs"),
+        "p t": (actions.user.copilot_generate_tests, "Generate Tests"),
+        "p r": (actions.user.copilot_reference_file, "Reference File in Chat"),
+        "p c": (
+            actions.user.copilot_full_suggestions,
+            "List Completions",
+        ),
+        "p u": (
+            actions.user.copilot_explain_current_function,
+            "Explain Current Function",
+        ),
+    },
+    copilot_chat_ide_context,
+)

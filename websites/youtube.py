@@ -2,6 +2,8 @@ import re
 
 from talon import Module, Context, actions, clip, cron, ui
 
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
+
 
 user = actions.user
 key = actions.key
@@ -153,25 +155,21 @@ class YouTubeActions:
         key(">:2")
 
 
-def bind_vimfinity_keys():
-    actions.user.vimfinity_bind_keys(
-        {
-            "p s": (actions.user.youtube_toggle_short, "Switch between Video & Short"),
-            "p d": (
-                actions.user.youtube_download_with_yt_dlg,
-                "Download Video With yt-dlg",
-            ),
-            "p q": (
-                actions.user.youtube_queue_with_yt_dlg,
-                "Add Video to yt-dlg Queue",
-            ),
-            "p .": (actions.user.video_2x_speed, "2x Video Speed"),
-            "p ,": (actions.user.video_1x_speed, "1x Video Speed"),
-            "p m": (actions.user.video_1halfx_speed, "1.5x Video Speed"),
-            "p w": (actions.user.youtube_save_to_watch_later, "Save to Watch Later"),
-        },
-        context,
-    )
-
-
-cron.after("50ms", bind_vimfinity_keys)
+vimfinity_bind_keys(
+    {
+        "p s": (actions.user.youtube_toggle_short, "Switch between Video & Short"),
+        "p d": (
+            actions.user.youtube_download_with_yt_dlg,
+            "Download Video With yt-dlg",
+        ),
+        "p q": (
+            actions.user.youtube_queue_with_yt_dlg,
+            "Add Video to yt-dlg Queue",
+        ),
+        "p .": (actions.user.video_2x_speed, "2x Video Speed"),
+        "p ,": (actions.user.video_1x_speed, "1x Video Speed"),
+        "p m": (actions.user.video_1halfx_speed, "1.5x Video Speed"),
+        "p w": (actions.user.youtube_save_to_watch_later, "Save to Watch Later"),
+    },
+    context,
+)

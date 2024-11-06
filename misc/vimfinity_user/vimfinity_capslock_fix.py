@@ -2,6 +2,9 @@
 
 from talon import Module, Context, actions, ui, cron, app
 
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
+
+
 ON_WINDOWS = app.platform == "windows"
 if ON_WINDOWS:
     import ctypes
@@ -67,20 +70,12 @@ if ON_WINDOWS:
     cron.interval("100ms", actions.self.vimfinity_disable_capslock_if_enabled)
 
 
-def bind():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                "= backspace": (
-                    actions.user.vimfinity_disable_capslock_windows,
-                    "Disable Caps Lock",
-                )
-            },
-            context=windows_context,
+vimfinity_bind_keys(
+    {
+        "= backspace": (
+            actions.user.vimfinity_disable_capslock_windows,
+            "Disable Caps Lock",
         )
-    except KeyError:
-        print("Failed to bind capslock key sequence. Retrying in 1s.")
-        cron.after("1s", bind)
-
-
-cron.after("100ms", bind)
+    },
+    context=windows_context,
+)

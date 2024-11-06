@@ -1,6 +1,8 @@
 from typing import Callable
 
 from talon import actions, Module, Context, cron
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
+
 
 key = actions.key
 surrounding_text = actions.user.surrounding_text
@@ -113,18 +115,10 @@ class Actions:
         # on the clipboard and overwrite the clipboard.
 
 
-def bind():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                "left": (actions.user.zap_initiate_kill_left_inclusive, "Zap Left"),
-                "right": (actions.user.zap_initiate_kill_right_inclusive, "Zap Right"),
-                "down": (actions.user.zap_undo_last_kill, "Undo Last Zap"),
-            }
-        )
-    except KeyError:
-        print("Failed to bind zap to char keys. Retrying in 1s.")
-        cron.after("1s", bind)
-
-
-cron.after("100ms", bind)
+vimfinity_bind_keys(
+    {
+        "left": (actions.user.zap_initiate_kill_left_inclusive, "Zap Left"),
+        "right": (actions.user.zap_initiate_kill_right_inclusive, "Zap Right"),
+        "down": (actions.user.zap_undo_last_kill, "Undo Last Zap"),
+    }
+)

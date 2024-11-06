@@ -2,6 +2,7 @@ import sys
 import re
 
 from talon import ui, Module, Context, actions, cron
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 if ui.platform == "windows":
     import win32api as win32
@@ -74,42 +75,36 @@ windows_context = Context()
 windows_context.matches = "os: windows"
 
 
-def bind():
-    try:
-
-        def screen_set_rotation(screen_index, rotation_degrees):
-            return (
-                lambda: actions.user.set_screen_rotation(
-                    screen_index, rotation_degrees
-                ),
-                f"Set rotation: {rotation_degrees} degrees",
-            )
-
-        bindings = {"w d": actions.self.open_display_settings}
-        for screen_i in range(9):
-            prefix = f"w f{screen_i + 1}"
-            bindings.update(
-                {
-                    f"{prefix}": f"Monitor {screen_i + 1} Actions",
-                    f"{prefix} up": screen_set_rotation(screen_i, 0),
-                    f"{prefix} left": screen_set_rotation(screen_i, 90),
-                    f"{prefix} down": screen_set_rotation(screen_i, 180),
-                    f"{prefix} right": screen_set_rotation(screen_i, 270),
-                    f"{prefix} r": (
-                        lambda i=screen_i: actions.user.rotate_screen_clockwise(i),
-                        "Rotate 90 degrees clockwise",
-                    ),
-                    f"{prefix} f": (
-                        lambda i=screen_i: actions.user.flip_screen_rotation(i),
-                        "Flip Orientation",
-                    ),
-                }
-            )
-
-        actions.user.vimfinity_bind_keys(bindings, windows_context)
-    except KeyError:
-        print("Failed to map window rotation vimfinity shortcuts. Trying again in 1s.")
-        cron.after("1s", bind)
+# Set vimfinity bindings
+#############################################################################
 
 
-cron.after("100ms", bind)
+def screen_set_rotation(screen_index, rotation_degrees):
+    return (
+        lambda: actions.user.set_screen_rotation(screen_index, rotation_degrees),
+        f"Set rotation: {rotation_degrees} degrees",
+    )
+
+
+bindings = {"w d": actions.self.open_display_settings}
+for screen_i in range(9):
+    prefix = f"w f{screen_i + 1}"
+    bindings.update(
+        {
+            f"{prefix}": f"Monitor {screen_i + 1} Actions",
+            f"{prefix} up": screen_set_rotation(screen_i, 0),
+            f"{prefix} left": screen_set_rotation(screen_i, 90),
+            f"{prefix} down": screen_set_rotation(screen_i, 180),
+            f"{prefix} right": screen_set_rotation(screen_i, 270),
+            f"{prefix} r": (
+                lambda i=screen_i: actions.user.rotate_screen_clockwise(i),
+                "Rotate 90 degrees clockwise",
+            ),
+            f"{prefix} f": (
+                lambda i=screen_i: actions.user.flip_screen_rotation(i),
+                "Flip Orientation",
+            ),
+        }
+    )
+
+vimfinity_bind_keys(bindings, windows_context)

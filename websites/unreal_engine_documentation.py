@@ -1,6 +1,7 @@
 import re
 
 from talon import Module, Context, actions, clip, cron
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 
 CURRENT_UNREAL_VERSION = "5.4"
@@ -60,17 +61,9 @@ and title: /\| Unreal Engine [0-9.]+ Documentation/
 context.tags = ["user.unreal_online_docs"]
 
 
-def bind_vimfinity_keys():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                "p c": actions.user.unreal_docs_switch_to_current_version,
-            },
-            context,
-        )
-    except IndexError:
-        print("Failed to bind Unreal Docs vimfinity keys. Retrying in 1s.")
-        cron.after("1s", bind_vimfinity_keys)
-
-
-cron.after("50ms", bind_vimfinity_keys)
+vimfinity_bind_keys(
+    {
+        "p c": actions.user.unreal_docs_switch_to_current_version,
+    },
+    context,
+)

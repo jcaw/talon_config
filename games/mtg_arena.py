@@ -6,6 +6,8 @@ from typing import Optional
 from talon import Module, Context, cron, actions, ui, ctrl
 from talon.ui import Rect, Point2d
 
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
+
 
 module = Module()
 
@@ -51,20 +53,12 @@ app: MTGA.exe
 """
 
 
-def bind():
-    try:
-        actions.user.vimfinity_bind_keys(
-            {
-                "enter": (
-                    actions.self.mtg_arena_play_card,
-                    "Play Hovered Card",
-                )
-            },
-            context=context,
+vimfinity_bind_keys(
+    {
+        "enter": (
+            actions.self.mtg_arena_play_card,
+            "Play Hovered Card",
         )
-    except KeyError:
-        print("Failed to bind MTG Duelist shortcuts. Retrying in 1s.")
-        cron.after("1s", bind)
-
-
-cron.after("1s", bind)
+    },
+    context=context,
+)

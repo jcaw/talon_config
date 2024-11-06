@@ -2,6 +2,7 @@ from typing import List
 from queue import Queue
 
 from talon import Module, ui, actions, cron
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 from user.misc.clickable_overlay.clickable_overlay import Clickable
 
@@ -62,13 +63,5 @@ class Actions:
         actions.user.clickable_overlay_show(clickables)
 
 
-def bind():
-    # TODO: Maybe even extract this to a proper action. Share with Jetbrains?
-    try:
-        actions.user.vimfinity_bind_keys({"t": actions.user.ui_tree_test})
-    except KeyError:
-        print('Failed to register "ui tree test" keys. Retrying in 1s.')
-        cron.after("1s", bind)
-
-
-cron.after("1ms", bind)
+# TODO: Maybe even extract this to a proper action. Share with Jetbrains?
+vimfinity_bind_keys({"t": actions.user.ui_tree_test})
