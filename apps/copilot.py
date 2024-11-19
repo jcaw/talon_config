@@ -98,9 +98,11 @@ class CopilotActions:
 
     def copilot_explain_compilation_error():
         """Explain the currently selected error in the build window."""
-        error_message, code_responsible, compilation_output = (
-            actions.self.copilot_get_compilation_error()
-        )
+        (
+            error_message,
+            code_responsible,
+            compilation_output,
+        ) = actions.self.copilot_get_compilation_error()
         if compilation_output == None:
             text = COPILOT_EXPLAIN_COMPILATION_ERROR.format(
                 error_message=error_message,
