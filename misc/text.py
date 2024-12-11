@@ -12,6 +12,7 @@ from talon_init import TALON_USER
 from user.utils import preserve_clipboard, WaitForClipChange, clip_set_safe
 
 LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
 
 edit = actions.edit
 user = actions.user
@@ -81,14 +82,14 @@ context = Context()
 
 def _update_custom_words(*args) -> None:
     global context
-    LOGGER.info("Updating custom words")
+    LOGGER.debug("Updating custom words")
     words = parse_dict_file(CUSTOM_WORDS_PATH)
     context.lists["user.custom_words"] = words
     return words
 
 
 _update_custom_words()
-fs.watch(SETTINGS_DIR, _update_custom_words)
+fs.watch(CUSTOM_WORDS_PATH, _update_custom_words)
 
 
 @module.action
