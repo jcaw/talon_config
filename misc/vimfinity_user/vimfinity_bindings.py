@@ -109,14 +109,16 @@ vimfinity_bind_keys(
         "o t": user.open_talon_log,
         "o T": (ShiftDelayed(user.open_talon_repl), "Open Talon REPL"),
         "o space": actions.app.window_hide,
-        "m": "Mic",
+        "m": "Mic/Macros",
         # For quicker access
         # This used to be backspace, but that caused too many false positives.
         "delete": user.toggle_mic_off,
         "m m": user.noisy_sleep,
         "m w": user.wake,
         "m space": user.toggle_mic_off,
-        "e": "Emacs",
+        "m r": user.macro_start_recording,
+        "m p": user.macro_replay,
+        "m " "e": "Emacs",
         "e e": user.open_current_file_in_emacs,
         "e p": user.open_current_project_in_emacs,
         "e g": user.send_to_magit_in_emacs,
