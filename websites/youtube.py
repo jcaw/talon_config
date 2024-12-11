@@ -63,9 +63,10 @@ class Actions:
             # Navigate to the newer version of the URL
             # HACK: Not implemented at time of writing - instead do it manually.
             # actions.browser.go(current_url)
-            clip.set_text(new_url)
-            actions.edit.paste()
-            key("enter")
+            with clip.revert():
+                clip.set_text(new_url)
+                actions.edit.paste()
+                key("enter")
 
     def youtube_queue_with_yt_dlg():
         """Download the current YouTube video using `yt-dlg`."""
