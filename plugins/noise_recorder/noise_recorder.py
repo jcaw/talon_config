@@ -1,5 +1,19 @@
-from talon import cron, Context, Module, ui, imgui, scope, actions, app, microphone
+from talon import cron, Context, Module, ui, imgui, scope, actions, app
 from talon.lib import flac
+
+# HACK: Talon seems to have removed the microphone module. For now, just stub it
+#  out to stop error spam.
+#
+# TODO: Fix the noise recorder module by finding a substitute for the old
+#  `talon.microphone` path.
+try:
+    from talon import microphone
+except ImportError:
+    # Just stub it
+    print(
+        "WARNING: `noise_recorder.py` Could not import `talon.microphone`. Stubbing it."
+    )
+    microphone = None
 
 # `cubeb` was moved to `lib` on newer Talon
 try:
