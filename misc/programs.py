@@ -1,9 +1,8 @@
 from talon import Module, Context, actions, imgui, app, ui
-from typing import Optional, List, Tuple, Any
+from typing import Optional, List, Tuple, Any, Union
 from pathlib import Path
-import os
 import subprocess
-import webbrowser
+import os
 import re
 import time
 from itertools import chain
@@ -366,6 +365,17 @@ class Actions:
             except:
                 pass
             return True
+
+    def open_with_default_program(path: Union[str, Path]) -> None:
+        """Open a file with the default operating system program."""
+        if app.platform == "mac":
+            subprocess.check_call(["open", path])
+        elif app.platform == "windows":
+            os.startfile(path)
+        elif app.platform == "linux":
+            subprocess.check_call(["xdg-open", path])
+        else:
+            raise ValueError(f"Unsupported platform: {app.platform}")
 
 
 windows_context = Context(name="programs_windows")
