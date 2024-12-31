@@ -1,68 +1,70 @@
-import logging
+# TODO: Figure out noises with Talon's built-in noise actions
 
-from talon import Module, Context, actions, noise, settings, cron
+# import logging
 
-from user.utils import sound
+# from talon import Module, Context, actions, noise, settings, cron
 
-LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.INFO)
+# from user.utils import sound
 
-
-module = Module()
-
-
-module.setting(
-    "hiss_start_deadzone",
-    type=int,
-    default=0,
-    desc="hisses will not be registered until they exceed this length (in ms)",
-)
+# LOGGER = logging.getLogger(__name__)
+# LOGGER.setLevel(logging.INFO)
 
 
-@module.action_class
-class Actions:
-    def on_pop():
-        """Will be called on a pop."""
-        LOGGER.debug(f"Default `on_pop`")
-
-    # TODO: How to handle contexts switching in the middle of a hiss, and never
-    #   closing? Maybe track open hisses?
-    def on_hiss(start: bool):
-        """Will be called on a hiss (at the start + end)."""
-        LOGGER.debug(f"Default `on_hiss`, start={start}")
+# module = Module()
 
 
-default_noise_context = Context()
+# module.setting(
+#     "hiss_start_deadzone",
+#     type=int,
+#     default=0,
+#     desc="hisses will not be registered until they exceed this length (in ms)",
+# )
 
 
-def _on_pop(start: bool):
-    if not start:
-        actions.self.on_pop()
+# @module.action_class
+# class Actions:
+#     def on_pop():
+#         """Will be called on a pop."""
+#         LOGGER.debug(f"Default `on_pop`")
+
+#     # TODO: How to handle contexts switching in the middle of a hiss, and never
+#     #   closing? Maybe track open hisses?
+#     def on_hiss(start: bool):
+#         """Will be called on a hiss (at the start + end)."""
+#         LOGGER.debug(f"Default `on_hiss`, start={start}")
 
 
-# Cron job to add leading deadzone to the hiss action.
-_hiss_start_job = None
+# default_noise_context = Context()
 
 
-def _cued_start_hiss():
-    """Start hiss handler, with an audio cue."""
-    sound.play(sound.WOOD_HIT)
-    actions.self.on_hiss(True)
+# def _on_pop(start: bool):
+#     if not start:
+#         actions.self.on_pop()
 
 
-def _on_hiss(start: bool):
-    global _hiss_start_job
-    if start:
-        start_deadzone = settings["user.hiss_start_deadzone"]
-        if start_deadzone:
-            _hiss_start_job = cron.after(f"{start_deadzone}ms", _cued_start_hiss)
-        else:
-            actions.self.on_hiss(True)
-    else:
-        if _hiss_start_job:
-            cron.cancel(_hiss_start_job)
-        actions.self.on_hiss(False)
+# # Cron job to add leading deadzone to the hiss action.
+# _hiss_start_job = None
 
 
-noise.register("pop", _on_pop)
-noise.register("hiss", _on_hiss)
+# def _cued_start_hiss():
+#     """Start hiss handler, with an audio cue."""
+#     sound.play(sound.WOOD_HIT)
+#     actions.self.on_hiss(True)
+
+
+# def _on_hiss(start: bool):
+#     global _hiss_start_job
+#     if start:
+#         start_deadzone = settings["user.hiss_start_deadzone"]
+#         if start_deadzone:
+#             _hiss_start_job = cron.after(f"{start_deadzone}ms", _cued_start_hiss)
+#         else:
+#             actions.self.on_hiss(True)
+#     else:
+#         if _hiss_start_job:
+#             cron.cancel(_hiss_start_job)
+#         actions.self.on_hiss(False)
+
+
+# noise.register("pop", _on_pop)
+# noise.register("hiss", _on_hiss)

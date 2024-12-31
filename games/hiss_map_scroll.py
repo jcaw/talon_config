@@ -3,7 +3,9 @@ import threading
 from typing import Callable
 
 from talon import cron, actions, Module, Context
-from talon_plugins import eye_mouse
+
+# FIXME: Port this over to the new noises & eye mouse system
+# from talon_plugins import eye_mouse
 
 
 _NORTH_THETA = math.atan2(0, -1)

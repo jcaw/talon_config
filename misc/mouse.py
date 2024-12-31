@@ -4,11 +4,13 @@ from random import randint
 
 from talon import Module, Context, actions, ctrl, ui
 from talon.types import Point2d
-from talon_plugins import eye_mouse, eye_zoom_mouse
+
+# from talon_plugins import eye_mouse, eye_zoom_mouse
 
 from user.utils import Modifiers
-from user.utils.eye_mouse import FrozenEyeMouse
-from user.utils.mouse_history import backdated_position
+
+# from user.utils.eye_mouse import FrozenEyeMouse
+# from user.utils.mouse_history import backdated_position
 
 
 CLICKS_MAP = {
@@ -58,6 +60,7 @@ class Actions:
         center = (rect.x + round(rect.width / 2), rect.y + round(rect.height / 2))
         actions.mouse_move(*center)
 
+    # TODO: Pull these over to new eye system?
     def debug_overlay():
         """Toggle the eye mouse debug overlay."""
         eye_mouse.debug_overlay.toggle()
@@ -136,6 +139,7 @@ class Actions:
         else:
             actions.self.drag(modifiers)
 
+    # TODO: Port this to new eye system?
     # TODO: Rename this to `eye_click` or something?
     def default_click(click_info: Click):
         """Perform ``click_function`` according to the context."""
@@ -222,19 +226,23 @@ def click(m) -> Click:
     #
     # TODO: Maybe defer to the backdated position of the voice activity if
     #   timestamps aren't available?
-    position = backdated_position(m[-1])
+    #
+    # FIXME: port backdated_position to new eye mouse system
+    # position = backdated_position(m[-1])
+    position = None
     modifiers = m["modifiers"] if hasattr(m, "modifiers") else []
     return Click(click_function, position, modifiers)
 
 
-@context.action_class("user")
-class NoiseActions:
-    def on_pop():
-        actions.mouse_click()
+# TODO: Port these to the new eye mouse and noise systems?
+# @context.action_class("user")
+# class NoiseActions:b
+#     def on_pop():
+#         actions.mouse_click()
 
-    def on_hiss(start: bool):
-        # TODO: Maybe use audio cues to notify user of premature release?
-        if start:
-            actions.mouse_drag()
-        else:
-            actions.mouse_release()
+#     def on_hiss(start: bool):
+#         # TODO: Maybe use audio cues to notify user of premature release?
+#         if start:
+#             actions.mouse_drag()
+#         else:
+#             actions.mouse_release()
