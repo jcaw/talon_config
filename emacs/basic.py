@@ -39,7 +39,7 @@ class Actions:
     def open_current_file_in_emacs():
         """Open the currently focussed file in Emacs."""
         path = actions.app.path()
-        print(f"PAth: {path}")
+        print(f"Path: {path}")
         user.open_in_emacs(path)
 
     def open_current_project_in_emacs():
