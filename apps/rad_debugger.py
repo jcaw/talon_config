@@ -100,12 +100,16 @@ class Actions:
         )
 
     # TODO: Get this info back into Emacs somehow. Probably when rad debugger is defocussed.
+    #
+    # TODO: Switch this to just read the project file directly?
     def raddbg_get_breakpoints() -> List[BreakpointData]:
         """Get all the breakpoints from the active Rad Debugger session."""
         # TODO: What if raddbg is not running?
         #
         # TODO: Probably remove the overlay. Don't want or need it.
-        with actions.user.automator_overlay("Getting Breakpoints from RadDB"):
+        with actions.user.automator_overlay(
+            "Getting Breakpoints from RadDB", invisible=True
+        ):
             original_app = ui.active_window()
             try:
                 actions.user.focus(app_name="raddbg.exe")
@@ -127,6 +131,7 @@ class Actions:
                         key("ctrl-c")
                     breakpoints_raw_string = c.text()
                 finally:
+                    # FIXME: If it was minimized, minimize it again.
                     actions.self.raddbg_ipc(["close_tab"])
                     # actions.self.raddbg_ipc(["close_panel"])
                     # actions.self.raddbg_ipc(["close_window"])
@@ -203,6 +208,7 @@ def setup_focus():
     cron.interval("400ms", poll_focus)
 
 
-if app.platform == "windows":
-    # Have to do this with cron to ensure actions are loaded
-    cron.after("500ms", setup_focus)
+# NOTE: Syncing on focus out is disabled, for now.
+# if app.platform == "windows":
+#     # Have to do this with cron to ensure actions are loaded
+#     cron.after("500ms", setup_focus)
