@@ -14,5 +14,5 @@ key(7): self.victoria_2_set_zoom(7)
 key(8): self.victoria_2_set_zoom(8)
 key(9): self.victoria_2_set_zoom(9)
 
-key(tab:down): mouse_drag(2)
-key(tab:up):   mouse_release(2)
+key(tab:down): mouse_drag(3)
+key(tab:up):   mouse_release(3)
