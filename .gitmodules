@@ -30,3 +30,6 @@
 	path = plugins/accessibility_automator
 	url = git@github.com:jcaw/talon_ui_automation.git
 	branch = master
+[submodule "plugins/vscode_command_client"]
+	path = plugins/vscode_command_client
+	url = https://github.com/cursorless-dev/talon-command-client
