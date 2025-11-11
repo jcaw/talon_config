@@ -49,6 +49,9 @@ class NavigationActions:
     def search(text: str = None) -> None:
         """Search for text in the current project or directory."""
 
+    def goto_line(line: int) -> None:
+        """Jump to a specific line number in the document."""
+
 
 @module.action_class
 class EditorActions:
@@ -57,6 +60,26 @@ class EditorActions:
 
     def toggle_comment() -> None:
         """Toggle comment on the current line or selection."""
+
+    def select_paragraph() -> None:
+        """Select the entire paragraph."""
+        actions.edit.paragraph_start()
+        actions.edit.extend_paragraph_end()
+
+    def select_sentence() -> None:
+        """Select the entire sentence."""
+        actions.edit.sentence_start()
+        actions.edit.extend_sentence_end()
+
+    def delete_paragraph() -> None:
+        """Delete the entire paragraph."""
+        actions.edit.select_paragraph()
+        actions.edit.delete()
+
+    def delete_sentence() -> None:
+        """Delete the entire sentence."""
+        actions.edit.select_sentence()
+        actions.edit.delete()
 
 
 @module.action_class

@@ -213,3 +213,30 @@ class VSCodeUserActions:
             column=cursor_pos["column"],
             offset=cursor_pos["offset"]
         )
+
+    def delete_line() -> None:
+        """Delete the current line."""
+        actions.user.vscode_rpc_command("editor.action.deleteLines")
+
+    def delete_word() -> None:
+        """Delete the current word."""
+        actions.user.vscode_rpc_command("deleteWord")
+
+    def select_line(line: int = None) -> None:
+        """Select the entire current line."""
+        if isinstance(line, int):
+            assert(line > 0, line)
+            actions.user.goto_line(line)
+        actions.user.vscode_rpc_command("expandLineSelection")
+
+    def select_word() -> None:
+        """Select the current word."""
+        actions.user.vscode_rpc_command("editor.action.addSelectionToNextFindMatch")
+        actions.key("esc")
+
+    def goto_line(line: int) -> None:
+        """Jump to a specific line number in the document."""
+        actions.user.vscode_rpc_command("editor.action.gotoLine")
+        actions.sleep("100ms")
+        actions.insert(str(line))
+        actions.key("enter")
