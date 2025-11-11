@@ -4,6 +4,7 @@ from talon import Context, Module, actions, ui
 from talon_init import TALON_USER
 
 from user.emacs.utils.voicemacs import rpc_call
+from user.apps.generic.code_editor import DocumentPositionInfo
 
 key = actions.key
 insert = actions.insert
@@ -318,3 +319,23 @@ class UserActions:
         # I have this method duplicated in my custom config so it should always
         # exist.
         user.emacs_command("spacemacs/split-window-vertically-and-switch")
+
+    def cursor_offset() -> int:
+        """Get the current cursor offset in the document."""
+        return rpc_call("point")
+    
+    def current_row() -> int:
+        """Get the current cursor row in the document (0-based)."""
+        return rpc_call("current-row")
+    
+    def current_column() -> int:
+        """Get the current cursor column in the document (0-based)."""
+        return rpc_call("current-column")
+
+    def document_position() -> Optional[DocumentPositionInfo]:
+        """Get document position including file path, row, column, and offset.
+        """
+        return DocumentPositionInfo(path=actions.app.path(),
+                                    row=rpc_call("current-row"), 
+                                    column=rpc_call("current-column"), 
+                                    offset=rpc_call("point"))

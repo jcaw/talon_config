@@ -22,15 +22,6 @@ _previous_mic = None
 
 @module.action_class
 class ModuleActions:
-    def open_file() -> None:
-        """Bring up a dialogue to open a file."""
-
-    def next_error() -> None:
-        """Go to the next error."""
-
-    def previous_error() -> None:
-        """Go to the previous error."""
-
     def go_back() -> None:
         """Go back (usually to the previous page - depends on context)."""
         # TODO: Switch to XF86Back. This is just a reliable default

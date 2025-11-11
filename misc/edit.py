@@ -28,20 +28,6 @@ class Actions:
         # TODO: Swap to newapi once I know the interface
         actions.key("shift:up")
 
-    def search(text: str = None) -> None:
-        """Perform some generic "search". Behavior depends on the program.
-
-        Provide `text` to search for some text.
-
-        """
-        actions.user.search()
-        actions.sleep("500ms")
-        if text:
-            actions.insert(text)
-
-    def toggle_comment() -> None:
-        """Toggle whether the current line/region is commented."""
-
     def toggle_comment_lines(num_lines: int) -> None:
         """Toggle multiple lines after point to be commented/uncommented."""
         # TODO: Maybe default implementation using something a `select-line`
