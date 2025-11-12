@@ -7,11 +7,11 @@ module.tag("code_editor", desc="Enabled when a code editor is the active applica
 
 class DocumentPositionInfo:
     """Information about cursor position in a document."""
-    def __init__(self, path=None, row=None, column=None, offset=None):
-        self.path = path       # File path
-        self.row = row         # Line number (0-based)
-        self.column = column   # Column number (0-based)
-        self.offset = offset   # Byte offset in file (0-based)
+    def __init__(self, path=None, line_number=None, column=None, offset=None):
+        self.path = path               # File path
+        self.line_number = line_number # Line number (1-based, for human readability)
+        self.column = column           # Column number (0-based)
+        self.offset = offset           # Byte offset in file (0-based)
 
 
 @module.action_class
@@ -118,10 +118,10 @@ class UnsortedActions:
         """Get the current cursor offset in the document - the point position."""
 
     def document_position() -> DocumentPositionInfo:
-        """Get document position including file path, row, column, and offset."""
-        # Maybe override this if the info can be gotten in a single call, 
+        """Get document position including file path, line number, column, and offset."""
+        # Maybe override this if the info can be gotten in a single call,
         # otherwise it'll default to using the individual calls.
         return DocumentPositionInfo(path=actions.app.path(),
-                                    row=actions.user.current_row(), 
-                                    column=actions.user.current_column(), 
+                                    line_number=actions.user.current_row(),
+                                    column=actions.user.current_column(),
                                     offset=actions.user.current_offset())

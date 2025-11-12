@@ -33,6 +33,8 @@ def click_candidate(results, button: int, ensure_one_match: bool):
         raise MultipleCandidatesError(
             "Multiple results. Could not determine a single result to click."
         )
+    if len(results) == 0:
+        raise TextNotFoundError("No OCR results.")
     original_position = ctrl.mouse_pos()
     actions.mouse_move(*results[0].rect.center)
     if button >= 0:
@@ -85,7 +87,7 @@ class Actions:
         else:
             raise TextNotFoundError(f'Could not find text via OCR: r"{regexp}"')
 
-    def ocr_click_anywhere(regexp: str, button: int = 0, ensure_one_match: bool = True):
+    def ocr_click_anywhere(regexp: str, button: int = 0, ensure_one_match: bool = False):
         """Click the ocr result matching `regexp`.
 
         If you want to allow multiple matches, provide `ensure_one_match`.
@@ -97,7 +99,7 @@ class Actions:
             )
 
     def ocr_click_in_window(
-        regexp: str, button: int = 0, ensure_one_match: bool = True
+        regexp: str, button: int = 0, ensure_one_match: bool = False
     ):
         """Click the ocr result matching `regexp` in the current window.
 
