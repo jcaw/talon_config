@@ -2,6 +2,7 @@
 
 from typing import Any, Optional
 from xml.parsers.expat import model
+import time
 from talon import Module, Context, actions
 from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 from user.plugins.vscode_command_client.command_client import NotSet
@@ -28,6 +29,7 @@ vscode_context.matches = r"""
 title: /Visual Studio Code/
 app: /code/
 """
+
 vscode_context.tags = ["user.vscode", "user.command_client", "user.code_editor"]
 
 
@@ -239,11 +241,20 @@ class SelfActions:
 
 @vscode_context.action_class("user")
 class VSCodeUserActions:
-    # TODO: Define prototype for this action, then re-enable.
-    def cursor_position() -> tuple[int, int]:
-        """Get cursor position as (line, column). Both are 0-based."""
+    def current_row() -> int:
+        """Get the current cursor row/line in the document (1-based)."""
         pos = actions.user.vscode_rpc_command_get("jcaw.getCursorPosition")
-        return (pos["line"], pos["column"])
+        return pos["line"] + 1  # Convert from 0-based to 1-based
+
+    def current_column() -> int:
+        """Get the current cursor column in the document (0-based)."""
+        pos = actions.user.vscode_rpc_command_get("jcaw.getCursorPosition")
+        return pos["column"]
+
+    def cursor_offset() -> int:
+        """Get the current cursor offset in the document - the point position."""
+        pos = actions.user.vscode_rpc_command_get("jcaw.getCursorPosition")
+        return pos["offset"]
 
     def project_root() -> str:
         """Get the workspace root path for the current file."""
@@ -377,7 +388,7 @@ class ClaudeCodeUserActions:
     def claude_code_focus_text_input() -> None:
         # Open Claude Code sidebar if not already visible
         # user.claude_code_open()
-        actions.sleep("400ms")
+        # actions.sleep("400ms")
         
         # HACK: Claude Code VSCode extension doesn't work properly - the input 
         #   focussing command specifically is broken, and doesn't reliably take 
@@ -388,27 +399,35 @@ class ClaudeCodeUserActions:
         #
         #   With that said, I can seem to get around this by mentioning the 
         #   current file - but this will only work if a file is open.
-        if actions.app.path():
+        if actions.app.path() and False:
+            # FIXME: Disabled for now because it's so unreliable on slow machines.
             user.claude_code_insert_mention()
             sleep("200ms")
             key("ctrl-a")
             key("backspace")
         else:
+            start_time = time.perf_counter()
             user.ocr_click_in_window(r"(to focus or unfocus Claude|Queue another message)")
+            ocr_duration_ms = (time.perf_counter() - start_time) * 1000
+            # If OCR took more than 600ms, we're on a laggy PC, so we may need to wait 
+            # for the text box to get focus. If we don't, we could select and erase 
+            # the previously focussed document.
+            if ocr_duration_ms > 600:
+                sleep(f"{int(ocr_duration_ms / 2)}ms")
             key("escape")
             key("ctrl-a")
             key("backspace")
 
     def claude_code_pick_from_the_open_interface(model: str) -> None:
         if model == "haiku":
-            actions.user.ocr_click_text_in_window("Haiku 4.5")
+            actions.user.ocr_click_in_window("Haiku 4.5")
         elif model == "opus":
-            actions.user.ocr_click_text_in_window("Opus 4.1")
+            actions.user.ocr_click_in_window("Opus 4.1")
         elif model == "sonnet":
-            # There are two Sonnet 4.5 versions available in the VSCode extension as of 
-            # 12th November 2025 - one is a legacy model. This should only match the 
+            # There are two Sonnet 4.5 versions available in the VSCode extension as of
+            # 12th November 2025 - one is a legacy model. This should only match the
             # default (up to date) one.
-            actions.user.ocr_click_text_in_window("Sonnet 4.5")
+            actions.user.ocr_click_in_window("Sonnet 4.5")
         else:
             raise RuntimeError(f"Unknown model: {model}")
         

@@ -114,7 +114,7 @@ class UnsortedActions:
     def current_column() -> int:
         """Get the current cursor column in the document (0-based)."""
 
-    def current_offset() -> int:
+    def cursor_offset() -> int:
         """Get the current cursor offset in the document - the point position."""
 
     def document_position() -> DocumentPositionInfo:
@@ -124,4 +124,4 @@ class UnsortedActions:
         return DocumentPositionInfo(path=actions.app.path(),
                                     line_number=actions.user.current_row(),
                                     column=actions.user.current_column(),
-                                    offset=actions.user.current_offset())
+                                    offset=actions.user.cursor_offset())

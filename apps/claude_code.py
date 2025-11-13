@@ -6,15 +6,11 @@ from talon import Module, Context, actions, ui
 from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 from user.misc import ocr
 
+
 module = Module()
 code_editor_context = Context()
 code_editor_context.matches = r"""
 tag: user.code_editor
-"""
-
-vscode_context = Context()
-vscode_context.matches = r"""
-tag: user.vscode
 """
 
 user = actions.user
@@ -70,7 +66,8 @@ class ClaudeCodeActions:
             actions.sleep("100ms")
         if current_model != model or force:
             actions.insert("/model")
-            actions.sleep("100ms")
+            actions.key("enter")
+            actions.sleep("200ms")
             actions.self.claude_code_pick_from_the_open_interface(model)
             current_model = model
             actions.sleep("100ms")
@@ -135,8 +132,7 @@ If there is no TODO at the exact location specified, I've made a mistake - in th
         # It's lowercase in the terminal, uppercase in VSCode.
         BYPASS_TEXT = "» [bB]ypass permissions"
         with actions.user.claude_code_temp_focus():
-        # HACK: Just
-        #  use OCR to find the bypass permissions text
+        # HACK: Just use OCR to find the bypass permissions text
             try:
                 actions.user.ocr_find_text_in_window(BYPASS_TEXT)
                 print("Bypass permissions text detected - assuming it's already enabled.")
@@ -163,6 +159,25 @@ If there is no TODO at the exact location specified, I've made a mistake - in th
         prompt = "Repeatedly fix tests until they all pass. Run the tests as the final step before assuming they pass."
         actions.user.claude_code_submit_to_claude(prompt, model)
 
+    def claude_code_submit_continue(model: Optional[str] = None) -> None:
+        """Tell Claude Code to continue with what it was doing."""
+        actions.user.claude_code_submit_to_claude("Continue", model)
+
+    def claude_code_toggle_thinking(assume_focussed: bool = False) -> None:
+        """Toggle thinking mode in Claude Code."""
+        if assume_focussed:
+            raise NotImplementedError("skipping focus not implemented for claude_code_toggle_thinking")
+        with actions.user.claude_code_temp_focus():
+            actions.sleep("100ms")
+            # Navigate to the thinking toggle
+            actions.key("tab:3")
+            actions.sleep("100ms")
+            # Toggle it
+            actions.key("enter")
+            actions.sleep("100ms")
+            # Navigate back to the text input
+            actions.key("shift-tab:3")
+
 
 # VSCode-specific Claude Code vimfinity bindings
 vimfinity_bind_keys(
@@ -180,10 +195,14 @@ vimfinity_bind_keys(
         "c l": (user.claude_code_show_logs, "Show logs"),
         "c u": (user.claude_code_update, "Update extension"),
         "c g": (user.claude_code_get_api, "Get API"),
-        "c s": (user.claude_code_set_bypass_permissions, "Set to bypass permissions"),
+        "c p": (user.claude_code_set_bypass_permissions, "Set to bypass permissions"),
         "c i": (user.claude_code_implement_todo_at_cursor, "Implement TODO at cursor"),
+        # TODO: Move these two to a claude file in `settings`
         "c b": (user.claude_code_fix_until_builds, "Fix problems until build succeeds"),
         "c t": (user.claude_code_fix_until_tests_pass, "Fix tests until they all pass"),
+        "c e": (user.claude_code_toggle_thinking, "Toggle thinking mode"),
+        "c h": (lambda: user.claude_code_set_model("haiku"), "Switch to Haiku model"),
+        "c s": (lambda: user.claude_code_set_model("sonnet"), "Switch to Sonnet model"),
     },
-    vscode_context,
+    code_editor_context,
 )
