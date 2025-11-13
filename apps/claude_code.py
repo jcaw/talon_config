@@ -66,6 +66,7 @@ class ClaudeCodeActions:
             actions.sleep("100ms")
         if current_model != model or force:
             actions.insert("/model")
+            actions.sleep("100ms")
             actions.key("enter")
             actions.sleep("200ms")
             actions.self.claude_code_pick_from_the_open_interface(model)
@@ -183,15 +184,13 @@ If there is no TODO at the exact location specified, I've made a mistake - in th
 vimfinity_bind_keys(
     {
         "c": "Claude Code",
-        "c o": (user.claude_code_open, "Open in sidebar"),
-        # TODO: Maybe remove these. Not sure.
-        # "c e": (user.claude_code_open_editor, "Open in editor tab"),
-        # "c w": (user.claude_code_open_window, "Open in new window"),
-        # "c t": (user.claude_code_open_terminal, "Open terminal version"),
+        "c o": (user.claude_code_open, "Open Claude Code"),
         "c c": (user.claude_code_focus_text_input, "Focus text input"),
+        # TODO: Move to VSCode module for now.
         "c a": (user.claude_code_accept_changes, "Accept changes"),
         "c r": (user.claude_code_reject_changes, "Reject changes"),
         "c m": (user.claude_code_insert_mention, "Mention file"),
+        # TODO: Consider moving to VSCode module.
         "c l": (user.claude_code_show_logs, "Show logs"),
         "c u": (user.claude_code_update, "Update extension"),
         "c g": (user.claude_code_get_api, "Get API"),
@@ -201,6 +200,7 @@ vimfinity_bind_keys(
         "c b": (user.claude_code_fix_until_builds, "Fix problems until build succeeds"),
         "c t": (user.claude_code_fix_until_tests_pass, "Fix tests until they all pass"),
         "c e": (user.claude_code_toggle_thinking, "Toggle thinking mode"),
+        # TODO: actions that combine switching model and thinking mode into one action. Be efficient too. Bind to the capitalised version, I guess. Switch model first, before the thinking mode.
         "c h": (lambda: user.claude_code_set_model("haiku"), "Switch to Haiku model"),
         "c s": (lambda: user.claude_code_set_model("sonnet"), "Switch to Sonnet model"),
     },
