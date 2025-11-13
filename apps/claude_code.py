@@ -23,16 +23,18 @@ current_model = None
 class ClaudeCodeTemporaryFocusContext:
     """Context manager that focuses Claude Code and restores focus on exit."""
 
-    def __init__(self):
+    def __init__(self, assume_focussed: bool = False):
+        self.assume_focussed = assume_focussed
         self.original_window = None
 
     def __enter__(self):
-        self.original_window = ui.active_window()
-        actions.user.claude_code_focus_text_input()
+        if not self.assume_focussed:
+            self.original_window = ui.active_window()
+            actions.user.claude_code_focus_text_input()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.original_window:
+        if not self.assume_focussed and self.original_window:
             self.original_window.focus()
         return False
 
@@ -90,12 +92,18 @@ class ClaudeCodeActions:
             actions.key("2")
         elif model == "sonnet":
             actions.key("1")
-        
-    def claude_code_submit_to_claude(text: str, model: Optional[str] = None) -> None:
-        """Submit text to the most recent active Claude Code instance for this project."""
+    
+    def claude_code_submit_to_claude(text: str, model: Optional[str] = None, restore_model: bool = False) -> None:
+        """Submit text to the most recent active Claude Code instance for this project.
+
+        If restore_model is True, saves the current model before switching and restores it after submission.
+        """
+        global current_model
         text = text.strip()
+        original_model = current_model
+
         with actions.user.claude_code_temp_focus():
-            if model:
+            if model and model != current_model:
                 actions.user.claude_code_set_model(model, assume_focussed=True)
             actions.sleep("100ms")
             if text.startswith("/"):
@@ -106,14 +114,23 @@ class ClaudeCodeActions:
                 actions.user.paste_insert(text)
             actions.key("enter")
 
+            if restore_model and current_model != original_model:
+                actions.sleep("100ms")
+                actions.user.claude_code_set_model(original_model or "sonnet")
+                actions.sleep("100ms")
+
     # HACK: Require `Any` so we can return subclasses of ClaudeCodeTemporaryFocusContext.
-    def claude_code_temp_focus() -> Any:
-        """Context manager to temporarily focus Claude Code input box."""
-        return ClaudeCodeTemporaryFocusContext()
+    def claude_code_temp_focus(assume_focussed: bool = False) -> Any:
+        """Context manager to temporarily focus Claude Code input box.
+
+        Args:
+            assume_focussed: If True, assumes Claude Code is already focused and skips focus/restore
+        """
+        return ClaudeCodeTemporaryFocusContext(assume_focussed)
     
     def claude_code_compact(model: Optional[str] = None) -> None:
         """Send 'Make the response more compact' prompt to Claude Code."""
-        actions.user.claude_code_submit_to_claude("/compact", model)
+        actions.user.claude_code_submit_to_claude("/compact", model, restore_model=True)
 
     def claude_code_implement_todo_at_cursor(model: Optional[str] = None) -> None:
         """Submit request to Claude to implement the TODO at the current cursor position."""
@@ -126,7 +143,7 @@ Implement the TODO at {location}
 
 If there is no TODO at the exact location specified, I've made a mistake - in that case, do nothing.
 """
-        actions.user.claude_code_submit_to_claude(prompt, model)
+        actions.user.claude_code_submit_to_claude(prompt, model, restore_model=True)
 
     def claude_code_set_bypass_permissions() -> None:
         """Set Claude Code to bypass file permissions."""
@@ -153,32 +170,41 @@ If there is no TODO at the exact location specified, I've made a mistake - in th
     def claude_code_fix_until_builds(model: Optional[str] = None) -> None:
         """Submit request to Claude to fix problems repeatedly until the build succeeds."""
         prompt = "Fix problems repeatedly until the project builds successfully. Run the build as the final step before assuming it is successful."
-        actions.user.claude_code_submit_to_claude(prompt, model)
+        actions.user.claude_code_submit_to_claude(prompt, model, restore_model=True)
 
     def claude_code_fix_until_tests_pass(model: Optional[str] = None) -> None:
         """Submit request to Claude to repeatedly fix tests until they all pass."""
         prompt = "Repeatedly fix tests until they all pass. Run the tests as the final step before assuming they pass."
-        actions.user.claude_code_submit_to_claude(prompt, model)
+        actions.user.claude_code_submit_to_claude(prompt, model, restore_model=True)
 
     def claude_code_submit_continue(model: Optional[str] = None) -> None:
         """Tell Claude Code to continue with what it was doing."""
-        actions.user.claude_code_submit_to_claude("Continue", model)
+        actions.user.claude_code_submit_to_claude("Continue", model, restore_model=True)
+
+    def claude_code_enable_thinking(assume_focussed: bool = False) -> None:
+        """Enable thinking mode in Claude Code. Implementation is editor-specific."""
+
+    def claude_code_disable_thinking(assume_focussed: bool = False) -> None:
+        """Disable thinking mode in Claude Code. Implementation is editor-specific."""
 
     def claude_code_toggle_thinking(assume_focussed: bool = False) -> None:
-        """Toggle thinking mode in Claude Code."""
-        if assume_focussed:
-            raise NotImplementedError("skipping focus not implemented for claude_code_toggle_thinking")
-        with actions.user.claude_code_temp_focus():
-            actions.sleep("100ms")
-            # Navigate to the thinking toggle
-            actions.key("tab:3")
-            actions.sleep("100ms")
-            # Toggle it
-            actions.key("enter")
-            actions.sleep("100ms")
-            # Navigate back to the text input
-            actions.key("shift-tab:3")
+        """Toggle thinking mode in Claude Code. Implementation is editor-specific."""
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            # Tab toggles thinking in the terminal version of Claude Code.
+            actions.key("tab")
 
+    def claude_code_set_model_and_thinking(model: str) -> None:
+        """Set model and enable thinking mode efficiently in one focused context."""
+        with actions.user.claude_code_temp_focus():
+            # Switch model first
+            actions.user.claude_code_set_model(model, assume_focussed=True)
+            actions.sleep("1000ms")
+            # Then enable thinking
+            actions.user.claude_code_enable_thinking(assume_focussed=True)
+
+
+HAIKU = "haiku"
+SONNET = "sonnet"
 
 # VSCode-specific Claude Code vimfinity bindings
 vimfinity_bind_keys(
@@ -186,23 +212,20 @@ vimfinity_bind_keys(
         "c": "Claude Code",
         "c o": (user.claude_code_open, "Open Claude Code"),
         "c c": (user.claude_code_focus_text_input, "Focus text input"),
-        # TODO: Move to VSCode module for now.
-        "c a": (user.claude_code_accept_changes, "Accept changes"),
-        "c r": (user.claude_code_reject_changes, "Reject changes"),
-        "c m": (user.claude_code_insert_mention, "Mention file"),
         # TODO: Consider moving to VSCode module.
         "c l": (user.claude_code_show_logs, "Show logs"),
         "c u": (user.claude_code_update, "Update extension"),
         "c g": (user.claude_code_get_api, "Get API"),
         "c p": (user.claude_code_set_bypass_permissions, "Set to bypass permissions"),
         "c i": (user.claude_code_implement_todo_at_cursor, "Implement TODO at cursor"),
-        # TODO: Move these two to a claude file in `settings`
-        "c b": (user.claude_code_fix_until_builds, "Fix problems until build succeeds"),
-        "c t": (user.claude_code_fix_until_tests_pass, "Fix tests until they all pass"),
         "c e": (user.claude_code_toggle_thinking, "Toggle thinking mode"),
-        # TODO: actions that combine switching model and thinking mode into one action. Be efficient too. Bind to the capitalised version, I guess. Switch model first, before the thinking mode.
-        "c h": (lambda: user.claude_code_set_model("haiku"), "Switch to Haiku model"),
-        "c s": (lambda: user.claude_code_set_model("sonnet"), "Switch to Sonnet model"),
+        "c h": (lambda: user.claude_code_set_model(HAIKU), "Switch to Haiku"),
+        "c H": (lambda: user.claude_code_set_model_and_thinking(HAIKU), "Haiku/enable thinking"),
+        "c s": (lambda: user.claude_code_set_model(SONNET), "Switch to Sonnet"),
+        "c S": (lambda: user.claude_code_set_model_and_thinking(SONNET), "Sonnet/enable thinking"),
+        # TODO: Verify that this function exists
+        "c r": (user.claude_code_compact, "Compact (reduce)"),
+        "c R": (lambda: user.claude_code_compact(HAIKU), "Compact with Haiku"),
     },
     code_editor_context,
 )

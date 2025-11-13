@@ -102,3 +102,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+apps/vscode_all_commands.json

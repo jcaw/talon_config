@@ -78,17 +78,42 @@ class VSCodeModuleActions:
 
 class ClaudeCodeVSCodeTemporaryFocusContext(ClaudeCodeTemporaryFocusContext):
     """VSCode-specific context manager that focuses Claude Code and uses blur to defocus."""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, assume_focussed: bool = False):
+        super().__init__(assume_focussed)
 
     def __enter__(self):
-        actions.user.claude_code_focus_text_input()
+        if not self.assume_focussed:
+            actions.user.claude_code_focus_text_input()
         return self
 
     def __exit__(self, _exc_type, _exc_val, _exc_tb):
         # VSCode uses blur to defocus instead of restoring window focus
-        actions.user.claude_code_blur()
+        if not self.assume_focussed:
+            actions.user.claude_code_blur()
         return False
+
+
+THINKING_ICON_THRESHOLD = 0.99  # Very strict matching to distinguish on/off states
+
+def claude_code_find_thinking_on_icon():
+    """Find the thinking on icon in the Claude Code interface using image recognition.
+
+    Returns the screen coordinates of the icon if found, None otherwise.
+    """
+    return actions.user.find_icon_in_window(
+        "user/assets/icons/claude_code/thinking_on.png",
+        threshold=THINKING_ICON_THRESHOLD
+    )
+
+def claude_code_find_thinking_off_icon():
+    """Find the thinking off icon in the Claude Code interface using image recognition.
+
+    Returns the screen coordinates of the icon if found, None otherwise.
+    """
+    return actions.user.find_icon_in_window(
+        "user/assets/icons/claude_code/thinking_off.png",
+        threshold=THINKING_ICON_THRESHOLD
+    )
 
 
 @module.action_class
@@ -401,10 +426,66 @@ class ClaudeCodeUserActions:
         else:
             raise RuntimeError(f"Unknown model: {model}")
         
-    def claude_code_temp_focus() -> Any:
-        """Context manager to temporarily focus Claude Code input box."""
-        return ClaudeCodeVSCodeTemporaryFocusContext()
-    
+    def claude_code_temp_focus(assume_focussed: bool = False) -> Any:
+        """Context manager to temporarily focus Claude Code input box.
+
+        Args:
+            assume_focussed: If True, assumes Claude Code is already focused and skips focus/restore
+        """
+        return ClaudeCodeVSCodeTemporaryFocusContext(assume_focussed)
+
+    def claude_code_enable_thinking(assume_focussed: bool = False) -> None:
+        """Enable thinking mode in Claude Code (VSCode-specific implementation)."""
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            actions.sleep("100ms")
+
+            # Check if thinking is already on
+            if claude_code_find_thinking_on_icon():
+                print("Thinking already enabled")
+                return
+
+            # Try to find and click the off icon to turn it on
+            coords = claude_code_find_thinking_off_icon()
+            if not coords:
+                raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
+            actions.mouse_move(*coords)
+            actions.sleep("100ms")
+            actions.mouse_click()
+
+    def claude_code_disable_thinking(assume_focussed: bool = False) -> None:
+        """Disable thinking mode in Claude Code (VSCode-specific implementation)."""
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            actions.sleep("100ms")
+
+            # Check if thinking is already off
+            if claude_code_find_thinking_off_icon():
+                print("Thinking already disabled")
+                return
+
+            # Try to find and click the on icon to turn it off
+            coords = claude_code_find_thinking_on_icon()
+            if not coords:
+                raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
+            actions.mouse_move(*coords)
+            actions.sleep("100ms")
+            actions.mouse_click()
+
+    def claude_code_toggle_thinking(assume_focussed: bool = False) -> None:
+        """Toggle thinking mode in Claude Code (VSCode-specific implementation)."""
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            actions.sleep("100ms")
+
+            # Try image detection first - look for either state of the thinking toggle
+            coords = claude_code_find_thinking_on_icon()
+            if not coords:
+                coords = claude_code_find_thinking_off_icon()
+            if not coords:
+                raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
+            # Click the icon we found
+            actions.mouse_move(*coords)
+            actions.sleep("100ms")
+            actions.mouse_click()
+
 
 vimfinity_bind_keys(
     {
@@ -412,6 +493,11 @@ vimfinity_bind_keys(
         "p": "VSCode",
         "p r": (user.vscode_restart_extension_host, "Restart extension host"),
         "p c": (user.vscode_get_all_commands, "Get all commands"),
+        # Claude Code commands
+        "c": "Claude Code",
+        "c a": (user.claude_code_accept_changes, "Accept changes"),
+        "c r": (user.claude_code_reject_changes, "Reject changes"),
+        "c m": (user.claude_code_insert_mention, "Mention file"),
         # Claude Code opening commands - experimental and kept commented out
         # "c s": (user.claude_code_open_sidebar, "Open Claude Code in sidebar"),
         # "c e": (user.claude_code_open_editor, "Open Claude Code in editor tab"),
