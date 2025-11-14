@@ -22,6 +22,7 @@ sleep = actions.sleep
 module = Module()
 module.tag("vscode", desc="Enabled when Visual Studio Code is the active application.")
 
+# FIXME: When first loading talon, this context doesn't seem to want to activate.
 # Context for VSCode
 vscode_context = Context()
 # TODO: Matching for Mac and Linux. This is Windows-specific.
@@ -33,7 +34,6 @@ app: /code/
 vscode_context.tags = ["user.vscode", "user.command_client", "user.code_editor"]
 
 
-# TODO: Remove docstrings from all context classes - they are redundant. Also do this in claude_code.py
 @module.action_class
 class VSCodeModuleActions:
     def vscode_rpc_command(
@@ -77,7 +77,6 @@ class VSCodeModuleActions:
 
 
 class ClaudeCodeVSCodeTemporaryFocusContext(ClaudeCodeTemporaryFocusContext):
-    """VSCode-specific context manager that focuses Claude Code and uses blur to defocus."""
     def __init__(self, assume_focussed: bool = False):
         super().__init__(assume_focussed)
 
@@ -140,24 +139,6 @@ class ClaudeVSCodeActions:
         """Open Claude Code in the terminal."""
         user.vscode_rpc_command("claude-vscode.terminal.open")
 
-    # TODO: Remove - these are old focus approaches I was experimenting with.
-    # def claude_code_focus() -> None:
-    #     """Focus the Claude Code input box."""
-    #     # Use custom focus command that bypasses the broken claude-vscode.focus
-    #     user.vscode_rpc_command("jcaw.claudeCodeFocusAuxiliary")
-
-    # def claude_code_focus_alt_panel() -> None:
-    #     """Focus Claude Code using panel strategy."""
-    #     user.vscode_rpc_command("jcaw.claudeCodeFocusPanel")
-
-    # def claude_code_focus_alt_click() -> None:
-    #     """Focus Claude Code using click strategy."""
-    #     user.vscode_rpc_command("jcaw.claudeCodeFocusWithClick")
-
-    # def claude_code_focus_alt_sidebar() -> None:
-    #     """Focus Claude Code using sidebar strategy."""
-    #     user.vscode_rpc_command("jcaw.claudeCodeFocusSidebar")
-
     def claude_code_blur() -> None:
         """Unfocus the Claude Code input box."""
         user.vscode_rpc_command("claude-vscode.blur")
@@ -169,10 +150,6 @@ class ClaudeVSCodeActions:
     def claude_code_reject_changes() -> None:
         """Reject proposed changes from Claude Code."""
         user.vscode_rpc_command("claude-vscode.rejectProposedDiff")
-
-    def claude_code_insert_mention() -> None:
-        """Insert an @-mention reference in Claude Code."""
-        user.vscode_rpc_command("claude-vscode.insertAtMention")
 
     def claude_code_show_logs() -> None:
         """Show Claude Code logs."""
@@ -400,7 +377,7 @@ class ClaudeCodeUserActions:
             key("backspace")
         else:
             start_time = time.perf_counter()
-            user.ocr_click_in_window(r"(to focus or unfocus Claude|Queue another message)")
+            user.ocr_click_in_window(r"(to focus or unfocus Claude|Queue another message...)")
             ocr_duration_ms = (time.perf_counter() - start_time) * 1000
             # If OCR took more than 600ms, we're on a laggy PC, so we may need to wait 
             # for the text box to get focus. If we don't, we could select and erase 
@@ -436,39 +413,11 @@ class ClaudeCodeUserActions:
 
     def claude_code_enable_thinking(assume_focussed: bool = False) -> None:
         """Enable thinking mode in Claude Code (VSCode-specific implementation)."""
-        with actions.user.claude_code_temp_focus(assume_focussed):
-            actions.sleep("100ms")
-
-            # Check if thinking is already on
-            if claude_code_find_thinking_on_icon():
-                print("Thinking already enabled")
-                return
-
-            # Try to find and click the off icon to turn it on
-            coords = claude_code_find_thinking_off_icon()
-            if not coords:
-                raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
-            actions.mouse_move(*coords)
-            actions.sleep("100ms")
-            actions.mouse_click()
+        actions.user.claude_code_set_thinking(True, assume_focussed)
 
     def claude_code_disable_thinking(assume_focussed: bool = False) -> None:
         """Disable thinking mode in Claude Code (VSCode-specific implementation)."""
-        with actions.user.claude_code_temp_focus(assume_focussed):
-            actions.sleep("100ms")
-
-            # Check if thinking is already off
-            if claude_code_find_thinking_off_icon():
-                print("Thinking already disabled")
-                return
-
-            # Try to find and click the on icon to turn it off
-            coords = claude_code_find_thinking_on_icon()
-            if not coords:
-                raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
-            actions.mouse_move(*coords)
-            actions.sleep("100ms")
-            actions.mouse_click()
+        actions.user.claude_code_set_thinking(False, assume_focussed)
 
     def claude_code_toggle_thinking(assume_focussed: bool = False) -> None:
         """Toggle thinking mode in Claude Code (VSCode-specific implementation)."""
@@ -486,6 +435,54 @@ class ClaudeCodeUserActions:
             actions.sleep("100ms")
             actions.mouse_click()
 
+    def claude_code_set_thinking(desired_state: Optional[bool], assume_focussed: bool = False) -> tuple[Optional[bool], Optional[bool]]:
+        """VSCode-specific implementation: Switch thinking mode using icon detection.
+
+        Args:
+            desired_state: The desired thinking state (True/False), or None to skip switching
+            assume_focussed: If True, assumes Claude Code is already focused
+
+        Returns:
+            Tuple of (original_state, new_state). Returns `(None, None)` if switching failed.
+        """
+        if desired_state is None:
+            return None, None
+
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            try:
+                # Try to find both icons to determine current state
+                on_coords = claude_code_find_thinking_on_icon()
+                off_coords = claude_code_find_thinking_off_icon()
+
+                # Determine current state based on which icon is visible
+                if on_coords and not off_coords:
+                    current_state = True
+                elif off_coords and not on_coords:
+                    current_state = False
+                else:
+                    # Can't determine state reliably (either both found or neither found)
+                    print(f"Could not determine thinking state: on_coords={on_coords}, off_coords={off_coords}")
+                    return None, None
+
+                # Only switch if there's a divergence
+                if current_state != desired_state:
+                    # Re-use the coordinates we just found
+                    coords_to_click = on_coords if current_state else off_coords
+                    actions.mouse_move(*coords_to_click)
+                    actions.sleep("100ms")
+                    actions.mouse_click()
+                    return current_state, desired_state
+                else:
+                    # Already in desired state, no need to switch
+                    return current_state, current_state
+
+            except Exception as e:
+                print(f"Failed to switch thinking mode: {e}")
+                return None, None
+
+    def claude_code_insert_mention() -> None:
+        user.vscode_rpc_command("claude-vscode.insertAtMention")
+
 
 vimfinity_bind_keys(
     {
@@ -493,16 +490,15 @@ vimfinity_bind_keys(
         "p": "VSCode",
         "p r": (user.vscode_restart_extension_host, "Restart extension host"),
         "p c": (user.vscode_get_all_commands, "Get all commands"),
-        # Claude Code commands
-        "c": "Claude Code",
-        "c a": (user.claude_code_accept_changes, "Accept changes"),
-        "c r": (user.claude_code_reject_changes, "Reject changes"),
-        "c m": (user.claude_code_insert_mention, "Mention file"),
-        # Claude Code opening commands - experimental and kept commented out
-        # "c s": (user.claude_code_open_sidebar, "Open Claude Code in sidebar"),
-        # "c e": (user.claude_code_open_editor, "Open Claude Code in editor tab"),
-        # "c w": (user.claude_code_open_window, "Open Claude Code in new window"),
-        # "c t": (user.claude_code_open_terminal, "Open Claude Code in terminal"),
+        # VSCode-specific Claude Code commands
+        "c = u": (user.claude_code_update, "Update extension"),
+        "c = ~": (user.claude_code_get_api, "Get API"),
+        "c = a": (user.claude_code_accept_changes, "Accept changes"),
+        "c = r": (user.claude_code_reject_changes, "Reject changes"),
+        "c = s": (user.claude_code_open_sidebar, "Open in sidebar"),
+        "c = e": (user.claude_code_open_editor, "Open in editor tab"),
+        "c = w": (user.claude_code_open_window, "Open in new window"),
+        "c = t": (user.claude_code_open_terminal, "Open terminal version"),
     },
     vscode_context,
 )

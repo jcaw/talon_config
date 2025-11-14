@@ -7,6 +7,15 @@ from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 from user.misc import ocr
 
 
+# Whether to use thinking when temporarily switching to a model.
+# Used by claude_code_submit_to_claude when restore_model=True.
+TEMP_USE_THINKING = {
+    "haiku": False,
+    "sonnet": True,
+    "opus": True,
+}
+
+
 module = Module()
 code_editor_context = Context()
 code_editor_context.matches = r"""
@@ -21,8 +30,6 @@ current_model = None
 
 
 class ClaudeCodeTemporaryFocusContext:
-    """Context manager that focuses Claude Code and restores focus on exit."""
-
     def __init__(self, assume_focussed: bool = False):
         self.assume_focussed = assume_focussed
         self.original_window = None
@@ -37,6 +44,8 @@ class ClaudeCodeTemporaryFocusContext:
         if not self.assume_focussed and self.original_window:
             self.original_window.focus()
         return False
+
+
 
 
 @module.action_class
@@ -54,6 +63,10 @@ class ClaudeCodeActions:
         actions.sleep("200ms")
         # Press escape twice just in case - this will clear the input box and exit dialogues.
         actions.key("escape:2")
+
+    def claude_code_insert_mention() -> None:
+        """Insert an @-mention reference in the Claude Code prompt."""
+        # TODO: Terminal implementation of file mentioning
 
     def claude_code_set_model(model: str, assume_focussed: bool = False, force: bool = False) -> None:
         """Set the Claude Code model."""
@@ -96,15 +109,25 @@ class ClaudeCodeActions:
     def claude_code_submit_to_claude(text: str, model: Optional[str] = None, restore_model: bool = False) -> None:
         """Submit text to the most recent active Claude Code instance for this project.
 
-        If restore_model is True, saves the current model before switching and restores it after submission.
+        If restore_model is True, saves the current model before switching and restores 
+        it after submission. Thinking will also teporarily be set based on the setting
+        in TEMP_USE_THINKING.
+
         """
         global current_model
         text = text.strip()
+        model = model.lower() if model else None
         original_model = current_model
+        original_thinking_state, new_thinking_state = None, None
 
         with actions.user.claude_code_temp_focus():
-            if model and model != current_model:
-                actions.user.claude_code_set_model(model, assume_focussed=True)
+            if model:
+                use_thinking = TEMP_USE_THINKING.get(model, None)
+                original_thinking_state, new_thinking_state = actions.user.claude_code_set_thinking(use_thinking, assume_focussed=True)
+                actions.sleep("200ms")
+                if model != current_model:
+                    actions.user.claude_code_set_model(model, assume_focussed=True)
+            
             actions.sleep("100ms")
             if text.startswith("/"):
                 # Commands should be entered directly so they trigger command detection
@@ -113,9 +136,16 @@ class ClaudeCodeActions:
                 # Otherwise, we paste insert to avoid issues with newlines and long prompts
                 actions.user.paste_insert(text)
             actions.key("enter")
+            actions.sleep("100ms")
 
             if restore_model and current_model != original_model:
-                actions.sleep("100ms")
+                # Restore thinking state if we changed it
+                if original_thinking_state and original_thinking_state != new_thinking_state:
+                    if original_thinking_state:
+                        actions.user.claude_code_enable_thinking(assume_focussed=True)
+                    else:
+                        actions.user.claude_code_disable_thinking(assume_focussed=True)
+                    actions.sleep("200ms")
                 actions.user.claude_code_set_model(original_model or "sonnet")
                 actions.sleep("100ms")
 
@@ -182,16 +212,55 @@ If there is no TODO at the exact location specified, I've made a mistake - in th
         actions.user.claude_code_submit_to_claude("Continue", model, restore_model=True)
 
     def claude_code_enable_thinking(assume_focussed: bool = False) -> None:
-        """Enable thinking mode in Claude Code. Implementation is editor-specific."""
+        """Enable thinking mode in Claude Code."""
+        actions.user.claude_code_set_thinking(True, assume_focussed)
 
     def claude_code_disable_thinking(assume_focussed: bool = False) -> None:
-        """Disable thinking mode in Claude Code. Implementation is editor-specific."""
+        """Disable thinking mode in Claude Code."""
+        actions.user.claude_code_set_thinking(False, assume_focussed)
 
     def claude_code_toggle_thinking(assume_focussed: bool = False) -> None:
         """Toggle thinking mode in Claude Code. Implementation is editor-specific."""
         with actions.user.claude_code_temp_focus(assume_focussed):
             # Tab toggles thinking in the terminal version of Claude Code.
             actions.key("tab")
+
+    def claude_code_set_thinking(desired_state: Optional[bool], assume_focussed: bool = False) -> tuple[Optional[bool], Optional[bool]]:
+        """Switch thinking mode to the desired state if specified.
+
+        Args:
+            desired_state: The desired thinking state (True/False), or None to skip switching
+            assume_focussed: If True, assumes Claude Code is already focused
+
+        Returns:
+            Tuple of (original_state, new_state). Returns `(None, desired_state)` since we
+            can't reliably detect the original state in terminal mode.
+        """
+        if desired_state is None:
+            return None, None
+
+        with actions.user.claude_code_temp_focus(assume_focussed):
+            # Get all OCR results for the window once, then filter multiple times. More efficient.
+            all_text_results = actions.user.ocr_get_all_text_in_window()
+
+            # Check which thinking state text is present
+            THINKING_ON_TEXT = "Thinking on (tab to toggle)"
+            THINKING_OFF_TEXT = "Thinking off (tab to toggle)"
+            thinking_on_found = any(THINKING_ON_TEXT.lower() in text.lower() for text in all_text_results)
+            thinking_off_found = any(THINKING_OFF_TEXT.lower() in text.lower() for text in all_text_results)
+
+            if thinking_on_found and not thinking_off_found:
+                current_state = True
+            elif thinking_off_found and not thinking_on_found:
+                current_state = False
+            else:
+                print(f"Could not determine thinking state: on={thinking_on_found}, off={thinking_off_found}")
+                return None, None
+            
+            if current_state != desired_state:
+                actions.key("tab")
+                actions.sleep("200ms")
+                return current_state, desired_state
 
     def claude_code_set_model_and_thinking(model: str) -> None:
         """Set model and enable thinking mode efficiently in one focused context."""
@@ -210,22 +279,32 @@ SONNET = "sonnet"
 vimfinity_bind_keys(
     {
         "c": "Claude Code",
+        "c .": "Perform with Haiku",
+        "c ,": "Perform with Sonnet",
+        "c =": "Editor-specific",
+        # General actions
         "c o": (user.claude_code_open, "Open Claude Code"),
         "c c": (user.claude_code_focus_text_input, "Focus text input"),
         # TODO: Consider moving to VSCode module.
         "c l": (user.claude_code_show_logs, "Show logs"),
-        "c u": (user.claude_code_update, "Update extension"),
-        "c g": (user.claude_code_get_api, "Get API"),
+        "c m": (user.claude_code_insert_mention, "Mention file"),
         "c p": (user.claude_code_set_bypass_permissions, "Set to bypass permissions"),
-        "c i": (user.claude_code_implement_todo_at_cursor, "Implement TODO at cursor"),
         "c e": (user.claude_code_toggle_thinking, "Toggle thinking mode"),
+        # TODO: Figure out how to handle thinking with these switches.
         "c h": (lambda: user.claude_code_set_model(HAIKU), "Switch to Haiku"),
-        "c H": (lambda: user.claude_code_set_model_and_thinking(HAIKU), "Haiku/enable thinking"),
+        "c H": (lambda: user.claude_code_set_model_and_thinking(HAIKU), "Switch to Haiku/thinking"),
         "c s": (lambda: user.claude_code_set_model(SONNET), "Switch to Sonnet"),
-        "c S": (lambda: user.claude_code_set_model_and_thinking(SONNET), "Sonnet/enable thinking"),
-        # TODO: Verify that this function exists
+        "c S": (lambda: user.claude_code_set_model_and_thinking(SONNET), "Switch to Sonnet/thinking"),
+        # Message dispatching actions
+        "c i": (user.claude_code_implement_todo_at_cursor, "Implement TODO at cursor"),
+        "c . i": (lambda: user.claude_code_implement_todo_at_cursor(HAIKU), "Implement TODO at cursor"),
+        "c , i": (lambda: user.claude_code_implement_todo_at_cursor(SONNET), "Implement TODO at cursor"),
+        "c n": (user.claude_code_submit_continue, "Continue"),
+        "c . n": (lambda: user.claude_code_submit_continue(HAIKU), "Continue"),
+        "c , n": (lambda: user.claude_code_submit_continue(SONNET), "Continue"),
         "c r": (user.claude_code_compact, "Compact (reduce)"),
-        "c R": (lambda: user.claude_code_compact(HAIKU), "Compact with Haiku"),
+        "c . r": (lambda: user.claude_code_compact(HAIKU), "Compact (reduce)"),
+        "c , r": (lambda: user.claude_code_compact(SONNET), "Compact (reduce)"),
     },
     code_editor_context,
 )
