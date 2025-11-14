@@ -3,6 +3,7 @@
 from typing import Optional, Tuple
 from talon import Module, actions, ui, screen
 from talon.experimental import locate
+from talon.skia import Image
 
 
 module = Module()
@@ -21,10 +22,14 @@ class IconDetectionActions:
         """
         window = ui.active_window()
         screenshot = screen.capture_rect(window.rect)
-        result = locate.locate_in_image(icon_path, screenshot, threshold=threshold)
+        # Load the needle image from file
+        needle_image = Image.from_file(icon_path)
+        result = locate.locate_in_image(screenshot, needle_image, threshold=threshold)
         if result:
+            # Just take the first match.
+            center = result[0].center
             # Translate coordinates from screenshot to screen space
-            return (window.rect.x + result.x, window.rect.y + result.y)
+            return (window.rect.x + center.x, window.rect.y + center.y)
         return None
 
     def click_icon_in_window(icon_path: str, threshold: float = 0.90, button: int = 0) -> bool:
@@ -39,8 +44,7 @@ class IconDetectionActions:
         """
         coords = actions.user.find_icon_in_window(icon_path, threshold)
         if coords:
-            actions.mouse_move(*coords)
-            actions.sleep("100ms")
-            actions.mouse_click(button)
+            actions.user.click_at_and_restore(*coords, button=button, delay_ms=100)
             return True
-        return False
+        else:
+            return False

@@ -19,9 +19,10 @@ module = Module()
 
 
 class ClaudeCodeVSCodeTemporaryFocusContext(ClaudeCodeTemporaryFocusContext):
-    def __init__(self, assume_focussed: bool = False):
-        super().__init__(assume_focussed)
+    """VSCode-specific context manager for temporarily focusing Claude Code input.
 
+    Restores prior focus on exit. Only takes focus if `assume_focussed` is False.    
+    """
     def __enter__(self):
         if not self.assume_focussed:
             actions.user.claude_code_focus_text_input()
@@ -191,9 +192,7 @@ class ClaudeCodeUserActions:
             if not coords:
                 raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
             # Click the icon we found
-            actions.mouse_move(*coords)
-            actions.sleep("100ms")
-            actions.mouse_click()
+            actions.user.click_at_and_restore(*coords, delay_ms=100)
 
     def claude_code_set_thinking(desired_state: Optional[bool], assume_focussed: bool = False) -> tuple[Optional[bool], Optional[bool]]:
         """VSCode-specific implementation: Switch thinking mode using icon detection.
@@ -227,14 +226,8 @@ class ClaudeCodeUserActions:
                 # Only switch if there's a divergence
                 if current_state != desired_state:
                     # Re-use the coordinates we just found
-                    coords_to_click = on_coords if current_state else off_coords
-                    actions.mouse_move(*coords_to_click)
-                    actions.sleep("100ms")
-                    actions.mouse_click()
-                    return current_state, desired_state
-                else:
-                    # Already in desired state, no need to switch
-                    return current_state, current_state
+                    actions.user.click_at_and_restore(on_coords or off_coords, delay_ms=100)
+                return current_state, desired_state
 
             except Exception as e:
                 print(f"Failed to switch thinking mode: {e}")

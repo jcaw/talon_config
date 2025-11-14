@@ -209,6 +209,23 @@ class Actions:
             actions.sleep(f"{FRAME_PAUSE_MS}ms")
         actions.mouse_move(x, y)
 
+    def click_at_and_restore(x: int, y: int, button: int = 0, delay_ms: int = 100) -> None:
+        """Click at coordinates (x, y) and restore the original mouse position.
+
+        Args:
+            x: Target x coordinate
+            y: Target y coordinate
+            button: Mouse button to click (0=left, 1=right, 2=middle)
+            delay_ms: Delay in milliseconds between move and click
+        """
+        original_position = ctrl.mouse_pos()
+        try:
+            actions.mouse_move(x, y)
+            actions.sleep(f"{delay_ms}ms")
+            actions.mouse_click(button)
+        finally:
+            actions.mouse_move(*original_position)
+
 
 context = Context()
 context.lists["self.clicks"] = CLICKS_MAP.keys()

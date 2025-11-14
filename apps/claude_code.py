@@ -30,6 +30,10 @@ current_model = None
 
 
 class ClaudeCodeTemporaryFocusContext:
+    """Context manager for temporarily focusing the Claude Code input box.
+
+    Restores prior focus on exit. Only takes focus if `assume_focussed` is False.
+    """
     def __init__(self, assume_focussed: bool = False):
         self.assume_focussed = assume_focussed
         self.original_window = None
@@ -44,8 +48,6 @@ class ClaudeCodeTemporaryFocusContext:
         if not self.assume_focussed and self.original_window:
             self.original_window.focus()
         return False
-
-
 
 
 @module.action_class
@@ -138,7 +140,7 @@ class ClaudeCodeActions:
             actions.key("enter")
             actions.sleep("100ms")
 
-            if restore_model and current_model != original_model:
+            if restore_model:
                 # Restore thinking state if we changed it
                 if original_thinking_state and original_thinking_state != new_thinking_state:
                     if original_thinking_state:
@@ -146,8 +148,9 @@ class ClaudeCodeActions:
                     else:
                         actions.user.claude_code_disable_thinking(assume_focussed=True)
                     actions.sleep("200ms")
-                actions.user.claude_code_set_model(original_model or "sonnet")
-                actions.sleep("100ms")
+                if original_model != current_model:
+                    actions.user.claude_code_set_model(original_model or "sonnet")
+                    actions.sleep("100ms")
 
     # HACK: Require `Any` so we can return subclasses of ClaudeCodeTemporaryFocusContext.
     def claude_code_temp_focus(assume_focussed: bool = False) -> Any:
