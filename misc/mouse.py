@@ -209,7 +209,7 @@ class Actions:
             actions.sleep(f"{FRAME_PAUSE_MS}ms")
         actions.mouse_move(x, y)
 
-    def click_at_and_restore(x: int, y: int, button: int = 0, delay_ms: int = 100) -> None:
+    def click_point(x: int, y: int, button: int = 0, delay_ms: int = 100) -> None:
         """Click at coordinates (x, y) and restore the original mouse position.
 
         Args:
@@ -218,6 +218,7 @@ class Actions:
             button: Mouse button to click (0=left, 1=right, 2=middle)
             delay_ms: Delay in milliseconds between move and click
         """
+        # TODO: Maybe disable eye mouse before doing all this
         original_position = ctrl.mouse_pos()
         try:
             actions.mouse_move(x, y)

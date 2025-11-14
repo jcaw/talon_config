@@ -138,7 +138,7 @@ class ClaudeCodeUserActions:
             key("backspace")
         else:
             start_time = time.perf_counter()
-            user.ocr_click_in_window(r"(to focus or unfocus Claude|Queue another message...)")
+            user.ocr_click_in_window(r"(to focus or unfocus Claude|Queue another message...|to attach selected text)")
             ocr_duration_ms = (time.perf_counter() - start_time) * 1000
             # If OCR took more than 600ms, we're on a laggy PC, so we may need to wait
             # for the text box to get focus. If we don't, we could select and erase
@@ -192,7 +192,7 @@ class ClaudeCodeUserActions:
             if not coords:
                 raise RuntimeError("Could not find thinking toggle icon in Claude Code interface")
             # Click the icon we found
-            actions.user.click_at_and_restore(*coords, delay_ms=100)
+            actions.user.click_point(*coords, delay_ms=100)
 
     def claude_code_set_thinking(desired_state: Optional[bool], assume_focussed: bool = False) -> tuple[Optional[bool], Optional[bool]]:
         """VSCode-specific implementation: Switch thinking mode using icon detection.
@@ -208,30 +208,25 @@ class ClaudeCodeUserActions:
             return None, None
 
         with actions.user.claude_code_temp_focus(assume_focussed):
-            try:
-                # Try to find both icons to determine current state
-                on_coords = claude_code_find_thinking_on_icon()
-                off_coords = claude_code_find_thinking_off_icon()
+            # Try to find both icons to determine current state
+            on_coords = claude_code_find_thinking_on_icon()
+            off_coords = claude_code_find_thinking_off_icon()
 
-                # Determine current state based on which icon is visible
-                if on_coords and not off_coords:
-                    current_state = True
-                elif off_coords and not on_coords:
-                    current_state = False
-                else:
-                    # Can't determine state reliably (either both found or neither found)
-                    print(f"Could not determine thinking state: on_coords={on_coords}, off_coords={off_coords}")
-                    return None, None
-
-                # Only switch if there's a divergence
-                if current_state != desired_state:
-                    # Re-use the coordinates we just found
-                    actions.user.click_at_and_restore(on_coords or off_coords, delay_ms=100)
-                return current_state, desired_state
-
-            except Exception as e:
-                print(f"Failed to switch thinking mode: {e}")
+            # Determine current state based on which icon is visible
+            if on_coords and not off_coords:
+                current_state = True
+            elif off_coords and not on_coords:
+                current_state = False
+            else:
+                # Can't determine state reliably (either both found or neither found)
+                print(f"Could not determine thinking state: on_coords={on_coords}, off_coords={off_coords}")
                 return None, None
+
+            # Only switch if there's a divergence
+            if current_state != desired_state:
+                # Re-use the coordinates we just found
+                actions.user.click_point(*(on_coords or off_coords), delay_ms=100)
+            return current_state, desired_state
 
     def claude_code_insert_mention() -> None:
         user.vscode_rpc_command("claude-vscode.insertAtMention")

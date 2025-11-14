@@ -122,11 +122,17 @@ class ClaudeCodeActions:
         original_model = current_model
         original_thinking_state, new_thinking_state = None, None
 
+        # HACK: Do it here so in VSCode, it doesn't result in confusing loss of focus of input text box.
+        #   Should go over this at some point and fix this implentation.
+        use_thinking = TEMP_USE_THINKING.get(model, None)
+        try:
+            original_thinking_state, new_thinking_state = actions.user.claude_code_set_thinking(use_thinking)
+        except Exception as e:
+            print(f"Warning: Failed to set thinking state when switching model: {e}")
+            pass
+        
         with actions.user.claude_code_temp_focus():
             if model:
-                use_thinking = TEMP_USE_THINKING.get(model, None)
-                original_thinking_state, new_thinking_state = actions.user.claude_code_set_thinking(use_thinking, assume_focussed=True)
-                actions.sleep("200ms")
                 if model != current_model:
                     actions.user.claude_code_set_model(model, assume_focussed=True)
             
@@ -141,16 +147,22 @@ class ClaudeCodeActions:
             actions.sleep("100ms")
 
             if restore_model:
+                if original_model != current_model:
+                    actions.user.claude_code_set_model(original_model or "sonnet", assume_focussed=True)
+                    actions.sleep("100ms")
+                
                 # Restore thinking state if we changed it
                 if original_thinking_state and original_thinking_state != new_thinking_state:
+                    # Pause to allow previous message to start processing
+                    actions.sleep("200ms")
+                    # OPTIM: Slight potential optimisation, click the point already found when we first switched the thinking state.
                     if original_thinking_state:
                         actions.user.claude_code_enable_thinking(assume_focussed=True)
                     else:
                         actions.user.claude_code_disable_thinking(assume_focussed=True)
                     actions.sleep("200ms")
-                if original_model != current_model:
-                    actions.user.claude_code_set_model(original_model or "sonnet")
-                    actions.sleep("100ms")
+
+    # TODO: Say hi, do nothing else.
 
     # HACK: Require `Any` so we can return subclasses of ClaudeCodeTemporaryFocusContext.
     def claude_code_temp_focus(assume_focussed: bool = False) -> Any:

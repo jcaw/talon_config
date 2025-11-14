@@ -44,7 +44,7 @@ class IconDetectionActions:
         """
         coords = actions.user.find_icon_in_window(icon_path, threshold)
         if coords:
-            actions.user.click_at_and_restore(*coords, button=button, delay_ms=100)
+            actions.user.click_point(*coords, button=button, delay_ms=100)
             return True
         else:
             return False
