@@ -3,7 +3,7 @@
 from typing import Optional, Tuple
 from talon import Module, actions, ui, screen
 from talon.experimental import locate
-from talon.skia import Image
+from skia import Image
 
 
 module = Module()

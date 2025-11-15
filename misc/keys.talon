@@ -34,7 +34,7 @@ batch:
     user.play_thunk()
     app.notify("It's \"bat\" again now.", "Don't say \"batch\"")
     # key(space)
-batch:
+zen:
     user.play_thunk()
     app.notify("It's \"zip\" again now.", "Don't say \"zen\"")
     # key(space)

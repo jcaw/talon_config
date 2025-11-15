@@ -218,10 +218,9 @@ class VSCodeUserActions:
         actions.user.vscode_rpc_command("editor.action.fontZoomOut")
 
     def document_position() -> DocumentPositionInfo:
-        file_path = actions.app.path()
         cursor_pos = actions.user.vscode_rpc_command_get("jcaw.getCursorPosition")
         return DocumentPositionInfo(
-            path=file_path,
+            path=actions.app.path(),  # May be None for untitled files
             line_number=cursor_pos["line"] + 1,  # Convert from 0-based to 1-based
             column=cursor_pos["column"],
             offset=cursor_pos["offset"]

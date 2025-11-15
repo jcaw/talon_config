@@ -26,12 +26,16 @@ module = Module()
 # - force homophone preference (alternate homophones can be accessed with homophones command)
 
 # To add an override, add the word to override as the key and desired replacement as value in overrides.json
-try:
-    with resource.open(user_dir / "overrides.json") as f:
+mapping = {}
+
+@resource.watch(user_dir / "overrides.json")
+def on_overrides_update(f):
+    global mapping
+    try:
         mapping = json.load(f)
-except Exception as e:
-    app.notify(str(e))
-    mapping = {}
+    except Exception as e:
+        app.notify(str(e))
+        mapping = {}
 
 # used for auto-spacing
 punctuation = set(".,-!?")

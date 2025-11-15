@@ -59,7 +59,6 @@ shade: key(s)
 (shrink | reduce) [<number>]: key("ctrl-keypad_minus:{number or 1}")
 
 details:key(n)
-scale:key(s)
 snap (camera | cam): key(ctrl-alt-keypad_0)
 
 render: key(f12)

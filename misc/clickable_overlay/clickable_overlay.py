@@ -3,7 +3,8 @@ import threading
 from enum import Enum
 from typing import List, Dict, Tuple, Optional, Callable
 
-from talon import Module, Context, canvas, actions, ui, app, skia
+import skia
+from talon import Module, Context, canvas, actions, ui, app
 from talon.ui import Rect
 
 

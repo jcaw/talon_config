@@ -332,10 +332,12 @@ class UserActions:
         """Get the current cursor column in the document (0-based)."""
         return rpc_call("current-column")
 
-    def document_position() -> Optional[DocumentPositionInfo]:
+    def document_position() -> DocumentPositionInfo:
         """Get document position including file path, row, column, and offset.
+
+        Note: path may be None for buffers without files (e.g. *scratch*, output buffers).
         """
-        return DocumentPositionInfo(path=actions.app.path(),
-                                    row=rpc_call("current-row"), 
-                                    column=rpc_call("current-column"), 
+        return DocumentPositionInfo(path=actions.app.path(),  # May be None for non-file buffers
+                                    row=rpc_call("current-row"),
+                                    column=rpc_call("current-column"),
                                     offset=rpc_call("point"))

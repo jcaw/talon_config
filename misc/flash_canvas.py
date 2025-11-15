@@ -2,7 +2,8 @@ from copy import copy
 import threading
 import re
 
-from talon import canvas, actions, Module, cron, skia, ui, app
+import skia
+from talon import canvas, actions, Module, cron, ui, app
 from talon.ui import Rect
 
 

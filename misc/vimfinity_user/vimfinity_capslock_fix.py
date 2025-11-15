@@ -66,8 +66,9 @@ class WindowsActions:
 if ON_WINDOWS:
     # TODO: For now, try forcing Caps Lock to be automatically disabled. The UI
     #  automation taking incomplete control may cause a problem here, so disable
-    #  this if it causes problems.
-    cron.interval("100ms", actions.self.vimfinity_disable_capslock_if_enabled)
+    #  this if it causes problems.    
+    # Delay startup to ensure actions are fully registered
+    cron.after("1s", lambda: cron.interval("100ms", actions.user.vimfinity_disable_capslock_if_enabled))
 
 
 vimfinity_bind_keys(

@@ -118,7 +118,10 @@ class UnsortedActions:
         """Get the current cursor offset in the document - the point position."""
 
     def document_position() -> DocumentPositionInfo:
-        """Get document position including file path, line number, column, and offset."""
+        """Get document position including file path, line number, column, and offset.
+
+        Note: path may be None for buffers without associated files (e.g. output buffers).
+        """
         # Maybe override this if the info can be gotten in a single call,
         # otherwise it'll default to using the individual calls.
         return DocumentPositionInfo(path=actions.app.path(),
