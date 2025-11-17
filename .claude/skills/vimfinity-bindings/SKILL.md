@@ -7,6 +7,16 @@ description: Create vimfinity keyboard bindings for Talon voice control followin
 
 Vimfinity is a modal keyboard system for Talon that uses vim-like key sequences. This skill helps create bindings following the project's conventions.
 
+## Vimfinity Source Code
+
+**Location:** `plugins/vimfinity/vimfinity.py`
+
+This is where `vimfinity_bind_keys()` is implemented. Read this file if you need to understand:
+- How the binding system works internally
+- Available parameters and options
+- How contexts are handled
+- Debug or troubleshoot binding issues
+
 ## Binding Locations
 
 Choose the appropriate location based on scope:
