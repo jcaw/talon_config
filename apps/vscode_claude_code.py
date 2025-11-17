@@ -118,8 +118,8 @@ class ClaudeVSCodeActions:
 class ClaudeCodeUserActions:
     def claude_code_focus_text_input() -> None:
         # Open Claude Code sidebar if not already visible
-        # user.claude_code_open()
-        # actions.sleep("400ms")
+        user.claude_code_open()
+        actions.sleep("200ms")
 
         # HACK: Claude Code VSCode extension doesn't work properly - the input
         #   focussing command specifically is broken, and doesn't reliably take

@@ -167,7 +167,16 @@ class VSCodeUserActions:
         actions.user.vscode_rpc_command("editor.action.showHover")
 
     def open_file() -> None:
-        actions.user.vscode_rpc_command("workbench.action.files.openFile")
+        actions.user.vscode_rpc_command("workbench.action.quickOpen")
+
+    def git_ui() -> None:
+        actions.user.vscode_rpc_command("workbench.view.scm")
+
+    def git_commit() -> None:
+        actions.user.vscode_rpc_command("git.commit")
+
+    def git_stage_file() -> None:
+        actions.user.vscode_rpc_command("git.stage")
 
     def search(text: str = None) -> None:
         actions.user.vscode_rpc_command("workbench.action.findInFiles")

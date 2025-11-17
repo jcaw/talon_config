@@ -1,8 +1,14 @@
-from talon import Module, actions
+from talon import Module, Context, actions
+from user.plugins.vimfinity.vimfinity import vimfinity_bind_keys
 
 
 module = Module()
 module.tag("code_editor", desc="Enabled when a code editor is the active application.")
+
+code_editor_context = Context()
+code_editor_context.matches = r"""
+tag: user.code_editor
+"""
 
 
 class DocumentPositionInfo:
@@ -83,6 +89,18 @@ class EditorActions:
 
 
 @module.action_class
+class GitActions:
+    def git_ui() -> None:
+        """Open the git/source control interface."""
+
+    def git_commit() -> None:
+        """Open the commit dialog/interface."""
+
+    def git_stage_file() -> None:
+        """Stage the current file's changes."""
+
+
+@module.action_class
 class ViewActions:
     def toggle_fold() -> None:
         """Toggle visibility folding for the current item."""
@@ -128,3 +146,15 @@ class UnsortedActions:
                                     line_number=actions.user.current_row(),
                                     column=actions.user.current_column(),
                                     offset=actions.user.cursor_offset())
+
+
+# Git vimfinity bindings for code editors
+vimfinity_bind_keys(
+    {
+        "g": "Git",
+        "g g": actions.user.git_ui,
+        "g c": actions.user.git_commit,
+        "g s": actions.user.git_stage_file,
+    },
+    code_editor_context,
+)

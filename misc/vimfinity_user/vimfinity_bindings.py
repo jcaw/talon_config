@@ -26,13 +26,6 @@ browser_context.matches = r"""
 tag: user.browser
 """
 
-ide_context = Context()
-ide_context.matches = r"""
-tag: user.jetbrains
-tag: user.emacs
-"""
-
-
 class ShiftDelayed:
     """Performs `action` after a short delay, to allow the user to release the shift key."""
 
@@ -149,11 +142,15 @@ vimfinity_bind_keys(
         "k": "Program-Specific",
         # Insertion menu - snippets, etc.
         "i": "Insert",
+        # File operations
+        "f": "File",
+        "f f": user.open_file,
         # Window snapping
         "up": ShiftDelayed(user.maximize),
         "down": ShiftDelayed(user.minimize),
         "left": ShiftDelayed(user.snap_window_left),
         "right": ShiftDelayed(user.snap_window_right),
+        "p": "App-specific",
     }
 )
 
@@ -195,6 +192,7 @@ vimfinity_bind_keys(
     draft_context,
 )
 
+# TODO: Probably move to browser module?
 vimfinity_bind_keys(
     {
         "k": user.rango_toggle_keyboard_clicking,
@@ -205,15 +203,5 @@ vimfinity_bind_keys(
     },
     browser_context,
 )
-
-# TODO: Build, run, debug commands
-# vimfinity_bind_keys(
-#     {
-#         "b b": user.build_project,
-#         "b r": user.run_project,
-#         "b d": user.debug_project,
-#     },
-#     ide_context,
-# )
 
 print("Key sequences registered successfully.")

@@ -278,6 +278,15 @@ class UserActions:
             keypress="ctrl-x ctrl-f",
         )
 
+    def git_ui() -> None:
+        emacs_command("magit-status")
+
+    def git_commit() -> None:
+        emacs_command("magit-commit-create")
+
+    def git_stage_file() -> None:
+        emacs_command("magit-stage-file")
+
     def next_error() -> None:
         emacs_fallbacks(["spacemacs/next-error", "flycheck-next-error", "next-error"])
 
