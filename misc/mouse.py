@@ -1,3 +1,9 @@
+"""Mouse actions and click handling.
+
+Utilises the eye tracker API.
+
+"""
+
 from typing import Callable, List
 import time
 from random import randint
@@ -5,12 +11,7 @@ from random import randint
 from talon import Module, Context, actions, ctrl, ui
 from talon.types import Point2d
 
-# from talon_plugins import eye_mouse, eye_zoom_mouse
-
 from user.utils import Modifiers
-
-# from user.utils.eye_mouse import FrozenEyeMouse
-# from user.utils.mouse_history import backdated_position
 
 
 CLICKS_MAP = {
@@ -60,28 +61,14 @@ class Actions:
         center = (rect.x + round(rect.width / 2), rect.y + round(rect.height / 2))
         actions.mouse_move(*center)
 
-    # TODO: Pull these over to new eye system?
-    def debug_overlay():
-        """Toggle the eye mouse debug overlay."""
-        eye_mouse.debug_overlay.toggle()
-
     def toggle_eye_mouse():
-        """Toggle the eye mouse on/off. Disables zoom mouse."""
-        eye_zoom_mouse.active.disable()
-        eye_mouse.control_mouse.toggle()
+        """Toggle the gaze control mouse on/off."""
+        actions.tracking.control_gaze_toggle()
 
     def toggle_zoom_mouse():
-        """Toggle the zoom mouse on/off. Disables regular eye mouse."""
-        eye_mouse.control_mouse.disable()
-        eye_zoom_mouse.active.toggle()
+        """Toggle the zoom mouse on/off."""
+        actions.tracking.control_zoom_toggle()
 
-    def camera_overlay():
-        """Toggle the camera overlay on/off."""
-        eye_mouse.camera_overlay.toggle()
-
-    def calibrate_tracker():
-        """Run eye tracker calibration."""
-        eye_mouse.calib_start()
 
     def left_click(modifiers: List[str] = []):
         """Left click at current position."""
@@ -139,17 +126,14 @@ class Actions:
         else:
             actions.self.drag(modifiers)
 
-    # TODO: Port this to new eye system?
-    # TODO: Rename this to `eye_click` or something?
     def default_click(click_info: Click):
         """Perform ``click_function`` according to the context."""
-        with FrozenEyeMouse():
-            # Backdating clicks is a good default for arbitrary pointing
-            # devices.
+        # If position is provided, move there first
+        if click_info.position_at:
             actions.mouse_move(*click_info.position_at)
-            click_info.function(click_info.modifiers)
-            # Sleep for enough time for the click to complete.
-            time.sleep(0.1)
+        click_info.function(click_info.modifiers)
+        # Sleep for enough time for the click to complete.
+        time.sleep(0.1)
 
     def click_current(click_info: Click):
         """Click where the mouse is currently."""
@@ -218,7 +202,6 @@ class Actions:
             button: Mouse button to click (0=left, 1=right, 2=middle)
             delay_ms: Delay in milliseconds between move and click
         """
-        # TODO: Maybe disable eye mouse before doing all this
         original_position = ctrl.mouse_pos()
         try:
             actions.mouse_move(x, y)
@@ -237,30 +220,6 @@ def click(m) -> Click:
     """Get click info from a phrase."""
     click_command = m["clicks"]
     click_function = CLICKS_MAP[click_command]
-    # TODO: Cover no backdated position
-    #
-    # NOTE: This has quirks. If you say "shift click", it will backdate to the
-    #   start of "click", not "shift".
-    #
-    # TODO: Maybe defer to the backdated position of the voice activity if
-    #   timestamps aren't available?
-    #
-    # FIXME: port backdated_position to new eye mouse system
-    # position = backdated_position(m[-1])
     position = None
     modifiers = m["modifiers"] if hasattr(m, "modifiers") else []
     return Click(click_function, position, modifiers)
-
-
-# TODO: Port these to the new eye mouse and noise systems?
-# @context.action_class("user")
-# class NoiseActions:b
-#     def on_pop():
-#         actions.mouse_click()
-
-#     def on_hiss(start: bool):
-#         # TODO: Maybe use audio cues to notify user of premature release?
-#         if start:
-#             actions.mouse_drag()
-#         else:
-#             actions.mouse_release()

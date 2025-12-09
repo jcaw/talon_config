@@ -1,29 +1,26 @@
+"""Gaze-based map scrolling for strategy games.
+
+Uses the modern Talon tracking API (talon.tracking_system).
+"""
+
 import math
 import threading
 from typing import Callable
 
-from talon import cron, actions, Module, Context
+from talon import cron, actions, Module, Context, ui
 
-# FIXME: Port this over to the new noises & eye mouse system
-# from talon_plugins import eye_mouse
+from user.utils.gaze import get_gaze_history
 
 
 _NORTH_THETA = math.atan2(0, -1)
 _GAZE_MIDPOINT = (0.5, 0.5)
 
 
-# TODO: Isn't it easier to use radians?
 def angle_from_north(center, point):
     """Get the angle of `point` from center, relative to north.
 
     Unit is degrees, not radians.
-
     """
-    # center_phase = cmath.phase(complex(*center))
-    # point_phase = cmath.phase(complex(*point))
-    # # Amount to rotate (clockwise, in degrees) to normalize to north.
-    # offset = -45
-    # return (center_phase - point_phase) * 180 / cmath.pi + offset
     vector = (
         point[0] - center[0],
         point[1] - center[1],
@@ -35,7 +32,7 @@ def angle_from_north(center, point):
 
 def edge_mouse_scroll(north, south, east, west):
     """Map scroller that moves the mouse to the edge of the screen."""
-    screen = eye_mouse.main_screen.rect
+    screen = ui.main_screen().rect
     if east:
         x = 0
     elif west:
@@ -48,7 +45,6 @@ def edge_mouse_scroll(north, south, east, west):
         y = screen.height
     else:
         y = round(screen.height / 2)
-    # TODO: Maybe figure out a way of not hammering this
     actions.mouse_move(x, y)
 
 
@@ -70,7 +66,6 @@ class KeyMover:
         """Update scroll with the given directions.
 
         This method can be passed to `EyeScroller`.
-
         """
         with self._lock:
             for direction, key in [
@@ -100,7 +95,6 @@ class EyeScroller(object):
           update the movement direction. It should take four directions, north,
           east, south and west, indicating which directions it should be moving
           in.
-
         """
         self._job = None
         self._move_function = move_function
@@ -119,23 +113,7 @@ class EyeScroller(object):
 
     @staticmethod
     def _get_zones(rect):
-        """Get the look zone angles for a particular rect.
-
-        I.e:
-
-                   Origin
-                      |
-                   0  |  1
-            .---------+---------.
-            |       | | |       |
-           7|----.   |||   .----|2
-            |     >---#---<     |
-           6|----'   | |   '----|3
-            |       |   |       |
-            '-------------------'
-                   5     4
-
-        """
+        """Get the look zone angles for a particular rect."""
         width = rect.width
         height = rect.height
         zone_limits = [None] * 8
@@ -154,23 +132,24 @@ class EyeScroller(object):
         return [angle_from_north(center, point) for point in zone_limits]
 
     def _update_scroll(self):
-        if len(eye_mouse.mouse.eye_hist) < 2:
+        gaze_history = get_gaze_history()
+        if len(gaze_history.history) < 2:
             return
-        left_eye, right_eye = eye_mouse.mouse.eye_hist[-1]
-        gaze_position = (left_eye.gaze + right_eye.gaze) / 2
+        latest = gaze_history.latest
+        if latest is None:
+            return
+
+        gaze_position = latest.gaze
         gaze_found = (
             -0.02 < gaze_position.x < 1.02
             and -0.02 < gaze_position.y < 1.02
-            # TODO: Won't work if only picking up one eye
-            and bool(left_eye or right_eye)
         )
-        # TODO: Maybe cache this on entry? Not gonna change during.
         if gaze_found:
-            zones = self._get_zones(eye_mouse.main_screen.rect)
+            screen_rect = ui.main_screen().rect
+            zones = self._get_zones(screen_rect)
             gaze_angle = angle_from_north(
                 _GAZE_MIDPOINT, (gaze_position.x, gaze_position.y)
             )
-            # TODO: Maybe deadzone?
             west = zones[1] <= gaze_angle < zones[4]
             south = zones[3] <= gaze_angle < zones[6]
             east = zones[5] <= gaze_angle
@@ -207,19 +186,19 @@ _arrows_mover = KeyMover("up", "down", "left", "right")
 _arrows_scroller = EyeScroller(_arrows_mover.do_move)
 
 
-@edge_mouse_context.action_class("self")
+@edge_mouse_context.action_class("user")
 class EdgeMouseActions:
-    def on_hiss(start: bool):
-        if start:
+    def on_hiss(active: bool):
+        if active:
             _edge_scroller.start()
         else:
             _edge_scroller.stop()
 
 
-@arrows_context.action_class("self")
+@arrows_context.action_class("user")
 class ArrowsActions:
-    def on_hiss(start: bool):
-        if start:
+    def on_hiss(active: bool):
+        if active:
             _arrows_scroller.start()
         else:
             _arrows_scroller.stop()

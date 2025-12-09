@@ -42,7 +42,7 @@ import time
 from talon import Module, Context, actions
 
 from user.utils import apply_function, prepend_to_map, multi_map
-from user.misc import zoom_mouse
+# from user.misc import zoom_mouse  # Removed: old API
 from . import eu4_locations
 from ..utils.hard_coded_buttons import Corner
 
@@ -255,12 +255,10 @@ class ModuleActions:
 
     def move_control_group(number: int) -> None:
         """Gaming: go to a unit control group, and queue a move."""
-        actions.self.go_to_control_group()
-        # Yucky approach
-        if zoom_mouse.zoom_mouse_active():
-            zoom_mouse.queue_zoom_action(actions.user.right_click)
-        else:
-            raise RuntimeError("Can only queue a move when the zoom mouse is active.")
+        # TODO: This used the old zoom_mouse queue feature which is no longer available.
+        # Need to implement differently or remove.
+        actions.self.go_to_control_group(number)
+        raise NotImplementedError("move_control_group requires old zoom_mouse queue feature")
 
 
 context = Context()

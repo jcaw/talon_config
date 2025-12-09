@@ -1,135 +1,90 @@
-# FIXME: port this whole file to the new eye mouse system?
+"""Eye tracking control utilities.
+
+Uses the modern Talon tracking API (actions.tracking).
+"""
 
 import logging
 
-# from talon_plugins import eye_mouse, eye_zoom_mouse
+from talon import actions
 
-from user.utils import sound
-
-# try:
-#     from user.settings import better_zoom_mouse
-# except:
-#     print("Couldn't import `better_zoom_mouse`. Skipping it.")
-#     better_zoom_mouse = None
 
 LOGGER = logging.getLogger(__name__)
 
 
-# TODO: Use centralized config system, e.g. from community.
-class config:
-    # Play sounds when clicks are buffered/cancelled?
-    BUFFERED_CLICK_SOUNDS = True
-
-
-def zooming():
-    """True iff the eye_zoom_mouse is currently zooming."""
-    return eye_zoom_mouse.zoom_mouse.state == eye_zoom_mouse.STATE_OVERLAY
+def zoom_mouse_enabled() -> bool:
+    """Check if zoom mouse is currently enabled."""
+    return actions.tracking.control_zoom_enabled()
 
 
 def cancel_zoom():
-    """Cancel the zoom, iff it's open. Returns the final position.
-
-    If not zooming, returns nothing. If an action is queued, always cancels it.
-
-    :returns Point2d: the final position
-
-    """
-    if zooming():
-        _, origin = eye_zoom_mouse.zoom_mouse.get_pos()
-        eye_zoom_mouse.zoom_mouse.cancel()
-        return origin
-    return None
-
-
-def zoom_mouse_enabled():
-    try:
-        return eye_zoom_mouse.zoom_mouse.enabled
-    except AttributeError:
-        return False
-
-
-def eye_mouse_enabled():
-    return eye_mouse.control_mouse.enabled
-
-
-def disable_zoom_mouse():
-    eye_zoom_mouse.active.disable()
-
-
-def disable_eye_mouse():
-    eye_mouse.control_mouse.disable()
+    """Cancel any active zoom overlay."""
+    actions.tracking.zoom_cancel()
 
 
 def enable_zoom_mouse():
-    eye_zoom_mouse.active.enable()
+    """Enable the zoom mouse."""
+    actions.tracking.control_zoom_toggle(True)
 
 
-def enable_eye_mouse():
-    eye_mouse.control_mouse.enable()
+def disable_zoom_mouse():
+    """Disable the zoom mouse."""
+    actions.tracking.control_zoom_toggle(False)
 
 
-def clear_zoom_queue(m=None):
-    # Possible race here. Not important or likely to happen; tolerate it.
-    if not eye_zoom_mouse.zoom_mouse.queued_actions.empty():
-        eye_zoom_mouse.zoom_mouse.cancel_actions()
-        if config.BUFFERED_CLICK_SOUNDS:
-            sound.play_cancel()
+def enable_gaze_control():
+    """Enable gaze control (direct eye mouse)."""
+    actions.tracking.control_gaze_toggle(True)
 
 
-def zoom_mouse_patched():
-    """Has `eye_zoom_mouse` been patched with `better_zoom_mouse`?"""
-    return hasattr(better_zoom_mouse, "BetterZoomMouse") and isinstance(
-        eye_zoom_mouse.zoom_mouse, better_zoom_mouse.BetterZoomMouse
-    )
+def disable_gaze_control():
+    """Disable gaze control."""
+    actions.tracking.control_gaze_toggle(False)
 
 
-class FrozenEyeMouse(object):
-    """Disable eye input for the duration of the context."""
+class FrozenEyeMouse:
+    """Context manager to temporarily disable eye tracking.
+
+    Example:
+        with FrozenEyeMouse():
+            # Eye tracking is disabled here
+            do_something()
+        # Eye tracking is restored
+    """
 
     def __init__(self):
-        self.zoom_was_enabled = False
-        self.eye_mouse_was_enabled = False
+        self._zoom_was_enabled = False
 
     def __enter__(self):
         cancel_zoom()
-        if zoom_mouse_enabled():
-            self.zoom_was_enabled = True
+        self._zoom_was_enabled = zoom_mouse_enabled()
+        if self._zoom_was_enabled:
             disable_zoom_mouse()
-        if eye_mouse_enabled():
-            self.eye_mouse_was_enabled = True
-            disable_eye_mouse()
+        return self
 
     def __exit__(self, *args):
-        if self.zoom_was_enabled:
+        if self._zoom_was_enabled:
             enable_zoom_mouse()
-        if self.eye_mouse_was_enabled:
-            enable_eye_mouse()
 
 
-class TempEyeMouse(object):
-    """Temporarily enable the eye mouse for the duration of the context.
+class TempEyeMouse:
+    """Context manager to temporarily switch to direct gaze control.
 
     Designed so the user can use normal eye tracking during a hiss.
-
     """
 
-    LOGGER = logging.getLogger(__name__ + ".TempEyeMouse")
-
     def __init__(self):
-        # Was the zoom mouse active when the hiss started?
-        self._zoom_was_active = False
+        self._zoom_was_enabled = False
 
     def __enter__(self):
-        LOGGER.debug("Enabling temporary eye mouse")
-        self._zoom_was_active = zoom_mouse_enabled()
-        if self._zoom_was_active:
+        LOGGER.debug("Enabling temporary gaze control")
+        self._zoom_was_enabled = zoom_mouse_enabled()
+        if self._zoom_was_enabled:
             disable_zoom_mouse()
-            self._zoom_was_active = True
-        enable_eye_mouse()
+        enable_gaze_control()
+        return self
 
-    def __exit__(self, *_):
-        LOGGER.debug("Disabling temporary eye mouse")
-        disable_eye_mouse()
-        if self._zoom_was_active:
+    def __exit__(self, *args):
+        LOGGER.debug("Disabling temporary gaze control")
+        disable_gaze_control()
+        if self._zoom_was_enabled:
             enable_zoom_mouse()
-            self._zoom_was_active = False
