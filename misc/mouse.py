@@ -48,6 +48,19 @@ class Click:
 module = Module()
 
 module.list("clicks", desc="all available click types")
+module.tag("zoom_mouse_active", desc="Zoom mouse mode is currently enabled")
+
+# Context to manage zoom_mouse_active tag
+_zoom_tag_ctx = Context()
+
+
+def _update_zoom_tag():
+    """Update zoom_mouse_active tag based on current zoom state."""
+    if actions.tracking.control_zoom_enabled():
+        _zoom_tag_ctx.tags = ["user.zoom_mouse_active"]
+    else:
+        _zoom_tag_ctx.tags = []
+
 
 # Currently in a click-drag operation? Left mouse is held?
 _left_mouse_dragging = False
@@ -68,6 +81,7 @@ class Actions:
     def toggle_zoom_mouse():
         """Toggle the zoom mouse on/off."""
         actions.tracking.control_zoom_toggle()
+        _update_zoom_tag()
 
 
     def left_click(modifiers: List[str] = []):
@@ -223,3 +237,18 @@ def click(m) -> Click:
     position = None
     modifiers = m["modifiers"] if hasattr(m, "modifiers") else []
     return Click(click_function, position, modifiers)
+
+
+# Context active when zoom mouse is enabled - hiss cancels zoom overlay
+zoom_mouse_ctx = Context()
+zoom_mouse_ctx.matches = r"""
+tag: user.zoom_mouse_active
+"""
+
+
+@zoom_mouse_ctx.action_class("user")
+class ZoomMouseActions:
+    def on_hiss(active: bool):
+        """Cancel zoom overlay on hiss start."""
+        if active:
+            actions.tracking.zoom_cancel()
