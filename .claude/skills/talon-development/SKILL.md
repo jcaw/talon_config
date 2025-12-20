@@ -229,6 +229,28 @@ def my_action():
     menu.open_repl(None)
 ```
 
+## Cron (Scheduled Tasks)
+
+The `cron` module schedules tasks to run on the **main thread**. This is important because UI operations (canvas creation, etc.) require the main thread's resource context.
+
+```python
+from talon import cron
+
+# Run once after delay
+job = cron.after("1s", my_callback)
+
+# Run repeatedly at interval
+job = cron.interval("500ms", my_callback)
+
+# Cancel a scheduled job
+cron.cancel(job)
+```
+
+**Key point:** `cron.after` and `cron.interval` queue callbacks to run on the main thread. This means:
+- Canvas creation/destruction works in cron callbacks
+- UI operations are safe in cron callbacks
+- The callback executes in a proper Talon resource context
+
 ## Quick Reference
 
 ### Common Actions
