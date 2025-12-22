@@ -51,10 +51,10 @@ This is specifically for VSCode integration, not general Talon access.
 
 ## Practical Workflow for Claude
 
-To test or execute Talon code:
+To launch a dedicated talon instance to test or execute Talon code:
 
 1. Write a Python file with test code using `cron.after()`
-2. Run `./test_talon.sh` to launch Talon and capture logs
+2. Write changes and inspect the log from a running talon instance, or run `./test_talon.sh` to launch a new instance of Talon and capture logs
 3. Parse the log output for results
 4. Delete the test file when done
 

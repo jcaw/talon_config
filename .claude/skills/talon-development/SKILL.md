@@ -65,6 +65,14 @@ See [PROGRAMMATIC_ACCESS.md](PROGRAMMATIC_ACCESS.md) for interacting with a runn
 - Write-and-reload pattern for executing code
 - File-based RPC (VSCode integration)
 
+## UI Automation
+
+See [UI_AUTOMATION.md](UI_AUTOMATION.md) for inspecting and interacting with application UI elements via Windows UI Automation / macOS Accessibility APIs.
+
+## Canvas (Skia Graphics)
+
+See [CANVAS.md](CANVAS.md) for drawing overlays, widgets, and visual feedback using Talon's Skia-based Canvas API.
+
 ## Eye Tracking
 
 See `settings/eye_tracking_api.md` for the eye tracking API reference.
