@@ -75,7 +75,7 @@ See [CANVAS.md](CANVAS.md) for drawing overlays, widgets, and visual feedback us
 
 ## Eye Tracking
 
-See `settings/eye_tracking_api.md` for the eye tracking API reference.
+See `settings/api_exploration/eye_tracking/EYE_TRACKING_API_EXPLORATION.md` for the eye tracking API reference.
 
 ## Project Structure
 
